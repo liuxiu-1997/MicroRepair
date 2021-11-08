@@ -49,16 +49,23 @@ public class RepairExpression {
                 ifStatement.setExpression(expression);
             }
         }
+
         Expression expression = null;
-//        infixOperaFilter();
+
         //坚决不能用原先的表达式，因为会修改掉之前的
         if (ifExp instanceof InfixExpression){
-
+            /**
+             * 依次进行运算符、表达式左运算符、表达式右运算符的修改;（每次修改的内容都不一样）
+             * 当前面的无法修改或已经修改完时，执行后面的修改
+             *
+             */
             expression = InfixOperatorRepair((InfixExpression)ifStatement.getExpression(),ifStatement);
             if (expression==null){
                 expression = InfixFieldRepairL((InfixExpression)ifStatement.getExpression(),ifStatement);
             }
             if (expression==null){
+                //重新排列一下表达式的优先级分数，因为前面的修改之后，会给表达式较低的分数;
+                //重新复值
                 ExpressionPrioritySort expressionPrioritySort = new ExpressionPrioritySort();
                 expressionPrioritySort.priorityAllocation(modificationPoint,modificationPoint.getExpressionInfosIngredients());
                 expression = InfixFieldRepairR((InfixExpression) ifStatement.getExpression(),ifStatement);
@@ -148,8 +155,8 @@ public class RepairExpression {
             double maxSort = -1;
             int mid=-1;
             for (int i=0;i<modiIngreExpList.size();i++){
-                if (modiIngreExpList.get(i).getVarTypeStr()==returnTypeStr){
-                    if (modiIngreExpList.get(i).getPriority()>maxSort){
+                if (Objects.equals(modiIngreExpList.get(i).getVarTypeStr(), returnTypeStr)){
+                    if (modiIngreExpList.get(i).getPriority() > maxSort){
                         maxSort = modiIngreExpList.get(i).getPriority();
                         mid = i;
                     }
@@ -163,75 +170,13 @@ public class RepairExpression {
             }
         }
 
-//        else if (stReturn instanceof Name){
-//            List<ExpressionInfo> modiExpressionList = modificationPoint.getModificationPointExpressionInfosList();
-//            List<ExpressionInfo> modiIngreExpList = modificationPoint.getExpressionInfosIngredients();
-//            for (int ii=0;ii<modiExpressionList.size();ii++)
-//                for (int j=0;j<modiIngreExpList.size();j++)
-//                    if (modiExpressionList.get(ii).getExpressionType()==modiIngreExpList.get(j).getExpressionType()){
-//                        returnStatement = ast.newReturnStatement();
-//                        Expression expression = (Expression)ASTNode.copySubtree(returnStatement.getAST(),modiIngreExpList.get(j).getExpression());
-//                        returnStatement.setExpression(expression);
-//                    }
-//        }else if (stReturn instanceof NumberLiteral){
-//            for (ExpressionInfo e:modificationPoint.getExpressionInfosIngredients()) {
-//                if (e.getExpression() instanceof NumberLiteral){
-//                    returnStatement = ast.newReturnStatement();
-//                    Expression expression = (Expression)ASTNode.copySubtree(returnStatement.getAST(),e.getExpression());
-//                    returnStatement.setExpression(expression);
-//                }
-//            }
-//        }else if (stReturn instanceof MethodInvocation) {
-//            for (ExpressionInfo e : modificationPoint.getExpressionInfosIngredients()) {
-//                if (e.getExpression() instanceof MethodInvocation) {
-//                    returnStatement = ast.newReturnStatement();
-//                    Expression expression = (Expression) ASTNode.copySubtree(returnStatement.getAST(), e.getExpression());
-//                    returnStatement.setExpression(expression);
-//                }
-//            }
-//        }else if (stReturn instanceof ArrayAccess) {
-//            for (ExpressionInfo e : modificationPoint.getExpressionInfosIngredients()) {
-//                if (e.getExpression() instanceof ArrayAccess) {
-//                    returnStatement = ast.newReturnStatement();
-//                    Expression expression = (Expression) ASTNode.copySubtree(returnStatement.getAST(), e.getExpression());
-//                    returnStatement.setExpression(expression);
-//                }
-//            }
-//        }else if (stReturn instanceof FieldAccess) {
-//            for (ExpressionInfo e : modificationPoint.getExpressionInfosIngredients()) {
-//                if (e.getExpression() instanceof FieldAccess) {
-//                    returnStatement = ast.newReturnStatement();
-//                    Expression expression = (Expression) ASTNode.copySubtree(returnStatement.getAST(), e.getExpression());
-//                    returnStatement.setExpression(expression);
-//                }
-//            }
-//        }else if (stReturn instanceof StringLiteral) {
-//            for (ExpressionInfo e : modificationPoint.getExpressionInfosIngredients()) {
-//                if (e.getExpression() instanceof StringLiteral) {
-//                    returnStatement = ast.newReturnStatement();
-//                    Expression expression = (Expression) ASTNode.copySubtree(returnStatement.getAST(), e.getExpression());
-//                    returnStatement.setExpression(expression);
-//                }
-//            }
-//        }else if (stReturn instanceof ConditionalExpression) {
-//            for (ExpressionInfo e : modificationPoint.getExpressionInfosIngredients()) {
-//                if (e.getExpression() instanceof ConditionalExpression) {
-//                    returnStatement = ast.newReturnStatement();
-//                    Expression expression = (Expression) ASTNode.copySubtree(returnStatement.getAST(), e.getExpression());
-//                    returnStatement.setExpression(expression);
-//                }
-//            }
-//        }
         if(returnStatement==null){
             returnStatement = ast.newReturnStatement();
             Expression expression = (Expression)ASTNode.copySubtree(returnStatement.getAST(), expressionInfo.getExpression());
             returnStatement.setExpression(expression);
         }
-        if (returnStatement!=null) {
-            clearAndSetIngredient(returnStatement);
-            return true;
-        }
-        return false;
+        clearAndSetIngredient(returnStatement);
+        return true;
     }
     public boolean doWhileRepair(){
         DoStatement doSta = (DoStatement)modificationPoint.getStatement();
@@ -248,7 +193,6 @@ public class RepairExpression {
                 doStatement.setExpression(expression);
         }
 
-//        infixOperaFilter();
 
         Expression expression = null;
         if (doExp instanceof InfixExpression){
@@ -273,9 +217,6 @@ public class RepairExpression {
             return true;
         }
         return false;
-//        Expression expression = (Expression) ASTNode.copySubtree(doStatement.getAST(),expressionInfo.getExpression());
-//        doStatement.setExpression(expression);
-//        clearAndSetIngredient(doStatement);
     }
     public void castTypeRepair(CastExpression castExpression){
         InstanceofExpression instanceofExpression = ast.newInstanceofExpression();
@@ -318,34 +259,6 @@ public class RepairExpression {
         clearAndSetIngredient(ifStatement);
     }
 
-    public void infixOperaFilter(){
-        while((expressionInfo.getExpression()!=null)&&expressionInfo.getExpression() instanceof InfixExpression){
-            /**
-             * only save
-             *
-             */
-            InfixExpression infixExpression = (InfixExpression) expressionInfo.getExpression();
-            if ((infixExpression.getOperator().equals(InfixExpression.Operator.LESS))||
-                    (infixExpression.getOperator().equals(InfixExpression.Operator.GREATER))||
-                    (infixExpression.getOperator().equals(InfixExpression.Operator.GREATER_EQUALS))||
-                    (infixExpression.getOperator().equals(InfixExpression.Operator.LESS_EQUALS))||
-                    (infixExpression.getOperator().equals(InfixExpression.Operator.EQUALS))||
-                    (infixExpression.getOperator().equals(InfixExpression.Operator.NOT_EQUALS))||
-                    (infixExpression.getOperator().equals(InfixExpression.Operator.AND))||
-                    (infixExpression.getOperator().equals(InfixExpression.Operator.OR))||
-                    (infixExpression.getOperator().equals(InfixExpression.Operator.CONDITIONAL_OR))||
-                    (infixExpression.getOperator().equals(InfixExpression.Operator.CONDITIONAL_AND))){
-
-               break;
-            }else{
-                if (expressionPriorityMaxSelect.getMaxPriority(modificationPoint.getModificationPointExpressionInfosList())!=null)
-                    expressionInfo = expressionPriorityMaxSelect.getMaxPriority(modificationPoint.getModificationPointExpressionInfosList());
-                else
-                    break;
-            }
-            expressionInfo.setPriority(-1);
-        }
-    }
     public void clearAndSetIngredient(Statement s){
         if (s!=null) {
             ingredients.add(s);
@@ -371,41 +284,46 @@ public class RepairExpression {
         opList.add(InfixExpression.Operator.LESS);
         opList.add(InfixExpression.Operator.LESS_EQUALS);
         opList.add(InfixExpression.Operator.GREATER);
-        opList.add(InfixExpression.Operator.LESS_EQUALS);
-        for (int i=0;i<opList.size();i++){
-           if ((!opList.get(i).equals(operator))&&(!TemplateBoolean.templateBooleanCheck(modificationPoint,opList.get(i).toString()))){
-               e.setOperator(opList.get(i));
-               modificationPoint.getTemplateBoolean().put(opList.get(i).toString(), true);
-               break;
-           }
+        opList.add(InfixExpression.Operator.GREATER_EQUALS);
+        boolean flag = true;
+        for (InfixExpression.Operator value : opList) {
+            if ((!value.equals(operator)) && (!TemplateBoolean.templateBooleanCheck(modificationPoint, value.toString()))) {
+                e.setOperator(value);
+                modificationPoint.getTemplateBoolean().put(value.toString(), true);
+                flag=false;
+                break;
+            }
         }
-        AST ast = AST.newAST(AST.JLS8);
-        Expression expression= (Expression) ASTNode.copySubtree(ast,e);
-        return expression;
+        if(flag)
+            return null;
+        else
+            return (Expression) ASTNode.copySubtree(statement.getAST(),e);
+
     }
     public Expression InfixFieldRepairL(InfixExpression e,Statement statement){
 
         /**
-         * 两个待改进的问题
-         * 1.左表达式使用后，右表达式的分数存在问题;
-         * expressionPrioritySort.priorityAllocation(mp,list);修复一下，然后，在拆分为左右进行运算;
-         * 2.有点罗嗦zasz
+         * 一个待改进的问题
+         *
+         * 有点罗嗦
          */
         Expression expLeft = e.getLeftOperand();
 
-        AST ast1 = AST.newAST(AST.JLS8);
-//        AST ast2 = AST.newAST(AST.JLS8);
+
         Expression expression1 = null;
         Expression expression2 = null;
         if (expLeft instanceof Name){
             ExpressionInfo expressionInfo = TypeInformation.getTypeInformation((Name)expLeft,modificationPoint);
             if (expressionInfo!=null){
                 List<ExpressionInfo> modiIngreExpList = modificationPoint.getExpressionInfosIngredients();
+                /**
+                 * 目的是选取满足条件中，分数最大的表达式;
+                 */
                 double maxSort = -1;
                 int mid=-1;
-                for (int i=0;i<modiIngreExpList.size();i++){
+                for (int i = 0 ; i < modiIngreExpList.size();i++){
                     if (Objects.equals(modiIngreExpList.get(i).getVarTypeStr(), expressionInfo.getVarTypeStr())){
-                        if (modiIngreExpList.get(i).getPriority()>maxSort){
+                        if (modiIngreExpList.get(i).getPriority() > maxSort){
                             maxSort = modiIngreExpList.get(i).getPriority();
                             mid = i;
                         }
@@ -413,9 +331,9 @@ public class RepairExpression {
                 }
                 if (mid>=0){
                     modiIngreExpList.get(mid).setPriority(-1);
-                    expression1 = (Expression)ASTNode.copySubtree(ast1,modiIngreExpList.get(mid).getExpression());
+                    expression1 = (Expression)ASTNode.copySubtree(statement.getAST(),modiIngreExpList.get(mid).getExpression());
                     e.setLeftOperand(expression1);
-                    expression2 = (Expression)ASTNode.copySubtree(ast1,e);
+                    expression2 = (Expression)ASTNode.copySubtree(statement.getAST(),e);
                     return expression2;
                 }
             }
@@ -432,8 +350,7 @@ public class RepairExpression {
          */
 
         Expression expRight = e.getRightOperand();
-        AST ast1 = AST.newAST(AST.JLS8);
-//        AST ast2 = AST.newAST(AST.JLS8);
+
         Expression expression1 = null;
         Expression expression2 = null;
 
@@ -443,9 +360,9 @@ public class RepairExpression {
                 List<ExpressionInfo> modiIngreExpList = modificationPoint.getModificationPointExpressionInfosList();
                 double maxSort = -1;
                 int mid=-1;
-                for (int i=0;i<modiIngreExpList.size();i++){
+                for (int i = 0 ; i < modiIngreExpList.size() ; i++){
                     if (Objects.equals(modiIngreExpList.get(i).getVarTypeStr(), expressionInfo.getVarTypeStr())){
-                        if (modiIngreExpList.get(i).getPriority()>maxSort){
+                        if (modiIngreExpList.get(i).getPriority() > maxSort){
                             maxSort = modiIngreExpList.get(i).getPriority();
                             mid = i;
                         }
@@ -453,9 +370,9 @@ public class RepairExpression {
                 }
                 if (mid>=0){
                     modiIngreExpList.get(mid).setPriority(-1);
-                    expression1 = (Expression)ASTNode.copySubtree(ast1,modiIngreExpList.get(mid).getExpression());
+                    expression1 = (Expression)ASTNode.copySubtree(statement.getAST(),modiIngreExpList.get(mid).getExpression());
                     e.setLeftOperand(expression1);
-                    expression2 = (Expression) ASTNode.copySubtree(ast1,e);
+                    expression2 = (Expression) ASTNode.copySubtree(statement.getAST(),e);
                     return expression2;
                 }
             }
