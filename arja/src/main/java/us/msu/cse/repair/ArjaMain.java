@@ -16,7 +16,7 @@ public class ArjaMain {
 	public static void main(String args[]) throws Exception {
 
 		String[] args1 = new String[9];
-		for (int i = 1; i < 2; i++) {
+		for (int i = 1; i < 12; i++) {
 			args1[0] = "Arja";
 			args1[1] = "-DsrcJavaDir";
 			args1[2] = "/home/bjtucs/workspace/apr/benchmarks/defects4j/math/math_" + i + "_buggy/src/main/java";

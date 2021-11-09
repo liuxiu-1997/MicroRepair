@@ -25,6 +25,22 @@ public class AllTypeVisitor extends ASTVisitor {
     }
     @Override
     public void preVisit(ASTNode node) {
+        /**
+         *这里的目的是提取种子语句所在方法的参数信息
+         */
+        ASTNode curNode = node;
+        while ((curNode!=null)&&(!(curNode instanceof MethodDeclaration))) {
+            curNode = curNode.getParent();
+        }
+        if ((curNode instanceof MethodDeclaration)){
+            MethodDeclaration methodDeclaration = (MethodDeclaration)curNode;
+            for (Object obj : methodDeclaration.parameters()) {
+                SingleVariableDeclaration vd = (SingleVariableDeclaration) obj;
+                if (vd != null) {
+                    list.add(new ExpressionInfo(vd.getName(),methClaPacOfExpName,lineAndNodeType,vd.getType(),vd.getName().toString()));
+                }
+            }
+        }
 
     }
 
@@ -264,10 +280,6 @@ public class AllTypeVisitor extends ASTVisitor {
 
     @Override
     public boolean visit(ExpressionStatement node) {
-//        Expression expression = node.getExpression();
-//        if (expression != null)
-//            list.add(new ExpressionInfo(expression,methClaPacOfExpName,lineAndNodeType));
-
         return true;
     }
 
