@@ -49,7 +49,8 @@ public class JavaJDKCompiler {
 		}
 		// Get a CompliationTask from the compiler and compile the sources
 		final CompilationTask task = compiler.getTask(null, javaFileManager, diagnostics, options, null, sources);
-		return task.call();
+		boolean res = task.call();
+		return res;
 	}
 
 	public synchronized boolean compile(String sourceFilePath, String sourceCode) throws Exception {

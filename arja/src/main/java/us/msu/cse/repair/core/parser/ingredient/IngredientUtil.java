@@ -442,7 +442,7 @@ public class IngredientUtil {
 			int i = 0;
 			for (i = 0; i < varScopes.size(); i++) {
 				Map<String, VarInfo> map = varScopes.get(i);
-				if (map.containsKey(name)) {
+				if (map != null && map.containsKey(name)) {
 					VarInfo vi2 = map.get(name);
 					if (vi1.isStronglyTypeMatched(vi2) || vi1.isWeaklyTypeMatched(vi2))
 						break;

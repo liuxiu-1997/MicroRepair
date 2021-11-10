@@ -262,12 +262,12 @@ public abstract class AbstractRepairProblem extends Problem {
 		invokeFaultLocalizer();
 		invokeSeedLineGenerator();
 		invokeASTRequestor();
-		invokeLocalVarDetector();
-		invokeFieldVarDetector();
-		invokeMethodDetector();//Field与Method都是在选自修改点的所在类与继承类的（“public”、“protected”、“同包下的private”的变量和方法）
+//		invokeLocalVarDetector();
+//		invokeFieldVarDetector();
+//		invokeMethodDetector();//Field与Method都是在选自修改点的所在类与继承类的（“public”、“protected”、“同包下的private”的变量和方法）
 		invokeIngredientScreener();
 		invokeManipulationInitializer();
-		invokeModificationPointsTrimmer();//modification修改点的整理——删除不必要的不符合理论逻辑的修改点
+//		invokeModificationPointsTrimmer();//modification修改点的整理——删除不必要的不符合理论逻辑的修改点
 		invokeTestFilter();
 		invokeCompilerOptionsInitializer();
 		invokeProgURLsInitializer();
@@ -403,20 +403,20 @@ public abstract class AbstractRepairProblem extends Problem {
 
 	void invokeIngredientScreener() throws JMException {
 		System.out.println("Ingredient screener starts...");
-		AbstractIngredientScreener ingredientScreener = IngredientScreenerFactory
-				.getIngredientScreener(ingredientScreenerName, modificationPoints, seedStatements, ingredientMode);
-		ingredientScreener.screen();
-
-		if (ingredientFilterRule) {
-			for (ModificationPoint mp : modificationPoints) {
-				Iterator<Statement> iterator = mp.getIngredients().iterator();
-				while (iterator.hasNext()) {
-					Statement seed = iterator.next();
-					if (IngredientFilterRule.canFiltered(seed, mp))
-						iterator.remove();
-				}
-			}
-		}
+//		AbstractIngredientScreener ingredientScreener = IngredientScreenerFactory
+//				.getIngredientScreener(ingredientScreenerName, modificationPoints, seedStatements, ingredientMode);
+//		ingredientScreener.screen();
+//
+//		if (ingredientFilterRule) {
+//			for (ModificationPoint mp : modificationPoints) {
+//				Iterator<Statement> iterator = mp.getIngredients().iterator();
+//				while (iterator.hasNext()) {
+//					Statement seed = iterator.next();
+//					if (IngredientFilterRule.canFiltered(seed, mp))
+//						iterator.remove();
+//				}
+//			}
+//		}
 		DirectIngredientExpressionScreener dir = new DirectIngredientExpressionScreener(modificationPoints,seedStatements);
 		dir.allocatonExpressionForModificationPoints();
 //		dir.TypeFilter();

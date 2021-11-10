@@ -99,7 +99,7 @@ public class ArjaProblem extends AbstractRepairProblem {
 
         for (int i = size; i < 2 * size; i++) {
             lowerLimit_[i] = 0;
-            upperLimit_[i] = modificationPoints.get(i - size).getIngredients().size() - 1;
+            upperLimit_[i] = 700;//后续需要更改，这是我设置的最大数，只是根据尝试怕越界设置的
         }
     }
 
@@ -127,56 +127,60 @@ public class ArjaProblem extends AbstractRepairProblem {
              * 3.普通修改
              * 优先级: 1 > 2 > 3
              */
+            //这个值成功一次，会增加1;当>2时，我则抛弃;
+            int checkFlag=0;
             boolean flag = true;
+
             ModificationPoint modificationPoint = modificationPoints.get(i);
-            RepairExpression repairExpression = null;
-            boolean isnull = ExpressionIngredientSize.isNullOfExpIngre(modificationPoint);
-            if (!isnull)
-                repairExpression = new RepairExpression(modificationPoint);
+            RepairExpression repairExpression = repairExpression = new RepairExpression(modificationPoint);
             double suspValue = modificationPoint.getSuspValue();
             Statement statement = modificationPoint.getStatement();
 
             /**
              * 当为特定的语句类型 并且 表达式成分不为空时执行
              */
-            if ((statement instanceof IfStatement) && (!isnull)) {
+            if (statement instanceof IfStatement) {
                 boolean mid = repairExpression.ifRepair();
                 if (mid) {
                     array[i] = 1;
                     array[i + size] = modificationPoint.getIngredients().size() - 1;
                     flag = false;
                 }
-            } else if ((statement instanceof WhileStatement) && (!isnull)) {
+            }
+            if ((statement instanceof WhileStatement)) {
                 boolean mid = repairExpression.whileRepair();
                 if (mid) {
                     array[i] = 1;
                     array[i + size] = modificationPoint.getIngredients().size() - 1;
                     flag = false;
                 }
-            } else if ((statement instanceof ReturnStatement) && (!isnull)) {
+            }
+            if ((statement instanceof ReturnStatement)) {
                 boolean mid = repairExpression.returnRepair();
                 if (mid) {
                     array[i] = 1;
                     array[i + size] = modificationPoint.getIngredients().size() - 1;
                     flag = false;
                 }
-            } else if ((statement instanceof DoStatement) && (!isnull)) {
+            }
+            if ((statement instanceof DoStatement)) {
                 boolean mid = repairExpression.doWhileRepair();
                 if (mid) {
                     array[i] = 1;
                     array[i + size] = modificationPoint.getIngredients().size() - 1;
                     flag = false;
                 }
-            } else if (!isnull) {
+            }
+            if (flag) {
                 for (ExpressionInfo expression : modificationPoint.getModificationPointExpressionInfosList()) {
                     /**
-                     * 当修改点部位ifStatement、whileStatement、doWhile时，
-                     * 看是否满足：
+                     * 当修改点部位ifStatement、whileStatement、doWhile时，看是否满足：
                      * 1.强制类型转换;
                      * 2.数组调用;
                      * 3.变量调用;
                      * 如果满足以上条件，则进行补丁的生成。并且此条补丁生成之后，不再进行使用。
                      */
+//                     ________我这里存在一个逻辑错误，就是，我只考虑前面的插入了，没有将相应的语句插入进去
                     if ((expression.getExpression() instanceof CastExpression) &&
                             (!TemplateBoolean.templateBooleanCheck(modificationPoints.get(i), expression.getExpressionStr()))) {
                         repairExpression.castTypeRepair((CastExpression) expression.getExpression());
@@ -211,29 +215,24 @@ public class ArjaProblem extends AbstractRepairProblem {
             if (flag) {
                 bits.set(i, false);
             } else {
-                selectedMP.put(i, suspValue);
-                bits.set(i, true);
+                if (selectedMP.size()<2){
+                    selectedMP.put(i, suspValue);
+                    bits.set(i, true);
+                }else{
+                    bits.set(i,false);
+                }
+                {//有越界存在，不清楚什么原因，以后修改
+                    List<String> list = new ArrayList<String>(Arrays.asList(manipulationNames));
+                    availableManipulations.get(i).clear();
+                    availableManipulations.get(i).addAll(list);
+                }
             }
-//				if (miFilterRule && flag) {
-//					String manipName = availableManipulations.get(i).get(array[i]);
-//					Statement seed = null;
-//					if (!modificationPoint.getIngredients().isEmpty())
-//						seed = modificationPoint.getIngredients().get(array[i + size]);
-//
-//					int index = MIFilterRule.canFiltered(manipName, seed, modificationPoints.get(i));
-//					if (index == -1)
-//						selectedMP.put(i, suspValue);
-//					else if (index < modificationPoint.getIngredients().size()) {
-//						array[i + size] = index;       //猜测是给他一个最大值，以后不再想去用他
-//						selectedMP.put(i, suspValue);
-//					} else
-//						bits.set(i, false);
-//				} else {
         }
         if (selectedMP.isEmpty()) {
             assignMaxObjectiveValues(solution);
             return;
         }
+
         int numberOfEdits = selectedMP.size();
         List<Map.Entry<Integer, Double>> list = new ArrayList<Map.Entry<Integer, Double>>(selectedMP.entrySet());
 

@@ -1,6 +1,8 @@
 package us.msu.cse.repair.filterExpression;
 
+import org.eclipse.jdt.core.dom.Name;
 import org.eclipse.jdt.core.dom.Statement;
+import org.eclipse.jdt.core.dom.TypeDeclaration;
 import us.msu.cse.repair.algorithmsExpression.ExpressionPrioritySort;
 import us.msu.cse.repair.astVisitorExpression.AllTypeVisitor;
 import us.msu.cse.repair.astVisitorExpression.ModificationPointVisitor;
@@ -9,6 +11,7 @@ import us.msu.cse.repair.core.parser.SeedStatement;
 import us.msu.cse.repair.core.parser.SeedStatementInfo;
 import us.msu.cse.repair.informationExpression.ExpressionInfo;
 import us.msu.cse.repair.informationExpression.MethClaPacOfExpName;
+import us.msu.cse.repair.toolsExpression.TypeInformation;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -57,6 +60,9 @@ public class DirectIngredientExpressionScreener {
         List<ExpressionInfo> listFinal = new ArrayList<>();
         for (ExpressionInfo e:list) {
             if (!listFinal.contains(e)){
+                //是变量但是没有进行赋值的情况下，我需要进行重新赋值。
+                if ((e.getExpression() instanceof Name)&&(e.getVarType()==null))
+                    TypeInformation.TypeInformation(e);
                 listFinal.add(e);
             }
         }

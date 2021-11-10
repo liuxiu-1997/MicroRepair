@@ -23,21 +23,37 @@ public class AllTypeVisitor extends ASTVisitor {
         this.methClaPacOfExpName = methClaPacOfExpName;
         this.lineAndNodeType = lineAndNodeType;
     }
+
     @Override
     public void preVisit(ASTNode node) {
         /**
          *这里的目的是提取种子语句所在方法的参数信息
          */
         ASTNode curNode = node;
-        while ((curNode!=null)&&(!(curNode instanceof MethodDeclaration))) {
+        while ((curNode != null) && (!(curNode instanceof MethodDeclaration))) {
             curNode = curNode.getParent();
         }
-        if ((curNode instanceof MethodDeclaration)){
-            MethodDeclaration methodDeclaration = (MethodDeclaration)curNode;
-            for (Object obj : methodDeclaration.parameters()) {
-                SingleVariableDeclaration vd = (SingleVariableDeclaration) obj;
-                if (vd != null) {
-                    list.add(new ExpressionInfo(vd.getName(),methClaPacOfExpName,lineAndNodeType,vd.getType(),vd.getName().toString()));
+        if ((curNode != null)) {
+            MethodDeclaration methodDeclaration = (MethodDeclaration) curNode;
+            if (!(methodDeclaration.getName().toString().equals(methClaPacOfExpName.expressionMethodName))) {
+                MethClaPacOfExpName methClaPacOfExpNameMid = new MethClaPacOfExpName();
+                methClaPacOfExpNameMid.setExpressionClassName(methClaPacOfExpNameMid.expressionClassName);
+                methClaPacOfExpNameMid.setExpressionMethodName(methodDeclaration.getName().toString());
+                methClaPacOfExpNameMid.setExpressionPackageName(methClaPacOfExpName.expressionPackageName);
+                for (Object obj : methodDeclaration.parameters()) {
+                    SingleVariableDeclaration vd = (SingleVariableDeclaration) obj;
+                    if (vd != null) {
+                        list.add(new ExpressionInfo(vd.getName(), methClaPacOfExpName, lineAndNodeType, vd.getType(), vd.getName().toString()));
+                    }
+                }
+
+            } else {
+
+                for (Object obj : methodDeclaration.parameters()) {
+                    SingleVariableDeclaration vd = (SingleVariableDeclaration) obj;
+                    if (vd != null) {
+                        list.add(new ExpressionInfo(vd.getName(), methClaPacOfExpName, lineAndNodeType, vd.getType(), vd.getName().toString()));
+                    }
                 }
             }
         }
@@ -71,8 +87,8 @@ public class AllTypeVisitor extends ASTVisitor {
 
     @Override
     public boolean visit(ArrayAccess node) {
-        if(node != null)
-            list.add(new ExpressionInfo(node,methClaPacOfExpName,lineAndNodeType));
+        if (node != null)
+            list.add(new ExpressionInfo(node, methClaPacOfExpName, lineAndNodeType));
         return true;
     }
 
@@ -101,19 +117,19 @@ public class AllTypeVisitor extends ASTVisitor {
 
         Expression expressionLeft = node.getLeftHandSide();
         Expression expressionRight = node.getRightHandSide();
-        if(expressionLeft != null) {
+        if (expressionLeft != null) {
             list.add(new ExpressionInfo(expressionLeft, methClaPacOfExpName, lineAndNodeType));
             if (expressionLeft instanceof Name) {
-                ExpressionInfo expressionInfo = TypeInformation.getTypeInformation((Name) expressionLeft,methClaPacOfExpName,lineAndNodeType);
-                if (expressionInfo!=null)
+                ExpressionInfo expressionInfo = TypeInformation.getTypeInformation((Name) expressionLeft, methClaPacOfExpName, lineAndNodeType);
+                if (expressionInfo != null)
                     list.add(expressionInfo);
             }
         }
-        if(expressionRight !=null) {
+        if (expressionRight != null) {
             list.add(new ExpressionInfo(expressionRight, methClaPacOfExpName, lineAndNodeType));
             if (expressionRight instanceof Name) {
-                ExpressionInfo expressionInfo = TypeInformation.getTypeInformation((Name) expressionRight,methClaPacOfExpName,lineAndNodeType);
-                if (expressionInfo!=null)
+                ExpressionInfo expressionInfo = TypeInformation.getTypeInformation((Name) expressionRight, methClaPacOfExpName, lineAndNodeType);
+                if (expressionInfo != null)
                     list.add(expressionInfo);
             }
         }
@@ -174,9 +190,9 @@ public class AllTypeVisitor extends ASTVisitor {
         Expression expression = node.getExpression();
         if (expression != null) {
             list.add(new ExpressionInfo(expression, methClaPacOfExpName, lineAndNodeType));
-            if (expression instanceof Name){
-                ExpressionInfo expressionInfo = TypeInformation.getTypeInformation((Name) expression,methClaPacOfExpName,lineAndNodeType);
-                if (expressionInfo!=null)
+            if (expression instanceof Name) {
+                ExpressionInfo expressionInfo = TypeInformation.getTypeInformation((Name) expression, methClaPacOfExpName, lineAndNodeType);
+                if (expressionInfo != null)
                     list.add(expressionInfo);
             }
         }
@@ -185,7 +201,7 @@ public class AllTypeVisitor extends ASTVisitor {
             list.add(new ExpressionInfo(expressionElse, methClaPacOfExpName, lineAndNodeType));
             if (expressionElse instanceof Name) {
                 ExpressionInfo expressionInfo = TypeInformation.getTypeInformation((Name) expressionElse, methClaPacOfExpName, lineAndNodeType);
-                if (expressionInfo!=null)
+                if (expressionInfo != null)
                     list.add(expressionInfo);
             }
         }
@@ -193,7 +209,7 @@ public class AllTypeVisitor extends ASTVisitor {
             list.add(new ExpressionInfo(expressionThen, methClaPacOfExpName, lineAndNodeType));
             if (expressionThen instanceof Name) {
                 ExpressionInfo expressionInfo = TypeInformation.getTypeInformation((Name) expressionThen, methClaPacOfExpName, lineAndNodeType);
-                if (expressionInfo!=null)
+                if (expressionInfo != null)
                     list.add(expressionInfo);
             }
         }
@@ -227,11 +243,10 @@ public class AllTypeVisitor extends ASTVisitor {
             list.add(new ExpressionInfo(expression, methClaPacOfExpName, lineAndNodeType));
             if (expression instanceof Name) {
                 ExpressionInfo expressionInfo = TypeInformation.getTypeInformation((Name) expression, methClaPacOfExpName, lineAndNodeType);
-                if (expressionInfo!=null)
+                if (expressionInfo != null)
                     list.add(expressionInfo);
             }
         }
-
 
 
         return true;
@@ -245,10 +260,10 @@ public class AllTypeVisitor extends ASTVisitor {
     @Override
     public boolean visit(EnhancedForStatement node) {
         Expression expression = node.getExpression();
-        if (expression instanceof Name){
-            ExpressionInfo expressionInfo = TypeInformation.getTypeInformation((Name) expression,methClaPacOfExpName,lineAndNodeType);
-            if (expressionInfo!=null)
-                 list.add(expressionInfo);
+        if (expression instanceof Name) {
+            ExpressionInfo expressionInfo = TypeInformation.getTypeInformation((Name) expression, methClaPacOfExpName, lineAndNodeType);
+            if (expressionInfo != null)
+                list.add(expressionInfo);
         }
         return super.visit(node);
     }
@@ -269,10 +284,10 @@ public class AllTypeVisitor extends ASTVisitor {
         Expression expression = node.getExpression();
         if (expression != null) {
             list.add(new ExpressionInfo(expression, methClaPacOfExpName, lineAndNodeType));
-            if (expression instanceof Name){
-                ExpressionInfo expressionInfo = TypeInformation.getTypeInformation((Name) expression,methClaPacOfExpName,lineAndNodeType);
-                if (expressionInfo!=null)
-                  list.add(expressionInfo);
+            if (expression instanceof Name) {
+                ExpressionInfo expressionInfo = TypeInformation.getTypeInformation((Name) expression, methClaPacOfExpName, lineAndNodeType);
+                if (expressionInfo != null)
+                    list.add(expressionInfo);
             }
         }
         return true;
@@ -285,13 +300,12 @@ public class AllTypeVisitor extends ASTVisitor {
 
     @Override
     public boolean visit(FieldAccess node) {
-//        Expression expression = node.getExpression();
-//        if (expression != null)
-            list.add(new ExpressionInfo(node,methClaPacOfExpName,lineAndNodeType));
 
-            ExpressionInfo expressionInfo = TypeInformation.getTypeInformation(node.getName(),methClaPacOfExpName,lineAndNodeType);
-           if (expressionInfo!=null)
-                list.add(expressionInfo);
+        list.add(new ExpressionInfo(node, methClaPacOfExpName, lineAndNodeType));
+
+        ExpressionInfo expressionInfo = TypeInformation.getTypeInformation(node.getName(), methClaPacOfExpName, lineAndNodeType);
+        if (expressionInfo != null)
+            list.add(expressionInfo);
 
         return true;
     }
@@ -299,45 +313,10 @@ public class AllTypeVisitor extends ASTVisitor {
     @Override
     public boolean visit(FieldDeclaration node) {
 
-
-//        String methString=null; //用于存放方法名，确定是否在一个方法最好
-//        ASTNode curNode = node;
-//        while (!(curNode instanceof MethodDeclaration)&&(curNode!=null) ){
-//            curNode = curNode.getParent();
-//        }
-//        if ((curNode != null)){
-//            MethodDeclaration me = (MethodDeclaration) curNode;
-//            methString = me.getName().toString();
-//        }
-//
-//        if (node.getParent() instanceof VariableDeclarationStatement) {
-//            VariableDeclarationStatement vb = (VariableDeclarationStatement) node.getParent();
-//
-//            List list1 = vb.fragments();
-//            String strings = list1.get(0).toString();
-//            String variableStr = null;
-//            int num = strings.indexOf("=");
-//            AST ast = AST.newAST(AST.JLS8);
-//            StringLiteral stringLiteral = ast.newStringLiteral();
-//            if (num > 0) {
-//
-//                variableStr = strings.substring(0, num);
-//                stringLiteral.setLiteralValue(variableStr);
-//                list.add(new ExpressionInfo(stringLiteral, node.getNodeType(), methString, statementClassName, statementPackageName,
-//                        vb.getType(), variableStr));
-//            }else {
-//
-//                variableStr = strings;
-//                stringLiteral.setLiteralValue(variableStr);
-//                list.add(new ExpressionInfo(stringLiteral, node.getNodeType(), methString, statementClassName, statementPackageName,
-//                        vb.getType(), strings));
-//            }
-//
-//        }
         for (Object obj : node.fragments()) {
             VariableDeclarationFragment v = (VariableDeclarationFragment) obj;
             String varName = v.getName().toString();
-            list.add(new ExpressionInfo(v.getName(),methClaPacOfExpName,lineAndNodeType, node.getType(),varName));
+            list.add(new ExpressionInfo(v.getName(), methClaPacOfExpName, lineAndNodeType, node.getType(), varName));
         }
         return true;
     }
@@ -347,7 +326,7 @@ public class AllTypeVisitor extends ASTVisitor {
 
         Expression expression = node.getExpression();
         if (expression != null)
-            list.add(new ExpressionInfo(expression,methClaPacOfExpName,lineAndNodeType));
+            list.add(new ExpressionInfo(expression, methClaPacOfExpName, lineAndNodeType));
 
         return true;
     }
@@ -355,8 +334,38 @@ public class AllTypeVisitor extends ASTVisitor {
     @Override
     public boolean visit(IfStatement node) {
         Expression expression = node.getExpression();
+        if (expression instanceof InfixExpression){
+            Expression expL = ((InfixExpression) expression).getLeftOperand();
+            Expression expR = ((InfixExpression) expression).getRightOperand();
+            if (expL instanceof Name) {
+                ExpressionInfo expressionInfo = TypeInformation.getTypeInformation((Name) expL, methClaPacOfExpName, lineAndNodeType);
+                if (expressionInfo != null)
+                    list.add(expressionInfo);
+            }
+            if (expR instanceof Name) {
+                ExpressionInfo expressionInfo = TypeInformation.getTypeInformation((Name) expR, methClaPacOfExpName, lineAndNodeType);
+                if (expressionInfo != null)
+                    list.add(expressionInfo);
+            }
+        }else if (expression instanceof PrefixExpression){
+            Expression expR = ((PrefixExpression)expression).getOperand();
+            if (expR instanceof Name) {
+                ExpressionInfo expressionInfo = TypeInformation.getTypeInformation((Name) expR, methClaPacOfExpName, lineAndNodeType);
+                if (expressionInfo != null)
+                    list.add(expressionInfo);
+            }
+
+        }else if (expression instanceof PostfixExpression){
+            Expression expL = ((PostfixExpression) expression).getOperand();
+            if (expL instanceof Name) {
+                ExpressionInfo expressionInfo = TypeInformation.getTypeInformation((Name) expL, methClaPacOfExpName, lineAndNodeType);
+                if (expressionInfo != null)
+                    list.add(expressionInfo);
+            }
+        }
+
         if (expression != null)
-            list.add(new ExpressionInfo(expression,methClaPacOfExpName,lineAndNodeType));
+            list.add(new ExpressionInfo(expression, methClaPacOfExpName, lineAndNodeType));
 
         return true;
     }
@@ -369,14 +378,13 @@ public class AllTypeVisitor extends ASTVisitor {
     @Override
     public boolean visit(InfixExpression node) {
 
-
-        Expression expressionLeft = node.getLeftOperand();
-        Expression expressionRight = node.getRightOperand();
-        if (expressionLeft != null && OperatorFilterPreAndIn.ExpressionFilterReturn(expressionLeft))
-            list.add(new ExpressionInfo(expressionLeft,methClaPacOfExpName,lineAndNodeType));
-
-        if (expressionRight != null && OperatorFilterPreAndIn.ExpressionFilterReturn(expressionRight)) {
-            list.add(new ExpressionInfo(expressionRight,methClaPacOfExpName,lineAndNodeType));
+        Expression expL = node.getLeftOperand();
+        Expression expR = node.getRightOperand();
+        if (expL instanceof Name){
+            list.add(new ExpressionInfo(expL, methClaPacOfExpName, lineAndNodeType));
+        }
+        if (expR instanceof Name){
+            list.add(new ExpressionInfo(expR, methClaPacOfExpName, lineAndNodeType));
         }
         return true;
     }
@@ -450,8 +458,8 @@ public class AllTypeVisitor extends ASTVisitor {
         for (SingleVariableDeclaration parameter : parameters) {
             Type parameterType = parameter.getType();
             String parameterName = parameter.getName().toString();
-            list.add(new ExpressionInfo(parameter.getName(),methClaPacOfExpName,lineAndNodeType,
-                    parameterType,parameterName));
+            list.add(new ExpressionInfo(parameter.getName(), methClaPacOfExpName, lineAndNodeType,
+                    parameterType, parameterName));
         }
         return true;
     }
@@ -459,8 +467,8 @@ public class AllTypeVisitor extends ASTVisitor {
     @Override
     public boolean visit(MethodInvocation node) {
         Expression expression = node.getExpression();
-        if (expression!=null && OperatorFilterPreAndIn.ExpressionFilterReturn(expression))
-            list.add(new ExpressionInfo(expression,methClaPacOfExpName,lineAndNodeType));
+        if (expression != null && OperatorFilterPreAndIn.ExpressionFilterReturn(expression))
+            list.add(new ExpressionInfo(expression, methClaPacOfExpName, lineAndNodeType));
         return true;
     }
 
@@ -487,7 +495,8 @@ public class AllTypeVisitor extends ASTVisitor {
     @Override
     public boolean visit(NumberLiteral node) {
 
-        list.add(new ExpressionInfo(node,methClaPacOfExpName,lineAndNodeType));
+
+        list.add(new ExpressionInfo(node, methClaPacOfExpName, lineAndNodeType));
         return super.visit(node);
     }
 
@@ -504,34 +513,37 @@ public class AllTypeVisitor extends ASTVisitor {
     @Override
     public boolean visit(ParenthesizedExpression node) {
 
-        if (node!=null && OperatorFilterPreAndIn.ExpressionFilterReturn(node.getExpression()))
-            list.add(new ExpressionInfo(node.getExpression(),methClaPacOfExpName,lineAndNodeType));
+        if (node != null && OperatorFilterPreAndIn.ExpressionFilterReturn(node.getExpression()))
+            list.add(new ExpressionInfo(node.getExpression(), methClaPacOfExpName, lineAndNodeType));
         return true;
     }
 
     @Override
     public boolean visit(PostfixExpression node) {
-
-        list.add(new ExpressionInfo(node,methClaPacOfExpName,lineAndNodeType));
+        Expression expL = node.getOperand();
+        if (expL instanceof Name){
+            list.add(new ExpressionInfo(expL, methClaPacOfExpName, lineAndNodeType));
+        }
+        list.add(new ExpressionInfo(node, methClaPacOfExpName, lineAndNodeType));
         return true;
     }
 
     @Override
     public boolean visit(PrefixExpression node) {
 
-        list.add(new ExpressionInfo(node,methClaPacOfExpName,lineAndNodeType));
+        list.add(new ExpressionInfo(node, methClaPacOfExpName, lineAndNodeType));
         return true;
     }
 
     //用于变量的提取
     @Override
     public boolean visit(PrimitiveType node) {
-        String methString=null; //用于存放方法名，确定是否在一个方法最好
+        String methString = null; //用于存放方法名，确定是否在一个方法最好
         ASTNode curNode = node;
-        while (!(curNode instanceof MethodDeclaration)&&(curNode!=null) ){
+        while (!(curNode instanceof MethodDeclaration) && (curNode != null)) {
             curNode = curNode.getParent();
         }
-        if ((curNode != null)){
+        if ((curNode != null)) {
             MethodDeclaration me = (MethodDeclaration) curNode;
             methString = me.getName().toString();
         }
@@ -549,13 +561,13 @@ public class AllTypeVisitor extends ASTVisitor {
 
                 variableStr = strings.substring(0, num);
                 stringLiteral.setLiteralValue(variableStr);
-                list.add(new ExpressionInfo(stringLiteral,methClaPacOfExpName,lineAndNodeType,
+                list.add(new ExpressionInfo(stringLiteral, methClaPacOfExpName, lineAndNodeType,
                         vb.getType(), variableStr));
-            }else {
+            } else {
 
                 variableStr = strings;
                 stringLiteral.setLiteralValue(variableStr);
-                list.add(new ExpressionInfo(stringLiteral,methClaPacOfExpName,lineAndNodeType,
+                list.add(new ExpressionInfo(stringLiteral, methClaPacOfExpName, lineAndNodeType,
                         vb.getType(), strings));
             }
 
@@ -579,8 +591,8 @@ public class AllTypeVisitor extends ASTVisitor {
     public boolean visit(ReturnStatement node) {
         Expression expression = node.getExpression();
 //        System.out.println("返回语句"+expression+"与相应的node结点："+node);
-        if (expression!=null)
-           list.add(new ExpressionInfo(expression,methClaPacOfExpName,lineAndNodeType));
+        if (expression != null)
+            list.add(new ExpressionInfo(expression, methClaPacOfExpName, lineAndNodeType));
 
 //        returnStatement = node;
         return true;
@@ -606,7 +618,7 @@ public class AllTypeVisitor extends ASTVisitor {
 
         Expression expression = node.getInitializer();
         if (expression != null)
-            list.add(new ExpressionInfo(expression,methClaPacOfExpName,lineAndNodeType));
+            list.add(new ExpressionInfo(expression, methClaPacOfExpName, lineAndNodeType));
         return true;
     }
 
@@ -657,7 +669,6 @@ public class AllTypeVisitor extends ASTVisitor {
     public boolean visit(TagElement node) {
         return super.visit(node);
     }
-
 
 
     @Override
@@ -736,8 +747,8 @@ public class AllTypeVisitor extends ASTVisitor {
             VariableDeclarationFragment v = (VariableDeclarationFragment) obj;
             Type varType = node.getType();
             String varName = v.getName().toString();
-            list.add(new ExpressionInfo(v.getName(),methClaPacOfExpName,lineAndNodeType,
-                    varType,varName));
+            list.add(new ExpressionInfo(v.getName(), methClaPacOfExpName, lineAndNodeType,
+                    varType, varName));
         }
         return true;
     }
@@ -747,7 +758,7 @@ public class AllTypeVisitor extends ASTVisitor {
 
         Expression expression = node.getInitializer();
         if (expression != null)
-            list.add(new ExpressionInfo(expression,methClaPacOfExpName,lineAndNodeType));
+            list.add(new ExpressionInfo(expression, methClaPacOfExpName, lineAndNodeType));
         return true;
     }
 
@@ -756,7 +767,7 @@ public class AllTypeVisitor extends ASTVisitor {
 
         Expression expression = node.getExpression();
         if (expression != null)
-            list.add(new ExpressionInfo(expression,methClaPacOfExpName,lineAndNodeType));
+            list.add(new ExpressionInfo(expression, methClaPacOfExpName, lineAndNodeType));
         return true;
     }
 
@@ -899,7 +910,6 @@ public class AllTypeVisitor extends ASTVisitor {
     public void endVisit(EnumDeclaration node) {
         super.endVisit(node);
     }
-
 
 
     @Override
@@ -1253,15 +1263,17 @@ public class AllTypeVisitor extends ASTVisitor {
     protected void finalize() throws Throwable {
         super.finalize();
     }
-    public  List<ExpressionInfo> getList(){
+
+    public List<ExpressionInfo> getList() {
 
         display();
         return listfinal;
     }
+
     //此函数目的是为了去重
-    public void display(){
-        for (ExpressionInfo expressionInfo:list){
-            if (!listfinal.contains(expressionInfo)&&(expressionInfo.getExpression().getNodeType()!=ASTNode.NULL_LITERAL)){
+    public void display() {
+        for (ExpressionInfo expressionInfo : list) {
+            if (!listfinal.contains(expressionInfo) && (expressionInfo.getExpression().getNodeType() != ASTNode.NULL_LITERAL)) {
                 listfinal.add(expressionInfo);
             }
         }
