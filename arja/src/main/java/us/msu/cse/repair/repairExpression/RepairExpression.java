@@ -25,7 +25,10 @@ public class RepairExpression {
     public RepairExpression(ModificationPoint mp) {
         this.modificationPoint = mp;
         this.expressionInfo = expressionPriorityMaxSelect.getMaxPriority(modificationPoint.getExpressionInfosIngredients());
-        this.ingredients = new ArrayList<>();
+        if (mp.getIngredients()==null)
+            this.ingredients = new ArrayList<>();
+        else
+            this.ingredients = new ArrayList<>(mp.getIngredients());
     }
 
     public boolean ifRepair() {
@@ -270,7 +273,36 @@ public class RepairExpression {
         ifStatement.setThenStatement(statementThen);
         clearAndSetIngredient(ifStatement);
     }
+//    public boolean methodInvocationRepair(MethodInvocation methodInvocation){
+//        List<Expression> argu = methodInvocation.arguments();
+//        if (argu.size() == 1){
+//            //仅仅能修复参数为一个的函数调用——参数的替换
+//            List<ExpressionInfo> modiIngreExpList = modificationPoint.getExpressionInfosIngredients();
+//            double maxSort = -1;
+//            int mid = -1;
+//            for (int i = 0; i < modiIngreExpList.size(); i++) {
+//                if (Objects.equals(ASTNode.nodeClassForType(argu.get(0).getNodeType()).getSimpleName(),modiIngreExpList.get(i).getExpression().toString())) {
+//                    if (modiIngreExpList.get(i).getPriority() > maxSort) {
+//                        maxSort = modiIngreExpList.get(i).getPriority();
+//                        mid = i;
+//                    }
+//                }
+//            }
+//            if (mid >= 0) {
+//                modiIngreExpList.get(mid).setPriority(-1);
+//                 = ast.newReturnStatement();
+//                Expression expression = (Expression) ASTNode.copySubtree(returnStatement.getAST(), modiIngreExpList.get(mid).getExpression());
+//                returnStatement.setExpression(expression);
+//            }
+//        }
+//        return false;
+//    }
 
+
+    public boolean assignmentRepair(){
+        return false;
+    }
+    
     public void clearAndSetIngredient(Statement s) {
         if (s != null) {
             ingredients.add(s);

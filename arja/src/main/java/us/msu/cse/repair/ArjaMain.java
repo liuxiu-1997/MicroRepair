@@ -27,6 +27,7 @@ public class ArjaMain {
 			args1[7] = "-Ddependences";
 			args1[8] = "/home/bjtucs/program_files/defects4j/framework/projects/lib/junit-4.11.jar";
 
+			System.out.println("输出这是第几个修改的地方:chart_"+i+"_buggy");
 
 			HashMap<String, String> parameterStrs = Interpreter.getParameterStrings(args1);
 			HashMap<String, Object> parameters = Interpreter.getBasicParameterSetting(parameterStrs);

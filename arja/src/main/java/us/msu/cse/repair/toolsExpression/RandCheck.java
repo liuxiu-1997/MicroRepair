@@ -4,23 +4,21 @@ import java.util.BitSet;
 import java.util.Random;
 
 public class RandCheck {
-    public static void randCheck(BitSet bits,int size){
-        Random random =new Random();
-        int flag=-1;
-        int rand = random.nextInt(bits.size()+1);
-        for (int j = 0 ;j < size ; j++) {
+    public static void randCheck(BitSet bits, int size) {
+        Random random = new Random();
+        int flag = 0;
+        int rand = random.nextInt(bits.size() + 1);//最大的数不会到达bit.size()+1
+        for (int j = 0; j < size; j++) {
             if (bits.get(j)) {
-                flag = 1;
+                flag++;
+                if (flag == 2)//一次只去修一个位置
+                    break;
             }
         }
-        if (flag == -1) {
-            for (int i = 0; i < bits.size(); ++i) {
-                if (rand < bits.size() / 3) {
-                    bits.set(i, true);
-                } else {
-                    bits.set(i, false);
-                }
-            }
+        while (flag != 2) {
+            rand = random.nextInt(bits.size() + 1);
+            bits.set(rand, true);
+            flag++;
         }
     }
 
