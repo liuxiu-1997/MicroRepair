@@ -62,7 +62,7 @@ public class DirectIngredientExpressionScreener {
             if (!listFinal.contains(e)){
                 //是变量但是没有进行赋值的情况下，我需要进行重新赋值。
                 if ((e.getExpression() instanceof Name)&&(e.getVarType()==null))
-                    TypeInformation.TypeInformation(e);
+                    TypeInformation.getTypeInformation(e);
                 listFinal.add(e);
             }
         }
@@ -94,9 +94,8 @@ public class DirectIngredientExpressionScreener {
         }
     }
     public boolean TypeFilter(ModificationPoint mp,ExpressionInfo e){
-//        if (mp.getLineAndNodeType().NodeType == e.getLineAndNodeType().NodeType)
             return true;
-//        return false;
+
     }
 
     public boolean LineFilter(ModificationPoint mp,ExpressionInfo e){
@@ -114,9 +113,6 @@ public class DirectIngredientExpressionScreener {
         String expCN = expName.expressionClassName;
 
         if ((Objects.equals(mpMN, expMN))||(Objects.equals(mpCN, expCN))){
-//            System.out.println("DirectingredientExpressionScreener检测行" +
-//                    "验证两者的放吗名与类型是否相等："+
-//                    mpCN+"-"+expCN+"-"+mpMN+"-"+expMN);
             return true;
         }
         return false;

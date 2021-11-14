@@ -87,13 +87,18 @@ public class AllTypeVisitor extends ASTVisitor {
 
     @Override
     public boolean visit(ArrayAccess node) {
-        if (node != null)
-            list.add(new ExpressionInfo(node, methClaPacOfExpName, lineAndNodeType));
+        ExpressionInfo expressionInfo = TypeInformation.getArrayAccessTypeInfo(node);
+        if (expressionInfo!=null){
+            expressionInfo.setMethClaPacOfExpName(methClaPacOfExpName);
+            expressionInfo.setLineAndNodeType(lineAndNodeType);
+            list.add(expressionInfo);
+        }
         return true;
     }
 
     @Override
     public boolean visit(ArrayCreation node) {
+        list.add(new ExpressionInfo(node,methClaPacOfExpName,lineAndNodeType,node.getType(),node.dimensions().toString()));
         return super.visit(node);
     }
 
@@ -169,13 +174,15 @@ public class AllTypeVisitor extends ASTVisitor {
 
     @Override
     public boolean visit(CharacterLiteral node) {
-
-        return super.visit(node);
+        list.add(new ExpressionInfo(node,methClaPacOfExpName,lineAndNodeType));
+        return false;
     }
 
     @Override
     public boolean visit(ClassInstanceCreation node) {
-        return super.visit(node);
+
+        list.add(new ExpressionInfo(node,methClaPacOfExpName,lineAndNodeType,node.getType(),node.toString()));
+        return true;
     }
 
     @Override
@@ -495,7 +502,6 @@ public class AllTypeVisitor extends ASTVisitor {
     @Override
     public boolean visit(NumberLiteral node) {
 
-
         list.add(new ExpressionInfo(node, methClaPacOfExpName, lineAndNodeType));
         return super.visit(node);
     }
@@ -590,16 +596,16 @@ public class AllTypeVisitor extends ASTVisitor {
     @Override
     public boolean visit(ReturnStatement node) {
         Expression expression = node.getExpression();
-//        System.out.println("返回语句"+expression+"与相应的node结点："+node);
         if (expression != null)
             list.add(new ExpressionInfo(expression, methClaPacOfExpName, lineAndNodeType));
-
-//        returnStatement = node;
         return true;
     }
 
     @Override
     public boolean visit(SimpleName node) {
+        ExpressionInfo expressionInfo = TypeInformation.getTypeInformation(node,methClaPacOfExpName,lineAndNodeType);
+        if (expressionInfo!=null)
+           list.add(expressionInfo);
         return super.visit(node);
     }
 
@@ -624,9 +630,8 @@ public class AllTypeVisitor extends ASTVisitor {
 
     @Override
     public boolean visit(StringLiteral node) {
-
-
-        return super.visit(node);
+       list.add(new ExpressionInfo(node,methClaPacOfExpName,lineAndNodeType));
+        return false;
     }
 
     @Override

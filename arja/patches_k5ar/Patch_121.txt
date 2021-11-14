@@ -1,0 +1,59 @@
+1 InsertBefore /home/bjtucs/workspace/apr/benchmarks/defects4j/chart/chart_7_buggy/source/org/jfree/data/time/TimePeriodValues.java 288
+Faulty:
+long e=getDataItem(this.minMiddleIndex).getPeriod().getEnd().getTime();
+Seed:
+if (this.minMiddleIndex != null) long e=getDataItem(this.minMiddleIndex).getPeriod().getEnd().getTime();
+**************************************************
+————————————————————————结束————————————————————————————
+2 Replace /home/bjtucs/workspace/apr/benchmarks/defects4j/chart/chart_7_buggy/source/org/jfree/data/time/TimePeriodValues.java 313
+Faulty:
+if (this.minEndIndex >= 0) {
+  long minEnd=getDataItem(this.minEndIndex).getPeriod().getEnd().getTime();
+  if (end < minEnd) {
+    this.minEndIndex=index;
+  }
+}
+ else {
+  this.minEndIndex=index;
+}
+Seed:
+if (this.minEndIndex == 0) {
+  long minEnd=getDataItem(this.minEndIndex).getPeriod().getEnd().getTime();
+  if (end < minEnd) {
+    this.minEndIndex=index;
+  }
+}
+ else {
+  this.minEndIndex=index;
+}
+**************************************************
+————————————————————————结束————————————————————————————
+3 Replace /home/bjtucs/workspace/apr/benchmarks/defects4j/chart/chart_7_buggy/source/org/jfree/data/time/TimePeriodValues.java 285
+Faulty:
+if (this.minMiddleIndex >= 0) {
+  long s=getDataItem(this.minMiddleIndex).getPeriod().getStart().getTime();
+  long e=getDataItem(this.minMiddleIndex).getPeriod().getEnd().getTime();
+  long minMiddle=s + (e - s) / 2;
+  if (middle < minMiddle) {
+    this.minMiddleIndex=index;
+  }
+}
+ else {
+  this.minMiddleIndex=index;
+}
+Seed:
+if (this.minMiddleIndex == 0) {
+  long s=getDataItem(this.minMiddleIndex).getPeriod().getStart().getTime();
+  long e=getDataItem(this.minMiddleIndex).getPeriod().getEnd().getTime();
+  long minMiddle=s + (e - s) / 2;
+  if (middle < minMiddle) {
+    this.minMiddleIndex=index;
+  }
+}
+ else {
+  this.minMiddleIndex=index;
+}
+**************************************************
+————————————————————————结束————————————————————————————
+Evaluations: 359
+EstimatedTime: 27243

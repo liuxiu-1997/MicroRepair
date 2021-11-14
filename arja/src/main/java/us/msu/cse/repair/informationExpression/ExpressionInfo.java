@@ -1,6 +1,8 @@
 package us.msu.cse.repair.informationExpression;
 
+import org.eclipse.jdt.core.dom.ArrayAccess;
 import org.eclipse.jdt.core.dom.Expression;
+import org.eclipse.jdt.core.dom.SimpleName;
 import org.eclipse.jdt.core.dom.Type;
 
 import java.util.Objects;
@@ -32,31 +34,6 @@ public class ExpressionInfo implements Cloneable{
      * 3.记 3 为返回值
      */
     private int ExpressionType;
-
-    public ExpressionInfo() {
-
-    }
-
-    public int getExpressionType() {
-        return ExpressionType;
-    }
-
-    public void setExpressionType(int expressionType) {
-        ExpressionType = expressionType;
-    }
-
-    public Expression getExpression() {
-        return expression;
-    }
-
-    public Integer getExpressionNodeType() {
-        return expressionNodeType;
-    }
-
-    public String getExpressionStr() {
-        return expressionStr;
-    }
-
     public ExpressionInfo(Expression expression,MethClaPacOfExpName methClaPacOfExpName,LineAndNodeType lineAndNodeType){
         this.expression = expression;
         if (expression != null) {
@@ -78,10 +55,46 @@ public class ExpressionInfo implements Cloneable{
         varTypeStr = varType.toString();
         this.varNameStr = varNameStr;
     }
+    public ExpressionInfo(Expression expression, Type varType, String varNameStr) {
+        this.expression = expression;
+        this.expressionNodeType = expression.getNodeType();
+        this.expressionStr = expression.toString();
+        this.varType = varType;
+        varTypeStr = varType.toString();
+        this.varNameStr = varNameStr;
+    }
+
+    public ExpressionInfo() {
+
+    }
+
+
+    public int getExpressionType() {
+        return ExpressionType;
+    }
+
+    public void setExpressionType(int expressionType) {
+        ExpressionType = expressionType;
+    }
+
+    public Expression getExpression() {
+        return expression;
+    }
+
+    public Integer getExpressionNodeType() {
+        return expressionNodeType;
+    }
+
+    public String getExpressionStr() {
+        return expressionStr;
+    }
 
 
     public Type getVarType() {
-        return varType;
+        if (varType!=null)
+            return varType;
+        else
+            return null;
     }
 
     public void setVarType(Type varType) {

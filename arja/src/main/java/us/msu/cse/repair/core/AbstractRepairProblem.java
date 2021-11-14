@@ -27,6 +27,7 @@ import jmetal.core.Problem;
 import jmetal.metaheuristics.moead.Utils;
 import jmetal.util.Configuration;
 import jmetal.util.JMException;
+import us.msu.cse.repair.astVisitorExpression.ModificationPointRepairVisitor;
 import us.msu.cse.repair.core.compiler.JavaJDKCompiler;
 import us.msu.cse.repair.core.coverage.SeedLineGeneratorProcess;
 import us.msu.cse.repair.core.coverage.TestFilterProcess;
@@ -405,23 +406,8 @@ public abstract class AbstractRepairProblem extends Problem {
 
     void invokeIngredientScreener() throws JMException {
         System.out.println("Ingredient screener starts...");
-//		AbstractIngredientScreener ingredientScreener = IngredientScreenerFactory
-//				.getIngredientScreener(ingredientScreenerName, modificationPoints, seedStatements, ingredientMode);
-//		ingredientScreener.screen();
-//
-//		if (ingredientFilterRule) {
-//			for (ModificationPoint mp : modificationPoints) {
-//				Iterator<Statement> iterator = mp.getIngredients().iterator();
-//				while (iterator.hasNext()) {
-//					Statement seed = iterator.next();
-//					if (IngredientFilterRule.canFiltered(seed, mp))
-//						iterator.remove();
-//				}
-//			}
-//		}
         DirectIngredientExpressionScreener dir = new DirectIngredientExpressionScreener(modificationPoints, seedStatements);
         dir.allocatonExpressionForModificationPoints();
-//		dir.TypeFilter();
         System.out.println("Ingredient screener is finished!");
     }
 
@@ -432,10 +418,6 @@ public abstract class AbstractRepairProblem extends Problem {
         for (int i = 0; i < modificationPoints.size(); i++) {      //操作的初始化就是对于每一个修改点初始化：‘删除’/‘替换’/‘增加’操作,同时,
             ModificationPoint mp = modificationPoints.get(i);       //我还制定了规则来决定这些操作是否保留
             List<String> list = new ArrayList<String>();
-            //				if (manipulationFilterRule) {
-            //			/		if (!ManipulationFilterRule.canFiltered(manipulationName, mp))
-            //				} else
-            //					list.add(manipulationName);
             list.addAll(Arrays.asList(manipulationNames));
             availableManipulations.add(list);
         }
@@ -459,6 +441,8 @@ public abstract class AbstractRepairProblem extends Problem {
             /**
              * 当为特定的语句类型 并且 表达式成分不为空时执行
              */
+            //——————————————————————————————————————————— 修复— ——————————————————————————————————————————————————————————
+            //——————————————————————Ifstatement—WhileStatement—DoWhileStatement—ReturnStatement—————————————————————————-
             if (statement instanceof IfStatement) {
                 boolean mid = repairExpression.ifRepair();
                 while(mid){
@@ -488,6 +472,8 @@ public abstract class AbstractRepairProblem extends Problem {
                     flag=false;
                 }
             }
+            //——————————————————————————————————————————— 修复二 ——————————————————————————————————————————————————————————
+            //———————————————————————————————————强制类型转换、数组调用、变量调用检查——————————————————————————————————————————————-
             for (ExpressionInfo expression : modificationPoint.getModificationPointExpressionInfosList()) {
                 /**
                  * 当修改点部位ifStatement、whileStatement、doWhile时，看是否满足：
@@ -514,6 +500,32 @@ public abstract class AbstractRepairProblem extends Problem {
                         (!SimilarTarTemplateCheck.templateCheck(etem,"FieldAccess"))) {
                     repairExpression.fieldRepair((FieldAccess) etem);
                     modificationPoint.getTemplateBoolean().put(expression.getExpressionStr(), true);
+                    flag = false;
+                }
+            }
+            //——————————————————————————————————————————— 修复三——————————————————————————————————————————————————————————
+            //—————————————————————————————————————对修改点在ASTVisitor上进行修复————————————————————————————————————————————-
+            {
+                //两个修改方式的目的都是为了增加成分，在第二种修改方式中，只要是通过ASTVisitor 进行修改
+                boolean visitorRepairFlag = true;
+                ModificationPointRepairVisitor mpVisitor = new ModificationPointRepairVisitor(modificationPoint);
+                AST ast = AST.newAST(AST.JLS8);
+                List<Statement> ingredientList = new ArrayList<>();
+                while(visitorRepairFlag){
+                    Statement sta = (Statement) ASTNode.copySubtree(ast,statement);
+                    mpVisitor.setRepaired(false);
+                    sta.accept(mpVisitor);
+                    visitorRepairFlag = mpVisitor.isRepaired();
+                    if(visitorRepairFlag){
+                        ingredientList.add(sta);
+                    }
+                }
+                if(ingredientList.size()>0){
+                    if (modificationPoint.getIngredients()==null){
+                        modificationPoint.setIngredients(ingredientList);
+                    }else {
+                        modificationPoint.getIngredients().addAll(ingredientList);
+                    }
                     flag = false;
                 }
 
