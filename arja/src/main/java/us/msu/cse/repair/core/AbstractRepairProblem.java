@@ -376,32 +376,9 @@ public abstract class AbstractRepairProblem extends Problem {
                 ModificationPoint mp = modificationPoints.get(permutation[i]);
                 temp.add(mp);
             }
-
-
             modificationPoints = temp;
         }
         System.out.println("AST parsing is finished!");
-    }
-
-    void invokeLocalVarDetector() {
-        System.out.println("Detection of local variables starts...");
-        LocalVarDetector lvd = new LocalVarDetector(modificationPoints);
-        lvd.detect();
-        System.out.println("Detection of local variables is finished!");
-    }
-
-    void invokeMethodDetector() throws ClassNotFoundException, IOException {
-        System.out.println("Detection of methods starts...");
-        MethodDetector md = new MethodDetector(modificationPoints, declaredClasses, dependences);
-        md.detect();
-        System.out.println("Detection of methods is finished!");
-    }
-
-    void invokeFieldVarDetector() throws ClassNotFoundException, IOException {
-        System.out.println("Detection of fields starts...");
-        FieldVarDetector fvd = new FieldVarDetector(modificationPoints, declaredClasses, dependences);
-        fvd.detect();
-        System.out.println("Detection of fields is finished!");
     }
 
     void invokeIngredientScreener() throws JMException {
@@ -535,6 +512,15 @@ public abstract class AbstractRepairProblem extends Problem {
         }
 
         modificationPoints = tmp;
+        for (ModificationPoint modificationPoint : modificationPoints) {
+            List<ExpressionInfo> list = new ArrayList<>();
+            for (ExpressionInfo e:modificationPoint.getExpressionInfosIngredients()) {
+                if (!list.contains(e)){
+                    list.add(e);
+                }
+            }
+            modificationPoint.setIngredientsExpressionInfo(list);
+        }
         System.out.println("modification-initial of expressionIngredient finish...");
     }
 

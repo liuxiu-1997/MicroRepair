@@ -1,0 +1,16 @@
+1 Replace /home/bjtucs/workspace/apr/benchmarks/defects4j/chart/chart_7_buggy/source/org/jfree/data/time/TimePeriodValues.java 552
+Faulty:
+return this.maxMiddleIndex;
+Seed:
+return maxStartIndex;
+**************************************************
+————————————————————————结束————————————————————————————
+2 InsertBefore /home/bjtucs/workspace/apr/benchmarks/defects4j/chart/chart_7_buggy/source/org/jfree/data/time/TimePeriodValues.java 247
+Faulty:
+updateBounds(item.getPeriod(),this.data.size() - 1);
+Seed:
+if (this.data != null) updateBounds(item.getPeriod(),this.data.size() - 1);
+**************************************************
+————————————————————————结束————————————————————————————
+Evaluations: 949
+EstimatedTime: 154861

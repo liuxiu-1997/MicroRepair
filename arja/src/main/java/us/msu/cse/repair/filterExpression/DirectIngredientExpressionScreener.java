@@ -1,16 +1,18 @@
 package us.msu.cse.repair.filterExpression;
 
+import org.eclipse.jdt.core.dom.CompilationUnit;
 import org.eclipse.jdt.core.dom.Name;
 import org.eclipse.jdt.core.dom.Statement;
-import org.eclipse.jdt.core.dom.TypeDeclaration;
 import us.msu.cse.repair.algorithmsExpression.ExpressionPrioritySort;
-import us.msu.cse.repair.astVisitorExpression.AllTypeVisitor;
+import us.msu.cse.repair.astVisitorExpression.AllTypeVisitorModificationPoint;
+import us.msu.cse.repair.astVisitorExpression.AllTypeVisitorSeedStatement;
 import us.msu.cse.repair.astVisitorExpression.ModificationPointVisitor;
 import us.msu.cse.repair.core.parser.ModificationPoint;
 import us.msu.cse.repair.core.parser.SeedStatement;
 import us.msu.cse.repair.core.parser.SeedStatementInfo;
 import us.msu.cse.repair.informationExpression.ExpressionInfo;
 import us.msu.cse.repair.informationExpression.MethClaPacOfExpName;
+import us.msu.cse.repair.toolsExpression.GetCompilcationUnit;
 import us.msu.cse.repair.toolsExpression.TypeInformation;
 
 import java.util.ArrayList;
@@ -46,10 +48,23 @@ public class DirectIngredientExpressionScreener {
             SeedStatement seedStatement = entry.getKey();
             Statement statement = seedStatement.getStatement();
             List<ExpressionInfo> infoList = null;
-            AllTypeVisitor allTypeVisitor = new AllTypeVisitor(seedStatement.getMethClaPacOfExpName(),seedStatement.getLineAndNodeType());
-            statement.accept(allTypeVisitor);
-            infoList = allTypeVisitor.getList();
+            AllTypeVisitorSeedStatement allTypeVisitorSeedStatement = new AllTypeVisitorSeedStatement(seedStatement.getMethClaPacOfExpName(),seedStatement.getLineAndNodeType());
+            statement.accept(allTypeVisitorSeedStatement);
+            infoList = allTypeVisitorSeedStatement.getList();
             list.addAll(infoList);
+        }
+        /**
+         *  此函数，是编译整个修改点单元
+         */
+        for (ModificationPoint modi:modificationPoints){
+            CompilationUnit compilationUnit = GetCompilcationUnit.getCompilationUnit(modi.getSourceFilePath());
+            if (compilationUnit != null){
+                AllTypeVisitorModificationPoint visitorModificationPoint = new AllTypeVisitorModificationPoint(modi,compilationUnit);
+                compilationUnit.accept(visitorModificationPoint);
+                List<ExpressionInfo> infoList = null;
+                infoList = visitorModificationPoint.getList();
+                list.addAll(infoList);
+            }
         }
     }
 
@@ -61,8 +76,8 @@ public class DirectIngredientExpressionScreener {
         for (ExpressionInfo e:list) {
             if (!listFinal.contains(e)){
                 //是变量但是没有进行赋值的情况下，我需要进行重新赋值。
-                if ((e.getExpression() instanceof Name)&&(e.getVarType()==null))
-                    TypeInformation.getTypeInformation(e);
+//                if ((e.getExpression() instanceof Name)&&(e.getVarType()==null))
+//                    TypeInformation.getTypeInformation(e);
                 listFinal.add(e);
             }
         }
@@ -76,7 +91,7 @@ public class DirectIngredientExpressionScreener {
 
         for (ModificationPoint mp:modificationPoints) {
             List<ExpressionInfo> list = new ArrayList<>();
-            ExpressionPrioritySort expressionPrioritySort = new ExpressionPrioritySort();
+//            ExpressionPrioritySort expressionPrioritySort = new ExpressionPrioritySort();
             for (ExpressionInfo e:expressionInfoList) {
                 boolean boolean1 = TypeFilter(mp,e);
                 boolean boolean2 = LineFilter(mp,e);
@@ -90,7 +105,7 @@ public class DirectIngredientExpressionScreener {
                 }
             }
             mp.setIngredientsExpressionInfo(list);
-            expressionPrioritySort.priorityAllocation(mp,list);
+//            expressionPrioritySort.priorityAllocation(mp,list);
         }
     }
     public boolean TypeFilter(ModificationPoint mp,ExpressionInfo e){

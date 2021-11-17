@@ -1,0 +1,48 @@
+1 Replace /home/bjtucs/workspace/apr/benchmarks/defects4j/math/math_70_buggy/src/main/java/org/apache/commons/math/analysis/solvers/BisectionSolver.java 72
+Faulty:
+return solve(min,max);
+Seed:
+return solve(f,min,max);
+**************************************************
+————————————————————————结束————————————————————————————
+2 Replace /home/bjtucs/workspace/apr/benchmarks/defects4j/math/math_70_buggy/src/main/java/org/apache/commons/math/analysis/solvers/BisectionSolver.java 86
+Faulty:
+while (i < maximalIterationCount) {
+  m=UnivariateRealSolverUtils.midpoint(min,max);
+  fmin=f.value(min);
+  fm=f.value(m);
+  if (fm * fmin > 0.0) {
+    min=m;
+  }
+ else {
+    max=m;
+  }
+  if (Math.abs(max - min) <= absoluteAccuracy) {
+    m=UnivariateRealSolverUtils.midpoint(min,max);
+    setResult(m,i);
+    return m;
+  }
+  ++i;
+}
+Seed:
+while (i != maximalIterationCount) {
+  m=UnivariateRealSolverUtils.midpoint(min,max);
+  fmin=f.value(min);
+  fm=f.value(m);
+  if (fm * fmin > 0.0) {
+    min=m;
+  }
+ else {
+    max=m;
+  }
+  if (Math.abs(max - min) <= absoluteAccuracy) {
+    m=UnivariateRealSolverUtils.midpoint(min,max);
+    setResult(m,i);
+    return m;
+  }
+  ++i;
+}
+**************************************************
+————————————————————————结束————————————————————————————
+Evaluations: 127
+EstimatedTime: 11489

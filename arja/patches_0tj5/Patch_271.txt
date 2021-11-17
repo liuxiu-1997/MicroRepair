@@ -1,0 +1,9 @@
+1 Replace /home/bjtucs/workspace/apr/benchmarks/defects4j/chart/chart_7_buggy/source/org/jfree/data/time/TimePeriodValues.java 552
+Faulty:
+return this.maxMiddleIndex;
+Seed:
+return maxEndIndex;
+**************************************************
+————————————————————————结束————————————————————————————
+Evaluations: 856
+EstimatedTime: 62328

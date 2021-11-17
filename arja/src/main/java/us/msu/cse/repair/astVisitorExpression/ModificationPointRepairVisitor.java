@@ -9,6 +9,7 @@ import us.msu.cse.repair.toolsExpression.TypeInformation;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class ModificationPointRepairVisitor extends ASTVisitor {
     private ModificationPoint mp = null;
@@ -271,7 +272,7 @@ public class ModificationPointRepairVisitor extends ASTVisitor {
 
     @Override
     public boolean visit(InfixExpression node) {
-        if (!isRepaired) {
+        if ((!isRepaired)&&(!(mp.getStatement() instanceof IfStatement))) {
             InfixExpression.Operator operator = node.getOperator();
             List<InfixExpression.Operator> listTDRPM = OperatorInformation.getTDRPM();// * / % + -
             List<InfixExpression.Operator> listLRR = OperatorInformation.getLRR();// << >> >>>
@@ -318,17 +319,6 @@ public class ModificationPointRepairVisitor extends ASTVisitor {
         return false;
     }
 
-
-    @Override
-    public boolean visit(IntersectionType node) {
-        return super.visit(node);
-    }
-
-    @Override
-    public boolean visit(Javadoc node) {
-        return super.visit(node);
-    }
-
     @Override
     public boolean visit(LabeledStatement node) {
         return super.visit(node);
@@ -336,16 +326,6 @@ public class ModificationPointRepairVisitor extends ASTVisitor {
 
     @Override
     public boolean visit(LambdaExpression node) {
-        return super.visit(node);
-    }
-
-    @Override
-    public boolean visit(LineComment node) {
-        return super.visit(node);
-    }
-
-    @Override
-    public boolean visit(MarkerAnnotation node) {
         return super.visit(node);
     }
 
@@ -523,16 +503,6 @@ public class ModificationPointRepairVisitor extends ASTVisitor {
     }
 
     @Override
-    public boolean visit(SimpleType node) {
-        return super.visit(node);
-    }
-
-    @Override
-    public boolean visit(SingleMemberAnnotation node) {
-        return super.visit(node);
-    }
-
-    @Override
     public boolean visit(SingleVariableDeclaration node) {
         return super.visit(node);
     }
@@ -549,26 +519,6 @@ public class ModificationPointRepairVisitor extends ASTVisitor {
                 }
             }
         }
-        return super.visit(node);
-    }
-
-    @Override
-    public boolean visit(SuperConstructorInvocation node) {
-        return super.visit(node);
-    }
-
-    @Override
-    public boolean visit(SuperFieldAccess node) {
-        return super.visit(node);
-    }
-
-    @Override
-    public boolean visit(SuperMethodInvocation node) {
-        return super.visit(node);
-    }
-
-    @Override
-    public boolean visit(SuperMethodReference node) {
         return super.visit(node);
     }
 
@@ -654,16 +604,26 @@ public class ModificationPointRepairVisitor extends ASTVisitor {
 
     @Override
     public boolean visit(VariableDeclarationFragment node) {
+        if ((!isRepaired)&&(node.getInitializer()!=null)) {
+            int nodeType = node.getInitializer().getNodeType();
+            for (ExpressionInfo e : expressionInfoList) {
+                if (nodeType == e.getExpression().getNodeType()) {
+                    boolean flag = TemplateBoolean.templateBooleanCheck(mp, e.getExpression().toString() + "varia");
+                    if (!flag) {
+                        Expression expression = (Expression) ASTNode.copySubtree(node.getAST(), e.getExpression());
+                        node.setInitializer(expression);
+                        mp.getTemplateBoolean().put(e.getExpression().toString() + "varia", true);
+                        isRepaired = true;
+                        return true;
+                    }
+                }
+            }
+        }
         return super.visit(node);
     }
 
     @Override
     public boolean visit(WhileStatement node) {
-        return super.visit(node);
-    }
-
-    @Override
-    public boolean visit(WildcardType node) {
         return super.visit(node);
     }
 

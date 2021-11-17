@@ -1,7 +1,7 @@
 package us.msu.cse.repair.astVisitorExpression;
 
 import org.eclipse.jdt.core.dom.*;
-import org.eclipse.jdt.core.dom.Expression;
+import us.msu.cse.repair.core.parser.ModificationPoint;
 import us.msu.cse.repair.informationExpression.ExpressionInfo;
 import us.msu.cse.repair.informationExpression.LineAndNodeType;
 import us.msu.cse.repair.informationExpression.MethClaPacOfExpName;
@@ -11,17 +11,18 @@ import us.msu.cse.repair.toolsExpression.TypeInformation;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AllTypeVisitor extends ASTVisitor {
-    private IfStatement ifStatement;
-    private List<ExpressionInfo> list = new ArrayList<>();
-    private List<ExpressionInfo> listfinal = new ArrayList<>();
-    private MethClaPacOfExpName methClaPacOfExpName = new MethClaPacOfExpName();
-    private LineAndNodeType lineAndNodeType = new LineAndNodeType();
+public class AllTypeVisitorModificationPoint extends ASTVisitor {
+    private volatile List<ExpressionInfo> list = new ArrayList<>();
+    private volatile List<ExpressionInfo> listfinal = new ArrayList<>();
+    private MethClaPacOfExpName methClaPacOfExpName = null;
+    private LineAndNodeType lineAndNodeType = null;
+    private CompilationUnit compilationUnit = null;
 
 
-    public AllTypeVisitor(MethClaPacOfExpName methClaPacOfExpName, LineAndNodeType lineAndNodeType) {
-        this.methClaPacOfExpName = methClaPacOfExpName;
-        this.lineAndNodeType = lineAndNodeType;
+    public AllTypeVisitorModificationPoint(ModificationPoint mp, CompilationUnit compilationUnit) {
+        this.methClaPacOfExpName = mp.getMethClaPacOfExpName();
+        this.lineAndNodeType = mp.getLineAndNodeType();
+        this.compilationUnit = compilationUnit;
     }
 
     @Override
@@ -43,7 +44,10 @@ public class AllTypeVisitor extends ASTVisitor {
                 for (Object obj : methodDeclaration.parameters()) {
                     SingleVariableDeclaration vd = (SingleVariableDeclaration) obj;
                     if (vd != null) {
-                        list.add(new ExpressionInfo(vd.getName(), methClaPacOfExpName, lineAndNodeType, vd.getType(), vd.getName().toString()));
+
+                        LineAndNodeType lineNode = new LineAndNodeType(vd.getStartPosition(), vd.getNodeType());
+                        list.add(new ExpressionInfo(vd.getName(), methClaPacOfExpName, lineNode, vd.getType(), vd.getName().toString()));
+
                     }
                 }
 
@@ -52,7 +56,8 @@ public class AllTypeVisitor extends ASTVisitor {
                 for (Object obj : methodDeclaration.parameters()) {
                     SingleVariableDeclaration vd = (SingleVariableDeclaration) obj;
                     if (vd != null) {
-                        list.add(new ExpressionInfo(vd.getName(), methClaPacOfExpName, lineAndNodeType, vd.getType(), vd.getName().toString()));
+                        LineAndNodeType lineNode = new LineAndNodeType(vd.getStartPosition(), vd.getNodeType());
+                        list.add(new ExpressionInfo(vd.getName(), methClaPacOfExpName, lineNode, vd.getType(), vd.getName().toString()));
                     }
                 }
             }
@@ -88,9 +93,10 @@ public class AllTypeVisitor extends ASTVisitor {
     @Override
     public boolean visit(ArrayAccess node) {
         ExpressionInfo expressionInfo = TypeInformation.getArrayAccessTypeInfo(node);
-        if (expressionInfo!=null){
+        if (expressionInfo != null) {
             expressionInfo.setMethClaPacOfExpName(methClaPacOfExpName);
-            expressionInfo.setLineAndNodeType(lineAndNodeType);
+            LineAndNodeType lineNode = new LineAndNodeType(node.getStartPosition(), node.getNodeType());
+            expressionInfo.setLineAndNodeType(lineNode);
             list.add(expressionInfo);
         }
         return true;
@@ -98,7 +104,9 @@ public class AllTypeVisitor extends ASTVisitor {
 
     @Override
     public boolean visit(ArrayCreation node) {
-        list.add(new ExpressionInfo(node,methClaPacOfExpName,lineAndNodeType,node.getType(),node.dimensions().toString()));
+
+        LineAndNodeType lineNode = new LineAndNodeType(node.getStartPosition(), node.getNodeType());
+        list.add(new ExpressionInfo(node, methClaPacOfExpName, lineNode, node.getType(), node.dimensions().toString()));
         return super.visit(node);
     }
 
@@ -122,18 +130,19 @@ public class AllTypeVisitor extends ASTVisitor {
 
         Expression expressionLeft = node.getLeftHandSide();
         Expression expressionRight = node.getRightHandSide();
+        LineAndNodeType lineNode = new LineAndNodeType(node.getStartPosition(), node.getNodeType());
         if (expressionLeft != null) {
-            list.add(new ExpressionInfo(expressionLeft, methClaPacOfExpName, lineAndNodeType));
+            list.add(new ExpressionInfo(expressionLeft, methClaPacOfExpName, lineNode));
             if (expressionLeft instanceof Name) {
-                ExpressionInfo expressionInfo = TypeInformation.getTypeInformation((Name) expressionLeft, methClaPacOfExpName, lineAndNodeType);
+                ExpressionInfo expressionInfo = TypeInformation.getTypeInformation((Name) expressionLeft, methClaPacOfExpName, lineNode);
                 if (expressionInfo != null)
                     list.add(expressionInfo);
             }
         }
         if (expressionRight != null) {
-            list.add(new ExpressionInfo(expressionRight, methClaPacOfExpName, lineAndNodeType));
+            list.add(new ExpressionInfo(expressionRight, methClaPacOfExpName, lineNode));
             if (expressionRight instanceof Name) {
-                ExpressionInfo expressionInfo = TypeInformation.getTypeInformation((Name) expressionRight, methClaPacOfExpName, lineAndNodeType);
+                ExpressionInfo expressionInfo = TypeInformation.getTypeInformation((Name) expressionRight, methClaPacOfExpName, lineNode);
                 if (expressionInfo != null)
                     list.add(expressionInfo);
             }
@@ -174,14 +183,15 @@ public class AllTypeVisitor extends ASTVisitor {
 
     @Override
     public boolean visit(CharacterLiteral node) {
-        list.add(new ExpressionInfo(node,methClaPacOfExpName,lineAndNodeType));
+        LineAndNodeType lineNode = new LineAndNodeType(node.getStartPosition(), node.getNodeType());
+        list.add(new ExpressionInfo(node, methClaPacOfExpName, lineNode));
         return false;
     }
 
     @Override
     public boolean visit(ClassInstanceCreation node) {
-
-        list.add(new ExpressionInfo(node,methClaPacOfExpName,lineAndNodeType,node.getType(),node.toString()));
+        LineAndNodeType lineNode = new LineAndNodeType(node.getStartPosition(), node.getNodeType());
+        list.add(new ExpressionInfo(node, methClaPacOfExpName, lineNode, node.getType(), node.toString()));
         return true;
     }
 
@@ -195,27 +205,28 @@ public class AllTypeVisitor extends ASTVisitor {
         Expression expressionElse = node.getElseExpression();
         Expression expressionThen = node.getThenExpression();
         Expression expression = node.getExpression();
+        LineAndNodeType lineNode = new LineAndNodeType(node.getStartPosition(), node.getNodeType());
         if (expression != null) {
-            list.add(new ExpressionInfo(expression, methClaPacOfExpName, lineAndNodeType));
+            list.add(new ExpressionInfo(expression, methClaPacOfExpName, lineNode));
             if (expression instanceof Name) {
-                ExpressionInfo expressionInfo = TypeInformation.getTypeInformation((Name) expression, methClaPacOfExpName, lineAndNodeType);
+                ExpressionInfo expressionInfo = TypeInformation.getTypeInformation((Name) expression, methClaPacOfExpName, lineNode);
                 if (expressionInfo != null)
                     list.add(expressionInfo);
             }
         }
 
         if (expressionElse != null) {
-            list.add(new ExpressionInfo(expressionElse, methClaPacOfExpName, lineAndNodeType));
+            list.add(new ExpressionInfo(expressionElse, methClaPacOfExpName, lineNode));
             if (expressionElse instanceof Name) {
-                ExpressionInfo expressionInfo = TypeInformation.getTypeInformation((Name) expressionElse, methClaPacOfExpName, lineAndNodeType);
+                ExpressionInfo expressionInfo = TypeInformation.getTypeInformation((Name) expressionElse, methClaPacOfExpName, lineNode);
                 if (expressionInfo != null)
                     list.add(expressionInfo);
             }
         }
         if (expressionThen != null) {
-            list.add(new ExpressionInfo(expressionThen, methClaPacOfExpName, lineAndNodeType));
+            list.add(new ExpressionInfo(expressionThen, methClaPacOfExpName, lineNode));
             if (expressionThen instanceof Name) {
-                ExpressionInfo expressionInfo = TypeInformation.getTypeInformation((Name) expressionThen, methClaPacOfExpName, lineAndNodeType);
+                ExpressionInfo expressionInfo = TypeInformation.getTypeInformation((Name) expressionThen, methClaPacOfExpName, lineNode);
                 if (expressionInfo != null)
                     list.add(expressionInfo);
             }
@@ -246,10 +257,11 @@ public class AllTypeVisitor extends ASTVisitor {
     @Override
     public boolean visit(DoStatement node) {
         Expression expression = node.getExpression();
+        LineAndNodeType lineNode = new LineAndNodeType(node.getStartPosition(), node.getNodeType());
         if (expression != null) {
-            list.add(new ExpressionInfo(expression, methClaPacOfExpName, lineAndNodeType));
+            list.add(new ExpressionInfo(expression, methClaPacOfExpName, lineNode));
             if (expression instanceof Name) {
-                ExpressionInfo expressionInfo = TypeInformation.getTypeInformation((Name) expression, methClaPacOfExpName, lineAndNodeType);
+                ExpressionInfo expressionInfo = TypeInformation.getTypeInformation((Name) expression, methClaPacOfExpName, lineNode);
                 if (expressionInfo != null)
                     list.add(expressionInfo);
             }
@@ -267,8 +279,9 @@ public class AllTypeVisitor extends ASTVisitor {
     @Override
     public boolean visit(EnhancedForStatement node) {
         Expression expression = node.getExpression();
+        LineAndNodeType lineNode = new LineAndNodeType(node.getStartPosition(), node.getNodeType());
         if (expression instanceof Name) {
-            ExpressionInfo expressionInfo = TypeInformation.getTypeInformation((Name) expression, methClaPacOfExpName, lineAndNodeType);
+            ExpressionInfo expressionInfo = TypeInformation.getTypeInformation((Name) expression, methClaPacOfExpName, lineNode);
             if (expressionInfo != null)
                 list.add(expressionInfo);
         }
@@ -289,10 +302,11 @@ public class AllTypeVisitor extends ASTVisitor {
     @Override
     public boolean visit(ExpressionMethodReference node) {
         Expression expression = node.getExpression();
+        LineAndNodeType lineNode = new LineAndNodeType(node.getStartPosition(), node.getNodeType());
         if (expression != null) {
-            list.add(new ExpressionInfo(expression, methClaPacOfExpName, lineAndNodeType));
+            list.add(new ExpressionInfo(expression, methClaPacOfExpName, lineNode));
             if (expression instanceof Name) {
-                ExpressionInfo expressionInfo = TypeInformation.getTypeInformation((Name) expression, methClaPacOfExpName, lineAndNodeType);
+                ExpressionInfo expressionInfo = TypeInformation.getTypeInformation((Name) expression, methClaPacOfExpName, lineNode);
                 if (expressionInfo != null)
                     list.add(expressionInfo);
             }
@@ -307,10 +321,10 @@ public class AllTypeVisitor extends ASTVisitor {
 
     @Override
     public boolean visit(FieldAccess node) {
+        LineAndNodeType lineNode = new LineAndNodeType(node.getStartPosition(), node.getNodeType());
+        list.add(new ExpressionInfo(node, methClaPacOfExpName, lineNode));
 
-        list.add(new ExpressionInfo(node, methClaPacOfExpName, lineAndNodeType));
-
-        ExpressionInfo expressionInfo = TypeInformation.getTypeInformation(node.getName(), methClaPacOfExpName, lineAndNodeType);
+        ExpressionInfo expressionInfo = TypeInformation.getTypeInformation(node.getName(), methClaPacOfExpName, lineNode);
         if (expressionInfo != null)
             list.add(expressionInfo);
 
@@ -319,11 +333,11 @@ public class AllTypeVisitor extends ASTVisitor {
 
     @Override
     public boolean visit(FieldDeclaration node) {
-
+        LineAndNodeType lineNode = new LineAndNodeType(node.getStartPosition(), node.getNodeType());
         for (Object obj : node.fragments()) {
             VariableDeclarationFragment v = (VariableDeclarationFragment) obj;
             String varName = v.getName().toString();
-            list.add(new ExpressionInfo(v.getName(), methClaPacOfExpName, lineAndNodeType, node.getType(), varName));
+            list.add(new ExpressionInfo(v.getName(), methClaPacOfExpName, lineNode, node.getType(), varName));
         }
         return true;
     }
@@ -332,8 +346,9 @@ public class AllTypeVisitor extends ASTVisitor {
     public boolean visit(ForStatement node) {
 
         Expression expression = node.getExpression();
+        LineAndNodeType lineNode = new LineAndNodeType(node.getStartPosition(), node.getNodeType());
         if (expression != null)
-            list.add(new ExpressionInfo(expression, methClaPacOfExpName, lineAndNodeType));
+            list.add(new ExpressionInfo(expression, methClaPacOfExpName, lineNode));
 
         return true;
     }
@@ -341,38 +356,38 @@ public class AllTypeVisitor extends ASTVisitor {
     @Override
     public boolean visit(IfStatement node) {
         Expression expression = node.getExpression();
-        if (expression instanceof InfixExpression){
+        String s = "ifexpression" ;
+        LineAndNodeType lineNode = new LineAndNodeType(node.getStartPosition(), node.getNodeType());
+        list.add(new ExpressionInfo(expression,methClaPacOfExpName,lineNode,s));
+        if (expression instanceof InfixExpression) {
             Expression expL = ((InfixExpression) expression).getLeftOperand();
             Expression expR = ((InfixExpression) expression).getRightOperand();
             if (expL instanceof Name) {
-                ExpressionInfo expressionInfo = TypeInformation.getTypeInformation((Name) expL, methClaPacOfExpName, lineAndNodeType);
+                ExpressionInfo expressionInfo = TypeInformation.getTypeInformation((Name) expL, methClaPacOfExpName, lineNode);
                 if (expressionInfo != null)
                     list.add(expressionInfo);
             }
             if (expR instanceof Name) {
-                ExpressionInfo expressionInfo = TypeInformation.getTypeInformation((Name) expR, methClaPacOfExpName, lineAndNodeType);
+                ExpressionInfo expressionInfo = TypeInformation.getTypeInformation((Name) expR, methClaPacOfExpName, lineNode);
                 if (expressionInfo != null)
                     list.add(expressionInfo);
             }
-        }else if (expression instanceof PrefixExpression){
-            Expression expR = ((PrefixExpression)expression).getOperand();
+        } else if (expression instanceof PrefixExpression) {
+            Expression expR = ((PrefixExpression) expression).getOperand();
             if (expR instanceof Name) {
-                ExpressionInfo expressionInfo = TypeInformation.getTypeInformation((Name) expR, methClaPacOfExpName, lineAndNodeType);
+                ExpressionInfo expressionInfo = TypeInformation.getTypeInformation((Name) expR, methClaPacOfExpName, lineNode);
                 if (expressionInfo != null)
                     list.add(expressionInfo);
             }
 
-        }else if (expression instanceof PostfixExpression){
+        } else if (expression instanceof PostfixExpression) {
             Expression expL = ((PostfixExpression) expression).getOperand();
             if (expL instanceof Name) {
-                ExpressionInfo expressionInfo = TypeInformation.getTypeInformation((Name) expL, methClaPacOfExpName, lineAndNodeType);
+                ExpressionInfo expressionInfo = TypeInformation.getTypeInformation((Name) expL, methClaPacOfExpName, lineNode);
                 if (expressionInfo != null)
                     list.add(expressionInfo);
             }
         }
-
-        if (expression != null)
-            list.add(new ExpressionInfo(expression, methClaPacOfExpName, lineAndNodeType));
 
         return true;
     }
@@ -384,14 +399,14 @@ public class AllTypeVisitor extends ASTVisitor {
 
     @Override
     public boolean visit(InfixExpression node) {
-
+        LineAndNodeType lineNode = new LineAndNodeType(node.getStartPosition(), node.getNodeType());
         Expression expL = node.getLeftOperand();
         Expression expR = node.getRightOperand();
-        if (expL instanceof Name){
-            list.add(new ExpressionInfo(expL, methClaPacOfExpName, lineAndNodeType));
+        if (expL instanceof Name) {
+            list.add(new ExpressionInfo(expL, methClaPacOfExpName, lineNode));
         }
-        if (expR instanceof Name){
-            list.add(new ExpressionInfo(expR, methClaPacOfExpName, lineAndNodeType));
+        if (expR instanceof Name) {
+            list.add(new ExpressionInfo(expR, methClaPacOfExpName, lineNode));
         }
         return true;
     }
@@ -460,12 +475,13 @@ public class AllTypeVisitor extends ASTVisitor {
 
     @Override
     public boolean visit(MethodDeclaration node) {
+        LineAndNodeType lineNode = new LineAndNodeType(node.getStartPosition(), node.getNodeType());
         String methodName = node.getName().getFullyQualifiedName();
         List<SingleVariableDeclaration> parameters = node.parameters();
         for (SingleVariableDeclaration parameter : parameters) {
             Type parameterType = parameter.getType();
             String parameterName = parameter.getName().toString();
-            list.add(new ExpressionInfo(parameter.getName(), methClaPacOfExpName, lineAndNodeType,
+            list.add(new ExpressionInfo(parameter.getName(), methClaPacOfExpName, lineNode,
                     parameterType, parameterName));
         }
         return true;
@@ -473,9 +489,12 @@ public class AllTypeVisitor extends ASTVisitor {
 
     @Override
     public boolean visit(MethodInvocation node) {
+
         Expression expression = node.getExpression();
+        LineAndNodeType lineNode = new LineAndNodeType(node.getStartPosition(), node.getNodeType());
+        list.add(new ExpressionInfo(node,methClaPacOfExpName,lineNode,"methodinvocation"));
         if (expression != null && OperatorFilterPreAndIn.ExpressionFilterReturn(expression))
-            list.add(new ExpressionInfo(expression, methClaPacOfExpName, lineAndNodeType));
+            list.add(new ExpressionInfo(expression, methClaPacOfExpName, lineNode));
         return true;
     }
 
@@ -501,8 +520,8 @@ public class AllTypeVisitor extends ASTVisitor {
 
     @Override
     public boolean visit(NumberLiteral node) {
-
-        list.add(new ExpressionInfo(node, methClaPacOfExpName, lineAndNodeType));
+        LineAndNodeType lineNode = new LineAndNodeType(node.getStartPosition(), node.getNodeType());
+        list.add(new ExpressionInfo(node, methClaPacOfExpName, lineNode));
         return super.visit(node);
     }
 
@@ -518,67 +537,34 @@ public class AllTypeVisitor extends ASTVisitor {
 
     @Override
     public boolean visit(ParenthesizedExpression node) {
+        LineAndNodeType lineNode = new LineAndNodeType(node.getStartPosition(), node.getNodeType());
 
         if (node != null && OperatorFilterPreAndIn.ExpressionFilterReturn(node.getExpression()))
-            list.add(new ExpressionInfo(node.getExpression(), methClaPacOfExpName, lineAndNodeType));
+            list.add(new ExpressionInfo(node.getExpression(), methClaPacOfExpName, lineNode));
         return true;
     }
 
     @Override
     public boolean visit(PostfixExpression node) {
+        LineAndNodeType lineNode = new LineAndNodeType(node.getStartPosition(), node.getNodeType());
         Expression expL = node.getOperand();
-        if (expL instanceof Name){
-            list.add(new ExpressionInfo(expL, methClaPacOfExpName, lineAndNodeType));
+        if (expL instanceof Name) {
+            list.add(new ExpressionInfo(expL, methClaPacOfExpName, lineNode));
         }
-        list.add(new ExpressionInfo(node, methClaPacOfExpName, lineAndNodeType));
+        list.add(new ExpressionInfo(node, methClaPacOfExpName, lineNode));
         return true;
     }
 
     @Override
     public boolean visit(PrefixExpression node) {
-
-        list.add(new ExpressionInfo(node, methClaPacOfExpName, lineAndNodeType));
+        LineAndNodeType lineNode = new LineAndNodeType(node.getStartPosition(), node.getNodeType());
+        list.add(new ExpressionInfo(node, methClaPacOfExpName, lineNode));
         return true;
     }
 
     //用于变量的提取
     @Override
     public boolean visit(PrimitiveType node) {
-        String methString = null; //用于存放方法名，确定是否在一个方法最好
-        ASTNode curNode = node;
-        while (!(curNode instanceof MethodDeclaration) && (curNode != null)) {
-            curNode = curNode.getParent();
-        }
-        if ((curNode != null)) {
-            MethodDeclaration me = (MethodDeclaration) curNode;
-            methString = me.getName().toString();
-        }
-
-        if (node.getParent() instanceof VariableDeclarationStatement) {
-            VariableDeclarationStatement vb = (VariableDeclarationStatement) node.getParent();
-
-            List list1 = vb.fragments();
-            String strings = list1.get(0).toString();
-            String variableStr = null;
-            int num = strings.indexOf("=");
-            AST ast = AST.newAST(AST.JLS8);
-            StringLiteral stringLiteral = ast.newStringLiteral();
-            if (num > 0) {
-
-                variableStr = strings.substring(0, num);
-                stringLiteral.setLiteralValue(variableStr);
-                list.add(new ExpressionInfo(stringLiteral, methClaPacOfExpName, lineAndNodeType,
-                        vb.getType(), variableStr));
-            } else {
-
-                variableStr = strings;
-                stringLiteral.setLiteralValue(variableStr);
-                list.add(new ExpressionInfo(stringLiteral, methClaPacOfExpName, lineAndNodeType,
-                        vb.getType(), strings));
-            }
-
-        }
-
         return super.visit(node);
     }
 
@@ -595,17 +581,19 @@ public class AllTypeVisitor extends ASTVisitor {
 
     @Override
     public boolean visit(ReturnStatement node) {
+        LineAndNodeType lineNode = new LineAndNodeType(node.getStartPosition(), node.getNodeType());
         Expression expression = node.getExpression();
         if (expression != null)
-            list.add(new ExpressionInfo(expression, methClaPacOfExpName, lineAndNodeType));
+            list.add(new ExpressionInfo(expression, methClaPacOfExpName, lineNode));
         return true;
     }
 
     @Override
     public boolean visit(SimpleName node) {
-        ExpressionInfo expressionInfo = TypeInformation.getTypeInformation(node,methClaPacOfExpName,lineAndNodeType);
-        if (expressionInfo!=null)
-           list.add(expressionInfo);
+        LineAndNodeType lineNode = new LineAndNodeType(node.getStartPosition(), node.getNodeType());
+        ExpressionInfo expressionInfo = TypeInformation.getTypeInformation(node, methClaPacOfExpName, lineNode);
+        if (expressionInfo != null)
+            list.add(expressionInfo);
         return super.visit(node);
     }
 
@@ -621,16 +609,17 @@ public class AllTypeVisitor extends ASTVisitor {
 
     @Override
     public boolean visit(SingleVariableDeclaration node) {
-
+        LineAndNodeType lineNode = new LineAndNodeType(node.getStartPosition(), node.getNodeType());
         Expression expression = node.getInitializer();
         if (expression != null)
-            list.add(new ExpressionInfo(expression, methClaPacOfExpName, lineAndNodeType));
+            list.add(new ExpressionInfo(expression, methClaPacOfExpName, lineNode));
         return true;
     }
 
     @Override
     public boolean visit(StringLiteral node) {
-       list.add(new ExpressionInfo(node,methClaPacOfExpName,lineAndNodeType));
+        LineAndNodeType lineNode = new LineAndNodeType(node.getStartPosition(), node.getNodeType());
+        list.add(new ExpressionInfo(node, methClaPacOfExpName, lineNode));
         return false;
     }
 
@@ -748,11 +737,12 @@ public class AllTypeVisitor extends ASTVisitor {
 
     @Override
     public boolean visit(VariableDeclarationStatement node) {
+        LineAndNodeType lineNode = new LineAndNodeType(node.getStartPosition(), node.getNodeType());
         for (Object obj : node.fragments()) {
             VariableDeclarationFragment v = (VariableDeclarationFragment) obj;
             Type varType = node.getType();
             String varName = v.getName().toString();
-            list.add(new ExpressionInfo(v.getName(), methClaPacOfExpName, lineAndNodeType,
+            list.add(new ExpressionInfo(v.getName(), methClaPacOfExpName, lineNode,
                     varType, varName));
         }
         return true;
@@ -760,19 +750,19 @@ public class AllTypeVisitor extends ASTVisitor {
 
     @Override
     public boolean visit(VariableDeclarationFragment node) {
-
+        LineAndNodeType lineNode = new LineAndNodeType(node.getStartPosition(), node.getNodeType());
         Expression expression = node.getInitializer();
         if (expression != null)
-            list.add(new ExpressionInfo(expression, methClaPacOfExpName, lineAndNodeType));
+            list.add(new ExpressionInfo(expression, methClaPacOfExpName, lineNode));
         return true;
     }
 
     @Override
     public boolean visit(WhileStatement node) {
-
+        LineAndNodeType lineNode = new LineAndNodeType(node.getStartPosition(), node.getNodeType());
         Expression expression = node.getExpression();
         if (expression != null)
-            list.add(new ExpressionInfo(expression, methClaPacOfExpName, lineAndNodeType));
+            list.add(new ExpressionInfo(expression, methClaPacOfExpName, lineNode));
         return true;
     }
 
@@ -780,497 +770,13 @@ public class AllTypeVisitor extends ASTVisitor {
     public boolean visit(WildcardType node) {
         return super.visit(node);
     }
-
-    @Override
-    public void endVisit(AnnotationTypeDeclaration node) {
-        super.endVisit(node);
-    }
-
-    @Override
-    public void endVisit(AnnotationTypeMemberDeclaration node) {
-        super.endVisit(node);
-    }
-
-    @Override
-    public void endVisit(AnonymousClassDeclaration node) {
-        super.endVisit(node);
-    }
-
-    @Override
-    public void endVisit(ArrayAccess node) {
-        super.endVisit(node);
-    }
-
-    @Override
-    public void endVisit(ArrayCreation node) {
-        super.endVisit(node);
-    }
-
-    @Override
-    public void endVisit(ArrayInitializer node) {
-        super.endVisit(node);
-    }
-
-    @Override
-    public void endVisit(ArrayType node) {
-        super.endVisit(node);
-    }
-
-    @Override
-    public void endVisit(AssertStatement node) {
-        super.endVisit(node);
-    }
-
-    @Override
-    public void endVisit(Assignment node) {
-        super.endVisit(node);
-    }
-
-    @Override
-    public void endVisit(Block node) {
-        super.endVisit(node);
-    }
-
-    @Override
-    public void endVisit(BlockComment node) {
-        super.endVisit(node);
-    }
-
-    @Override
-    public void endVisit(BooleanLiteral node) {
-        super.endVisit(node);
-    }
-
-    @Override
-    public void endVisit(BreakStatement node) {
-        super.endVisit(node);
-    }
-
-    @Override
-    public void endVisit(CastExpression node) {
-        super.endVisit(node);
-    }
-
-    @Override
-    public void endVisit(CatchClause node) {
-        super.endVisit(node);
-    }
-
-    @Override
-    public void endVisit(CharacterLiteral node) {
-        super.endVisit(node);
-    }
-
-    @Override
-    public void endVisit(ClassInstanceCreation node) {
-        super.endVisit(node);
-    }
-
-    @Override
-    public void endVisit(CompilationUnit node) {
-        super.endVisit(node);
-    }
-
-    @Override
-    public void endVisit(ConditionalExpression node) {
-        super.endVisit(node);
-    }
-
-    @Override
-    public void endVisit(ConstructorInvocation node) {
-        super.endVisit(node);
-    }
-
-    @Override
-    public void endVisit(ContinueStatement node) {
-        super.endVisit(node);
-    }
-
-    @Override
-    public void endVisit(CreationReference node) {
-        super.endVisit(node);
-    }
-
-    @Override
-    public void endVisit(DoStatement node) {
-        super.endVisit(node);
-    }
-
-    @Override
-    public void endVisit(EmptyStatement node) {
-        super.endVisit(node);
-    }
-
-    @Override
-    public void endVisit(EnhancedForStatement node) {
-        super.endVisit(node);
-    }
-
-    @Override
-    public void endVisit(EnumConstantDeclaration node) {
-        super.endVisit(node);
-    }
-
-    @Override
-    public void endVisit(EnumDeclaration node) {
-        super.endVisit(node);
-    }
-
-
-    @Override
-    public void endVisit(ExpressionMethodReference node) {
-        super.endVisit(node);
-    }
-
-    @Override
-    public void endVisit(ExpressionStatement node) {
-        super.endVisit(node);
-    }
-
-    @Override
-    public void endVisit(Dimension node) {
-        super.endVisit(node);
-    }
-
-    @Override
-    public void endVisit(FieldAccess node) {
-        super.endVisit(node);
-    }
-
-    @Override
-    public void endVisit(FieldDeclaration node) {
-        super.endVisit(node);
-    }
-
-    @Override
-    public void endVisit(ForStatement node) {
-        super.endVisit(node);
-    }
-
-    @Override
-    public void endVisit(IfStatement node) {
-        super.endVisit(node);
-    }
-
-    @Override
-    public void endVisit(ImportDeclaration node) {
-        super.endVisit(node);
-    }
-
-    @Override
-    public void endVisit(InfixExpression node) {
-        super.endVisit(node);
-    }
-
-    @Override
-    public void endVisit(InstanceofExpression node) {
-        super.endVisit(node);
-    }
-
-    @Override
-    public void endVisit(Initializer node) {
-        super.endVisit(node);
-    }
-
-    @Override
-    public void endVisit(Javadoc node) {
-        super.endVisit(node);
-    }
-
-    @Override
-    public void endVisit(LabeledStatement node) {
-        super.endVisit(node);
-    }
-
-    @Override
-    public void endVisit(LambdaExpression node) {
-        super.endVisit(node);
-    }
-
-    @Override
-    public void endVisit(LineComment node) {
-        super.endVisit(node);
-    }
-
-    @Override
-    public void endVisit(MarkerAnnotation node) {
-        super.endVisit(node);
-    }
-
-    @Override
-    public void endVisit(MemberRef node) {
-        super.endVisit(node);
-    }
-
-    @Override
-    public void endVisit(MemberValuePair node) {
-        super.endVisit(node);
-    }
-
-    @Override
-    public void endVisit(MethodRef node) {
-        super.endVisit(node);
-    }
-
-    @Override
-    public void endVisit(MethodRefParameter node) {
-        super.endVisit(node);
-    }
-
-    @Override
-    public void endVisit(MethodDeclaration node) {
-        super.endVisit(node);
-    }
-
-    @Override
-    public void endVisit(MethodInvocation node) {
-        super.endVisit(node);
-    }
-
-    @Override
-    public void endVisit(Modifier node) {
-        super.endVisit(node);
-    }
-
-
-    @Override
-    public void endVisit(NameQualifiedType node) {
-        super.endVisit(node);
-    }
-
-    @Override
-    public void endVisit(NormalAnnotation node) {
-        super.endVisit(node);
-    }
-
-    @Override
-    public void endVisit(NullLiteral node) {
-        super.endVisit(node);
-    }
-
-    @Override
-    public void endVisit(NumberLiteral node) {
-        super.endVisit(node);
-    }
-
-    @Override
-    public void endVisit(PackageDeclaration node) {
-        super.endVisit(node);
-    }
-
-    @Override
-    public void endVisit(ParameterizedType node) {
-        super.endVisit(node);
-    }
-
-    @Override
-    public void endVisit(ParenthesizedExpression node) {
-        super.endVisit(node);
-    }
-
-    @Override
-    public void endVisit(PostfixExpression node) {
-        super.endVisit(node);
-    }
-
-    @Override
-    public void endVisit(PrefixExpression node) {
-        super.endVisit(node);
-    }
-
-    @Override
-    public void endVisit(PrimitiveType node) {
-        super.endVisit(node);
-    }
-
-    @Override
-    public void endVisit(QualifiedName node) {
-        super.endVisit(node);
-    }
-
-    @Override
-    public void endVisit(QualifiedType node) {
-        super.endVisit(node);
-    }
-
-    @Override
-    public void endVisit(ReturnStatement node) {
-        super.endVisit(node);
-    }
-
-    @Override
-    public void endVisit(SimpleName node) {
-        super.endVisit(node);
-    }
-
-    @Override
-    public void endVisit(SimpleType node) {
-        super.endVisit(node);
-    }
-
-    @Override
-    public void endVisit(SingleMemberAnnotation node) {
-        super.endVisit(node);
-    }
-
-    @Override
-    public void endVisit(SingleVariableDeclaration node) {
-        super.endVisit(node);
-    }
-
-    @Override
-    public void endVisit(StringLiteral node) {
-        super.endVisit(node);
-    }
-
-    @Override
-    public void endVisit(SuperConstructorInvocation node) {
-        super.endVisit(node);
-    }
-
-    @Override
-    public void endVisit(SuperFieldAccess node) {
-        super.endVisit(node);
-    }
-
-    @Override
-    public void endVisit(SuperMethodInvocation node) {
-        super.endVisit(node);
-    }
-
-    @Override
-    public void endVisit(SuperMethodReference node) {
-        super.endVisit(node);
-    }
-
-    @Override
-    public void endVisit(SwitchCase node) {
-        super.endVisit(node);
-    }
-
-    @Override
-    public void endVisit(SwitchStatement node) {
-        super.endVisit(node);
-    }
-
-    @Override
-    public void endVisit(SynchronizedStatement node) {
-        super.endVisit(node);
-    }
-
-    @Override
-    public void endVisit(TagElement node) {
-        super.endVisit(node);
-    }
-
-
-    @Override
-    public void endVisit(TextElement node) {
-        super.endVisit(node);
-    }
-
-    @Override
-    public void endVisit(ThisExpression node) {
-        super.endVisit(node);
-    }
-
-    @Override
-    public void endVisit(ThrowStatement node) {
-        super.endVisit(node);
-    }
-
-    @Override
-    public void endVisit(TryStatement node) {
-        super.endVisit(node);
-    }
-
-    @Override
-    public void endVisit(TypeDeclaration node) {
-        super.endVisit(node);
-    }
-
-    @Override
-    public void endVisit(TypeDeclarationStatement node) {
-        super.endVisit(node);
-    }
-
-    @Override
-    public void endVisit(TypeLiteral node) {
-        super.endVisit(node);
-    }
-
-    @Override
-    public void endVisit(TypeMethodReference node) {
-        super.endVisit(node);
-    }
-
-    @Override
-    public void endVisit(TypeParameter node) {
-        super.endVisit(node);
-    }
-
-    @Override
-    public void endVisit(UnionType node) {
-        super.endVisit(node);
-    }
-
-    @Override
-    public void endVisit(IntersectionType node) {
-        super.endVisit(node);
-    }
-
-    @Override
-    public void endVisit(VariableDeclarationExpression node) {
-        super.endVisit(node);
-    }
-
-    @Override
-    public void endVisit(VariableDeclarationStatement node) {
-        super.endVisit(node);
-    }
-
-    @Override
-    public void endVisit(VariableDeclarationFragment node) {
-        super.endVisit(node);
-    }
-
-    @Override
-    public void endVisit(WhileStatement node) {
-        super.endVisit(node);
-    }
-
-    @Override
-    public void endVisit(WildcardType node) {
-        super.endVisit(node);
-    }
-
-    @Override
-    public int hashCode() {
-        return super.hashCode();
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        return super.equals(obj);
-    }
-
     @Override
     protected Object clone() throws CloneNotSupportedException {
         return super.clone();
     }
 
-    @Override
-    public String toString() {
-        return super.toString();
-    }
-
-    @Override
-    protected void finalize() throws Throwable {
-        super.finalize();
-    }
 
     public List<ExpressionInfo> getList() {
-
         display();
         return listfinal;
     }
@@ -1283,6 +789,4 @@ public class AllTypeVisitor extends ASTVisitor {
             }
         }
     }
-
 }
-

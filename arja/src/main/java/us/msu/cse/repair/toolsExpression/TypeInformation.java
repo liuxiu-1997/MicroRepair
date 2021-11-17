@@ -30,34 +30,38 @@ public class TypeInformation {
                 }
                 //————————————————方法声明———2.方法的函数体———————————————————————————————————————————————
                 Block block = methodDeclaration.getBody();
-                List stL = block.statements();
-                for (Object o : stL) {
-                    Statement statement = (Statement) o;
-                    if (statement instanceof VariableDeclarationStatement) {
-                        VariableDeclarationStatement vb = (VariableDeclarationStatement) statement;
-                        String strings = o.toString();
-                        int num = strings.indexOf("=");
-                        if (num > 0)
-                            strings = strings.substring(0, num);
-                        if (strings.equals(e.toString())) {
-                            return new ExpressionInfo(e, mp.getMethClaPacOfExpName(), mp.getLineAndNodeType(), vb.getType(), strings);
+                if (block!=null) {
+                    List stL = block.statements();
+                    for (Object o : stL) {
+                        Statement statement = (Statement) o;
+                        if (statement instanceof VariableDeclarationStatement) {
+                            VariableDeclarationStatement vb = (VariableDeclarationStatement) statement;
+                            String strings = o.toString();
+                            int num = strings.indexOf("=");
+                            if (num > 0)
+                                strings = strings.substring(0, num);
+                            if (strings.equals(e.toString())) {
+                                return new ExpressionInfo(e, mp.getMethClaPacOfExpName(), mp.getLineAndNodeType(), vb.getType(), strings);
+                            }
                         }
                     }
                 }
             } else if (curNode instanceof Block) {
                 Block td = (Block) curNode;
-                List stL = td.statements();
-                for (Object o : stL) {
-                    Statement statement = (Statement) o;
-                    if (statement instanceof VariableDeclarationStatement) {
-                        VariableDeclarationStatement vb = (VariableDeclarationStatement) statement;
-                        List list = vb.fragments();
-                        String strings = list.get(0).toString();
-                        int num = strings.indexOf("=");
-                        if (num > 0)
-                            strings = strings.substring(0, num);
-                        if (strings.equals(e.toString())) {
-                            return new ExpressionInfo(e, mp.getMethClaPacOfExpName(), mp.getLineAndNodeType(), vb.getType(), strings);
+                if (td!=null) {
+                    List stL = td.statements();
+                    for (Object o : stL) {
+                        Statement statement = (Statement) o;
+                        if (statement instanceof VariableDeclarationStatement) {
+                            VariableDeclarationStatement vb = (VariableDeclarationStatement) statement;
+                            List list = vb.fragments();
+                            String strings = list.get(0).toString();
+                            int num = strings.indexOf("=");
+                            if (num > 0)
+                                strings = strings.substring(0, num);
+                            if (strings.equals(e.toString())) {
+                                return new ExpressionInfo(e, mp.getMethClaPacOfExpName(), mp.getLineAndNodeType(), vb.getType(), strings);
+                            }
                         }
                     }
                 }
@@ -75,7 +79,7 @@ public class TypeInformation {
                         }
                     }
                 }
-            }else if (curNode instanceof VariableDeclarationStatement){
+            } else if (curNode instanceof VariableDeclarationStatement) {
                 VariableDeclarationStatement vb = (VariableDeclarationStatement) curNode;
                 List list = vb.fragments();
                 String strings = list.get(0).toString();
@@ -109,17 +113,19 @@ public class TypeInformation {
                 }
                 //————————————————方法声明———2.方法的函数体———————————————————————————————————————————————
                 Block block = methodDeclaration.getBody();
-                List stL = block.statements();
-                for (Object o : stL) {
-                    Statement statement = (Statement) o;
-                    if (statement instanceof VariableDeclarationStatement) {
-                        VariableDeclarationStatement vb = (VariableDeclarationStatement) statement;
-                        String strings = o.toString();
-                        int num = strings.indexOf("=");
-                        if (num > 0)
-                            strings = strings.substring(0, num);
-                        if (strings.equals(e.toString())) {
-                            return new ExpressionInfo(e,methClaPacOfExpName, lineAndNodeType, vb.getType(), strings);
+                if (block != null) {
+                    List stL = block.statements();
+                    for (Object o : stL) {
+                        Statement statement = (Statement) o;
+                        if (statement instanceof VariableDeclarationStatement) {
+                            VariableDeclarationStatement vb = (VariableDeclarationStatement) statement;
+                            String strings = o.toString();
+                            int num = strings.indexOf("=");
+                            if (num > 0)
+                                strings = strings.substring(0, num);
+                            if (strings.equals(e.toString())) {
+                                return new ExpressionInfo(e, methClaPacOfExpName, lineAndNodeType, vb.getType(), strings);
+                            }
                         }
                     }
                 }
@@ -136,7 +142,7 @@ public class TypeInformation {
                         if (num > 0)
                             strings = strings.substring(0, num);
                         if (strings.equals(e.toString())) {
-                            return new ExpressionInfo(e,methClaPacOfExpName, lineAndNodeType, vb.getType(), strings);
+                            return new ExpressionInfo(e, methClaPacOfExpName, lineAndNodeType, vb.getType(), strings);
                         }
                     }
                 }
@@ -150,11 +156,11 @@ public class TypeInformation {
                         if (num > 0)
                             strings = strings.substring(0, num);
                         if (strings.equals(e.toString())) {
-                            return new ExpressionInfo(e,methClaPacOfExpName, lineAndNodeType, f.getType(), strings);
+                            return new ExpressionInfo(e, methClaPacOfExpName, lineAndNodeType, f.getType(), strings);
                         }
                     }
                 }
-            }else if (curNode instanceof VariableDeclarationStatement){
+            } else if (curNode instanceof VariableDeclarationStatement) {
                 VariableDeclarationStatement vb = (VariableDeclarationStatement) curNode;
                 List list = vb.fragments();
                 String strings = list.get(0).toString();
@@ -251,7 +257,7 @@ public class TypeInformation {
                         }
                     }
                 }
-            }else if (curNode instanceof VariableDeclarationStatement){
+            } else if (curNode instanceof VariableDeclarationStatement) {
                 VariableDeclarationStatement vb = (VariableDeclarationStatement) curNode;
                 List list = vb.fragments();
                 String strings = list.get(0).toString();
@@ -351,7 +357,7 @@ public class TypeInformation {
                         }
                     }
                 }
-            }else if (cur instanceof VariableDeclarationStatement){
+            } else if (cur instanceof VariableDeclarationStatement) {
                 VariableDeclarationStatement vb = (VariableDeclarationStatement) cur;
                 List list = vb.fragments();
                 String strings = list.get(0).toString();
@@ -366,32 +372,33 @@ public class TypeInformation {
         }
         return null;
     }
+
     //尽量不用，因为他的成本代价比较高
-    public static ExpressionInfo getSourceVariable(String sourceFilePath,String nameStr){
-        File file=new File(sourceFilePath);
-        ExpressionInfo expressionInfo  = new ExpressionInfo();
+    public static ExpressionInfo getSourceVariable(String sourceFilePath, String nameStr) {
+        File file = new File(sourceFilePath);
+        ExpressionInfo expressionInfo = new ExpressionInfo();
         try {
-            FileInputStream in=new FileInputStream(file);
+            FileInputStream in = new FileInputStream(file);
             // size  为字串的长度 ，这里一次性读完
-            int size=in.available();
-            byte[] buffer=new byte[size];
+            int size = in.available();
+            byte[] buffer = new byte[size];
             in.read(buffer);
             in.close();
-            String str=new String(buffer,"GB2312");
+            String str = new String(buffer, "GB2312");
 
             ASTParser astParser = ASTParser.newParser(AST.JLS8);
             astParser.setKind(ASTParser.K_COMPILATION_UNIT);
             astParser.setResolveBindings(true);
             astParser.setStatementsRecovery(true);
             astParser.setSource(str.toCharArray());
-            CompilationUnit compilationUnit = (CompilationUnit)astParser.createAST(null);
+            CompilationUnit compilationUnit = (CompilationUnit) astParser.createAST(null);
 
-            GetVariableVisitor getVariableVisitor = new GetVariableVisitor(nameStr,expressionInfo);
+            GetVariableVisitor getVariableVisitor = new GetVariableVisitor(nameStr, expressionInfo);
             compilationUnit.accept(getVariableVisitor);
         } catch (IOException e) {
             e.printStackTrace();
         }
-        if (expressionInfo.getExpression()!=null){
+        if (expressionInfo.getExpression() != null) {
             return expressionInfo;
         } else
             return null;

@@ -55,6 +55,16 @@ public class ExpressionInfo implements Cloneable{
         varTypeStr = varType.toString();
         this.varNameStr = varNameStr;
     }
+    //有时候对于一些语句，真的 是没有类型，但是我需要一位进行标记;
+    //利用varNameStr进行标记
+    public ExpressionInfo(Expression expression, MethClaPacOfExpName methClaPacOfExpName,LineAndNodeType lineAndNodeType,String varNameStr) {
+        this.expression = expression;
+        this.expressionNodeType = expression.getNodeType();
+        this.expressionStr = expression.toString();
+        this.methClaPacOfExpName = methClaPacOfExpName;
+        this.lineAndNodeType = lineAndNodeType;
+        this.varNameStr = varNameStr;
+    }
     public ExpressionInfo(Expression expression, Type varType, String varNameStr) {
         this.expression = expression;
         this.expressionNodeType = expression.getNodeType();
@@ -153,13 +163,16 @@ public class ExpressionInfo implements Cloneable{
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ExpressionInfo that = (ExpressionInfo) o;
-        if ((((ExpressionInfo) o).expressionStr!=null)&&(expressionStr!=null)) {
-            if ((that.varTypeStr != null) && (varTypeStr != null)) {
-                return (Objects.equals(expressionStr, that.expressionStr) || (Objects.equals(varTypeStr, that.varTypeStr) && Objects.equals(varType.toString(), that.varType.toString())));
-            }
-            return Objects.equals(expressionStr, that.expressionStr);
-        }
-        return false;
+//        if ((((ExpressionInfo) o).expressionStr!=null)&&(expressionStr!=null)) {
+//            if ((that.varTypeStr != null) && (varTypeStr != null)) {
+//                return (Objects.equals(expressionStr, that.expressionStr) || (Objects.equals(varTypeStr, that.varTypeStr) && Objects.equals(varType.toString(), that.varType.toString())));
+//            }
+//            return Objects.equals(expressionStr, that.expressionStr);
+//        }
+        if ((that.expressionStr!=null)&&(expressionStr!=null)){
+            return (Objects.equals(that.expressionStr,expressionStr)&&(that.lineAndNodeType.lineOfStaOrExp==lineAndNodeType.lineOfStaOrExp));
+        }else
+            return false;
 
     }
 

@@ -1,0 +1,16 @@
+1 Replace /home/bjtucs/workspace/apr/benchmarks/defects4j/math/math_70_buggy/src/main/java/org/apache/commons/math/analysis/solvers/UnivariateRealSolverUtils.java 223
+Faulty:
+return (a + b) * .5;
+Seed:
+return (a + b) * .5;
+**************************************************
+————————————————————————结束————————————————————————————
+2 Replace /home/bjtucs/workspace/apr/benchmarks/defects4j/math/math_70_buggy/src/main/java/org/apache/commons/math/analysis/solvers/BisectionSolver.java 72
+Faulty:
+return solve(min,max);
+Seed:
+return solve(f,min,max);
+**************************************************
+————————————————————————结束————————————————————————————
+Evaluations: 593
+EstimatedTime: 54959

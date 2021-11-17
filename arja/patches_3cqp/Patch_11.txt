@@ -1,0 +1,27 @@
+1 Replace /home/bjtucs/workspace/apr/benchmarks/defects4j/chart/chart_5_buggy/source/org/jfree/data/xy/XYSeries.java 563
+Faulty:
+if (this.autoSort) {
+  this.data.add(-index - 1,new XYDataItem(x,y));
+}
+ else {
+  this.data.add(new XYDataItem(x,y));
+}
+Seed:
+if (index >= 0 && !this.allowDuplicateXValues) {
+  this.data.add(-index - 1,new XYDataItem(x,y));
+}
+ else {
+  this.data.add(new XYDataItem(x,y));
+}
+**************************************************
+————————————————————————结束————————————————————————————
+2 InsertBefore /home/bjtucs/workspace/apr/benchmarks/defects4j/chart/chart_5_buggy/source/org/jfree/data/xy/XYSeries.java 564
+Faulty:
+this.data.add(-index - 1,new XYDataItem(x,y));
+Seed:
+if (this.data != null) this.data.add(-index - 1,new XYDataItem(x,y));
+ else return;
+**************************************************
+————————————————————————结束————————————————————————————
+Evaluations: 42
+EstimatedTime: 15294

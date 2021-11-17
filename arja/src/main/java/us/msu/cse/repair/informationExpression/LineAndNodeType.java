@@ -1,6 +1,6 @@
 package us.msu.cse.repair.informationExpression;
 
-public class LineAndNodeType {
+public class LineAndNodeType implements Cloneable{
     public int lineOfStaOrExp;
     public int NodeType;
 
@@ -27,5 +27,16 @@ public class LineAndNodeType {
 
     public void setNodeType(int nodeType) {
         NodeType = nodeType;
+    }
+
+    @Override
+    public Object clone() throws CloneNotSupportedException {
+        LineAndNodeType lineAndNodeType = null;
+        try {
+            lineAndNodeType = (LineAndNodeType) super.clone();
+        }catch (CloneNotSupportedException e) {
+            e.printStackTrace();
+        }
+        return lineAndNodeType;
     }
 }

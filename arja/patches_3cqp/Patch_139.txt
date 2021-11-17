@@ -1,0 +1,33 @@
+1 Replace /home/bjtucs/workspace/apr/benchmarks/defects4j/chart/chart_5_buggy/source/org/jfree/data/xy/XYSeries.java 590
+Faulty:
+return Collections.binarySearch(this.data,new XYDataItem(x,null));
+Seed:
+return Collections.binarySearch(this.data,new XYDataItem(x,null));
+**************************************************
+————————————————————————结束————————————————————————————
+2 Replace /home/bjtucs/workspace/apr/benchmarks/defects4j/chart/chart_5_buggy/source/org/jfree/data/xy/XYSeries.java 563
+Faulty:
+if (this.autoSort) {
+  this.data.add(-index - 1,new XYDataItem(x,y));
+}
+ else {
+  this.data.add(new XYDataItem(x,y));
+}
+Seed:
+if (index >= 0 && !this.allowDuplicateXValues) {
+  this.data.add(-index - 1,new XYDataItem(x,y));
+}
+ else {
+  this.data.add(new XYDataItem(x,y));
+}
+**************************************************
+————————————————————————结束————————————————————————————
+3 InsertBefore /home/bjtucs/workspace/apr/benchmarks/defects4j/chart/chart_5_buggy/source/org/jfree/data/xy/XYSeries.java 564
+Faulty:
+this.data.add(-index - 1,new XYDataItem(x,y));
+Seed:
+if (this.data != null) this.data.add(-index - 1,new XYDataItem(x,y));
+**************************************************
+————————————————————————结束————————————————————————————
+Evaluations: 410
+EstimatedTime: 180171
