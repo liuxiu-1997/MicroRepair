@@ -12,6 +12,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+/**
+ * 第一种修复方式，模板修复：
+ *   1.对if、while、do-while语句修改：  换运算符——换左边的变量——换右边的变量
+ *   2.对return修改，换与函数返回类型相同的变量
+ *   3.三种模板修复{空指针、数组越界、强制类型转换检查}
+ */
 
 public class RepairExpression {
     private ModificationPoint modificationPoint = null;

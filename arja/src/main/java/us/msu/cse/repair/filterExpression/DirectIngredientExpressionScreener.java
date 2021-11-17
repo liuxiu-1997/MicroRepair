@@ -20,6 +20,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+
+/**
+ * 1.对修改点做ASTVisitor扫描，目的是为了获得对应的 表达式 为类似Tbar的模板修复
+ * 2.在对种子语句ASTVisitor扫描之后，根据方法名-类名是否相同,行号是否满足.分配给每个修改点
+ */
 public class DirectIngredientExpressionScreener {
 
    private List<ModificationPoint> modificationPoints;

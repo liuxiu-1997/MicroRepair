@@ -11,6 +11,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+/**
+ * 设置了一个共享变量isRepaied，目的每次只修改一个位置，将这个语句放入成分空间中。
+ *
+ */
 public class ModificationPointRepairVisitor extends ASTVisitor {
     private ModificationPoint mp = null;
     private volatile boolean isRepaired = false;

@@ -13,6 +13,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+/**
+ * 对种子语句进行扫描，提取成分
+ */
+
 public class AllTypeVisitorSeedStatement extends ASTVisitor {
     private IfStatement ifStatement;
     private volatile List<ExpressionInfo> list = new ArrayList<>();

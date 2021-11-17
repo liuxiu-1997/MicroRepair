@@ -62,6 +62,8 @@ import us.msu.cse.repair.toolsExpression.TemplateBoolean;
 
 public abstract class AbstractRepairProblem extends Problem {
     /**
+     *     void invokeExpressionProduct(); 这个函数里面三个模板，这主要是我产生补丁的地方
+     *     invokeIngredientScreener(); 这主要是我产生 表达式 的地方
      *
      */
     private static final long serialVersionUID = 1L;

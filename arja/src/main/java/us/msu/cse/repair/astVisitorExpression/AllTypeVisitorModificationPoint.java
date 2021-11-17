@@ -11,6 +11,9 @@ import us.msu.cse.repair.toolsExpression.TypeInformation;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ *对修改点进行扫描，目的是用于以后的Tbar模板修改
+ */
 public class AllTypeVisitorModificationPoint extends ASTVisitor {
     private volatile List<ExpressionInfo> list = new ArrayList<>();
     private volatile List<ExpressionInfo> listfinal = new ArrayList<>();
