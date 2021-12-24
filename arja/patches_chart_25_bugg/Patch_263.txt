@@ -1,0 +1,24 @@
+1 Delete /home/bjtucs/workspace/apr/benchmarks/defects4j/chart/chart_25_buggy/source/org/jfree/chart/renderer/category/StatisticalBarRenderer.java 248
+Faulty:
+if (seriesCount > 1) {
+  double seriesGap=dataArea.getHeight() * getItemMargin() / (categoryCount * (seriesCount - 1));
+  rectY=rectY + row * (state.getBarWidth() + seriesGap);
+}
+ else {
+  rectY=rectY + row * state.getBarWidth();
+}
+Seed:
+dataArea=dataArea + row * state.getBarWidth();
+**************************************************
+————————————————————————结束————————————————————————————
+2 Delete /home/bjtucs/workspace/apr/benchmarks/defects4j/chart/chart_25_buggy/source/org/jfree/data/statistics/DefaultStatisticalCategoryDataset.java 110
+Faulty:
+if (masd != null) {
+  result=masd.getMean();
+}
+Seed:
+result=masd.getMean();
+**************************************************
+————————————————————————结束————————————————————————————
+Evaluations: 2335
+EstimatedTime: 246681

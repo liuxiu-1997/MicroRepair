@@ -1,0 +1,16 @@
+1 InsertBefore /home/bjtucs/workspace/apr/benchmarks/defects4j/chart/chart_25_buggy/source/org/jfree/data/statistics/DefaultStatisticalCategoryDataset.java 173
+Faulty:
+result=masd.getStandardDeviation();
+Seed:
+result=masd.getStandardDeviation();
+**************************************************
+————————————————————————结束————————————————————————————
+2 Delete /home/bjtucs/workspace/apr/benchmarks/defects4j/chart/chart_25_buggy/source/org/jfree/data/statistics/DefaultStatisticalCategoryDataset.java 111
+Faulty:
+result=masd.getMean();
+Seed:
+result=masd.getMean();
+**************************************************
+————————————————————————结束————————————————————————————
+Evaluations: 13151
+EstimatedTime: 3279723

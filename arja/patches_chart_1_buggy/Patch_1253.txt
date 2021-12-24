@@ -1,0 +1,21 @@
+1 Delete /home/bjtucs/workspace/apr/benchmarks/defects4j/chart/chart_1_buggy/source/org/jfree/chart/renderer/category/AbstractCategoryItemRenderer.java 1797
+Faulty:
+if (dataset != null) {
+  return result;
+}
+Seed:
+return baseToolTipGenerator;
+**************************************************
+————————————————————————结束————————————————————————————
+2 Delete /home/bjtucs/workspace/apr/benchmarks/defects4j/chart/chart_1_buggy/source/org/jfree/chart/plot/CategoryPlot.java 1357
+Faulty:
+if (dataset != null) {
+  dataset.addChangeListener(this);
+}
+Seed:
+if (DEFAULT_RANGE_GRIDLINES_VISIBLE == null) {
+}
+**************************************************
+————————————————————————结束————————————————————————————
+Evaluations: 5541
+EstimatedTime: 2918072

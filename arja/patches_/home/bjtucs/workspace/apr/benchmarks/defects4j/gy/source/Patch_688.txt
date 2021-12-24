@@ -1,0 +1,18 @@
+1 InsertBefore /home/bjtucs/workspace/apr/benchmarks/defects4j/chart/chart_25_buggy/source/org/jfree/data/statistics/MeanAndStandardDeviation.java 104
+Faulty:
+return this.standardDeviation;
+Seed:
+if (this.standardDeviation != null) return this.standardDeviation;
+**************************************************
+————————————————————————结束————————————————————————————
+2 Delete /home/bjtucs/workspace/apr/benchmarks/defects4j/chart/chart_25_buggy/source/org/jfree/data/statistics/DefaultStatisticalCategoryDataset.java 110
+Faulty:
+if (masd != null) {
+  result=masd.getMean();
+}
+Seed:
+minimumRangeValueIncStdDev=masd.getMean();
+**************************************************
+————————————————————————结束————————————————————————————
+Evaluations: 5390
+EstimatedTime: 1523692

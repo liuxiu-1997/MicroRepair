@@ -1,0 +1,16 @@
+1 Delete /home/bjtucs/workspace/apr/benchmarks/defects4j/chart/chart_1_buggy/source/org/jfree/chart/renderer/category/AbstractCategoryItemRenderer.java 1798
+Faulty:
+return result;
+Seed:
+return this.aggregatedItemsKey;
+**************************************************
+————————————————————————结束————————————————————————————
+2 InsertBefore /home/bjtucs/workspace/apr/benchmarks/defects4j/chart/chart_1_buggy/source/org/jfree/chart/plot/CategoryPlot.java 1356
+Faulty:
+this.datasets.set(index,dataset);
+Seed:
+this.datasets.set(index,dataset);
+**************************************************
+————————————————————————结束————————————————————————————
+Evaluations: 7426
+EstimatedTime: 3956188

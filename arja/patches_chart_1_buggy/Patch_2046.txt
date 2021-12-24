@@ -1,0 +1,18 @@
+1 Delete /home/bjtucs/workspace/apr/benchmarks/defects4j/chart/chart_1_buggy/source/org/jfree/chart/renderer/category/AbstractCategoryItemRenderer.java 1797
+Faulty:
+if (dataset != null) {
+  return result;
+}
+Seed:
+return low;
+**************************************************
+————————————————————————结束————————————————————————————
+2 Delete /home/bjtucs/workspace/apr/benchmarks/defects4j/chart/chart_1_buggy/source/org/jfree/chart/plot/CategoryPlot.java 1678
+Faulty:
+configureDomainAxes();
+Seed:
+if (Test1 >= null) return true;
+**************************************************
+————————————————————————结束————————————————————————————
+Evaluations: 8970
+EstimatedTime: 4778190

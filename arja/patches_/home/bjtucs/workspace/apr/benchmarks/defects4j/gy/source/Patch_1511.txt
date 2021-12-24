@@ -1,0 +1,16 @@
+1 Replace /home/bjtucs/workspace/apr/benchmarks/defects4j/chart/chart_25_buggy/source/org/jfree/data/statistics/DefaultStatisticalCategoryDataset.java 108
+Faulty:
+MeanAndStandardDeviation masd=(MeanAndStandardDeviation)this.data.getObject(row,column);
+Seed:
+MeanAndStandardDeviation masd=(MeanAndStandardDeviation)this.data.getObject(row,maximumRangeValue);
+**************************************************
+————————————————————————结束————————————————————————————
+2 InsertBefore /home/bjtucs/workspace/apr/benchmarks/defects4j/chart/chart_25_buggy/source/org/jfree/data/statistics/DefaultStatisticalCategoryDataset.java 111
+Faulty:
+result=masd.getMean();
+Seed:
+result=masd.getMean();
+**************************************************
+————————————————————————结束————————————————————————————
+Evaluations: 11797
+EstimatedTime: 2463161

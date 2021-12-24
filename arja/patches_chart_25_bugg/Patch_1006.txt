@@ -1,0 +1,21 @@
+1 Delete /home/bjtucs/workspace/apr/benchmarks/defects4j/chart/chart_25_buggy/source/org/jfree/chart/renderer/category/StatisticalBarRenderer.java 200
+Faulty:
+if (!(data instanceof StatisticalCategoryDataset)) {
+  throw new IllegalArgumentException("Requires StatisticalCategoryDataset.");
+}
+Seed:
+if (dataset instanceof IntervalCategoryDataset) {
+  throw new IllegalArgumentException("Requires StatisticalCategoryDataset.");
+}
+**************************************************
+————————————————————————结束————————————————————————————
+2 Delete /home/bjtucs/workspace/apr/benchmarks/defects4j/chart/chart_25_buggy/source/org/jfree/data/statistics/DefaultStatisticalCategoryDataset.java 111
+Faulty:
+result=masd.getMean();
+Seed:
+if (Test1 >= null) {
+}
+**************************************************
+————————————————————————结束————————————————————————————
+Evaluations: 8156
+EstimatedTime: 2470035

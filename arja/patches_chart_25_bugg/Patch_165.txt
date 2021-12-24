@@ -1,0 +1,16 @@
+1 InsertBefore /home/bjtucs/workspace/apr/benchmarks/defects4j/chart/chart_25_buggy/source/org/jfree/data/statistics/DefaultStatisticalCategoryDataset.java 169
+Faulty:
+Number result=null;
+Seed:
+Number minimumRangeValue=null;
+**************************************************
+————————————————————————结束————————————————————————————
+2 Delete /home/bjtucs/workspace/apr/benchmarks/defects4j/chart/chart_25_buggy/source/org/jfree/data/statistics/DefaultStatisticalCategoryDataset.java 111
+Faulty:
+result=masd.getMean();
+Seed:
+if (Test1 >= null) return true;
+**************************************************
+————————————————————————结束————————————————————————————
+Evaluations: 1515
+EstimatedTime: 153655

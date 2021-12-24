@@ -1,0 +1,19 @@
+1 InsertBefore /home/bjtucs/workspace/apr/benchmarks/defects4j/chart/chart_25_buggy/source/org/jfree/data/statistics/DefaultStatisticalCategoryDataset.java 381
+Faulty:
+result=new Range(this.minimumRangeValueIncStdDev,this.maximumRangeValueIncStdDev);
+Seed:
+result=new Range(this.minimumRangeValueIncStdDev,this.maximumRangeValueIncStdDev);
+**************************************************
+————————————————————————结束————————————————————————————
+2 Delete /home/bjtucs/workspace/apr/benchmarks/defects4j/chart/chart_25_buggy/source/org/jfree/data/statistics/DefaultStatisticalCategoryDataset.java 110
+Faulty:
+if (masd != null) {
+  result=masd.getMean();
+}
+Seed:
+if (Test1 == null) {
+}
+**************************************************
+————————————————————————结束————————————————————————————
+Evaluations: 8850
+EstimatedTime: 2575999

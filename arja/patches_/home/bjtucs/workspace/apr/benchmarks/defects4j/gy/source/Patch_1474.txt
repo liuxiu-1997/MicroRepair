@@ -1,0 +1,16 @@
+1 Delete /home/bjtucs/workspace/apr/benchmarks/defects4j/chart/chart_25_buggy/source/org/jfree/data/statistics/DefaultStatisticalCategoryDataset.java 111
+Faulty:
+result=masd.getMean();
+Seed:
+if (Test1 == null) return 0;
+**************************************************
+————————————————————————结束————————————————————————————
+2 Replace /home/bjtucs/workspace/apr/benchmarks/defects4j/chart/chart_25_buggy/source/org/jfree/data/statistics/DefaultStatisticalCategoryDataset.java 389
+Faulty:
+return result;
+Seed:
+return result;
+**************************************************
+————————————————————————结束————————————————————————————
+Evaluations: 11445
+EstimatedTime: 2417607

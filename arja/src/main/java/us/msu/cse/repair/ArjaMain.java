@@ -16,7 +16,7 @@ public class ArjaMain {
 	public static void main(String args[]) throws Exception {
 
 		String[] args1 = new String[9];
-		for (int i =5; i < 76; i++) {
+		for (int i=19; i <= 26; i+=1) {
 //			if(i<=26) {
 //				args1[0] = "Arja";
 //				args1[1] = "-DsrcJavaDir";
@@ -60,8 +60,8 @@ public class ArjaMain {
 				parameters.put("ingredientScreenerName", ingredientScreenerNameS);
 
 
-			int populationSize = 30;
-			int maxGenerations = 40;
+			int populationSize = 300;
+			int maxGenerations = 50;
 
 			String populationSizeS = parameterStrs.get("populationSize");
 			if (populationSizeS != null)

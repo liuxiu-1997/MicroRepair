@@ -114,14 +114,6 @@ public class ArjaProblem extends AbstractRepairProblem {
         int size = modificationPoints.size();
         //这里相当于过滤，我以后逐渐完善
         RandCheck.randCheck(bits,size);
-        for (int i = 0; i < size; i++) {
-            Statement s = modificationPoints.get(i).getStatement();
-            if ((s instanceof IfStatement) || (s instanceof WhileStatement) || (s instanceof DoStatement) || (s instanceof ReturnStatement)) {
-                array[i] = 1;
-            }else{
-                array[i]=2;
-            }
-        }
         Map<String, ASTRewrite> astRewriters = new HashMap<String, ASTRewrite>();//Map<String,ASTRewrite>这里的String代表的是修改的java文件的绝对路径;value是据其创建的ASTRewrite
 
         Map<Integer, Double> selectedMP = new HashMap<Integer, Double>();

@@ -1,0 +1,17 @@
+1 InsertBefore /home/bjtucs/workspace/apr/benchmarks/defects4j/chart/chart_1_buggy/source/org/jfree/chart/plot/CategoryPlot.java 1672
+Faulty:
+this.renderers.set(index,renderer);
+Seed:
+if (this.renderers != null) this.renderers.set(index,renderer);
+ else return;
+**************************************************
+————————————————————————结束————————————————————————————
+2 Delete /home/bjtucs/workspace/apr/benchmarks/defects4j/chart/chart_1_buggy/source/org/jfree/chart/renderer/category/AbstractCategoryItemRenderer.java 1798
+Faulty:
+return result;
+Seed:
+return plot;
+**************************************************
+————————————————————————结束————————————————————————————
+Evaluations: 1517
+EstimatedTime: 820976

@@ -1,0 +1,25 @@
+1 Delete /home/bjtucs/workspace/apr/benchmarks/defects4j/chart/chart_25_buggy/source/org/jfree/data/statistics/DefaultStatisticalCategoryDataset.java 173
+Faulty:
+result=masd.getStandardDeviation();
+Seed:
+if (Test1 >= null) return false;
+**************************************************
+————————————————————————结束————————————————————————————
+2 InsertBefore /home/bjtucs/workspace/apr/benchmarks/defects4j/chart/chart_25_buggy/source/org/jfree/data/statistics/DefaultStatisticalCategoryDataset.java 107
+Faulty:
+Number result=null;
+Seed:
+Number maximumRangeValueIncStdDev=null;
+**************************************************
+————————————————————————结束————————————————————————————
+3 Delete /home/bjtucs/workspace/apr/benchmarks/defects4j/chart/chart_25_buggy/source/org/jfree/data/statistics/DefaultStatisticalCategoryDataset.java 111
+Faulty:
+result=masd.getMean();
+Seed:
+if (Test1 >= null) {
+  result=masd.getMean();
+}
+**************************************************
+————————————————————————结束————————————————————————————
+Evaluations: 11333
+EstimatedTime: 2998001

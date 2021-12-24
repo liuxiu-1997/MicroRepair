@@ -1,9 +1,7 @@
 package us.msu.cse.repair.filterExpression;
 
 import org.eclipse.jdt.core.dom.CompilationUnit;
-import org.eclipse.jdt.core.dom.Name;
 import org.eclipse.jdt.core.dom.Statement;
-import us.msu.cse.repair.algorithmsExpression.ExpressionPrioritySort;
 import us.msu.cse.repair.astVisitorExpression.AllTypeVisitorModificationPoint;
 import us.msu.cse.repair.astVisitorExpression.AllTypeVisitorSeedStatement;
 import us.msu.cse.repair.astVisitorExpression.ModificationPointVisitor;
@@ -12,8 +10,7 @@ import us.msu.cse.repair.core.parser.SeedStatement;
 import us.msu.cse.repair.core.parser.SeedStatementInfo;
 import us.msu.cse.repair.informationExpression.ExpressionInfo;
 import us.msu.cse.repair.informationExpression.MethClaPacOfExpName;
-import us.msu.cse.repair.toolsExpression.GetCompilcationUnit;
-import us.msu.cse.repair.toolsExpression.TypeInformation;
+import us.msu.cse.repair.toolsExpression.GetCompilationUnit;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -62,7 +59,7 @@ public class DirectIngredientExpressionScreener {
          *  此函数，是编译整个修改点单元
          */
         for (ModificationPoint modi:modificationPoints){
-            CompilationUnit compilationUnit = GetCompilcationUnit.getCompilationUnit(modi.getSourceFilePath());
+            CompilationUnit compilationUnit = GetCompilationUnit.getCompilationUnitOfPath(modi.getSourceFilePath());
             if (compilationUnit != null){
                 AllTypeVisitorModificationPoint visitorModificationPoint = new AllTypeVisitorModificationPoint(modi,compilationUnit);
                 compilationUnit.accept(visitorModificationPoint);
@@ -73,30 +70,25 @@ public class DirectIngredientExpressionScreener {
         }
     }
 
-    public List<ExpressionInfo> expressionFilter(){
-        /**
-         * 返回所有语句SeedStatement中的过滤掉后的内容
-         */
-        List<ExpressionInfo> listFinal = new ArrayList<>();
-        for (ExpressionInfo e:list) {
-            if (!listFinal.contains(e)){
-                //是变量但是没有进行赋值的情况下，我需要进行重新赋值。
-//                if ((e.getExpression() instanceof Name)&&(e.getVarType()==null))
-//                    TypeInformation.getTypeInformation(e);
-                listFinal.add(e);
-            }
-        }
-        return listFinal;
-    }
+//    public List<ExpressionInfo> expressionFilter(){
+//        /**
+//         * 返回所有语句SeedStatement中的过滤掉后的内容
+//         */
+//        List<ExpressionInfo> listFinal = new ArrayList<>();
+//        for (ExpressionInfo e:list) {
+//            if (!listFinal.contains(e)){
+//                listFinal.add(e);
+//            }
+//        }
+//        return listFinal;
+//    }
     public void  allocatonExpressionForModificationPoints()  {
-
         screenModifications();
         screenIngredientExpression();
-        List<ExpressionInfo> expressionInfoList = expressionFilter();
-
+//        List<ExpressionInfo> expressionInfoList = expressionFilter();
+        List<ExpressionInfo> expressionInfoList = list;//在这里我先不去过滤，以后去过滤
         for (ModificationPoint mp:modificationPoints) {
             List<ExpressionInfo> list = new ArrayList<>();
-//            ExpressionPrioritySort expressionPrioritySort = new ExpressionPrioritySort();
             for (ExpressionInfo e:expressionInfoList) {
                 boolean boolean1 = TypeFilter(mp,e);
                 boolean boolean2 = LineFilter(mp,e);
@@ -110,7 +102,6 @@ public class DirectIngredientExpressionScreener {
                 }
             }
             mp.setIngredientsExpressionInfo(list);
-//            expressionPrioritySort.priorityAllocation(mp,list);
         }
     }
     public boolean TypeFilter(ModificationPoint mp,ExpressionInfo e){

@@ -1,0 +1,18 @@
+1 Replace /home/bjtucs/workspace/apr/benchmarks/defects4j/chart/chart_25_buggy/source/org/jfree/chart/renderer/category/BarRenderer.java 459
+Faulty:
+return this.lowerClip;
+Seed:
+return this.lowerClip;
+**************************************************
+————————————————————————结束————————————————————————————
+2 Delete /home/bjtucs/workspace/apr/benchmarks/defects4j/chart/chart_25_buggy/source/org/jfree/data/statistics/DefaultStatisticalCategoryDataset.java 110
+Faulty:
+if (masd != null) {
+  result=masd.getMean();
+}
+Seed:
+if (result == null) break;
+**************************************************
+————————————————————————结束————————————————————————————
+Evaluations: 7899
+EstimatedTime: 1843388

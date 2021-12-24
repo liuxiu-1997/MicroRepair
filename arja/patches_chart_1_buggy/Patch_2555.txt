@@ -1,0 +1,18 @@
+1 Delete /home/bjtucs/workspace/apr/benchmarks/defects4j/chart/chart_1_buggy/source/org/jfree/chart/renderer/category/AbstractCategoryItemRenderer.java 1797
+Faulty:
+if (dataset != null) {
+  return result;
+}
+Seed:
+return selectionState;
+**************************************************
+————————————————————————结束————————————————————————————
+2 Delete /home/bjtucs/workspace/apr/benchmarks/defects4j/chart/chart_1_buggy/source/org/jfree/chart/renderer/category/AbstractCategoryItemRenderer.java 1798
+Faulty:
+return result;
+Seed:
+return im.getOutlinePaint();
+**************************************************
+————————————————————————结束————————————————————————————
+Evaluations: 11058
+EstimatedTime: 5937691

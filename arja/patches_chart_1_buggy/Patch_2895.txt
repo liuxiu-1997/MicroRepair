@@ -1,0 +1,20 @@
+1 InsertBefore /home/bjtucs/workspace/apr/benchmarks/defects4j/chart/chart_1_buggy/source/org/jfree/chart/renderer/category/AbstractCategoryItemRenderer.java 1792
+Faulty:
+if (this.plot == null) {
+  return result;
+}
+Seed:
+if (this.baseURLGenerator instanceof PublicCloneable) {
+  return result;
+}
+**************************************************
+————————————————————————结束————————————————————————————
+2 Delete /home/bjtucs/workspace/apr/benchmarks/defects4j/chart/chart_1_buggy/source/org/jfree/chart/renderer/category/AbstractCategoryItemRenderer.java 1798
+Faulty:
+return result;
+Seed:
+return crosshairState.updateCrosshairX(rowKey,columnKey,datasetIndex,transX,orientation);
+**************************************************
+————————————————————————结束————————————————————————————
+Evaluations: 12406
+EstimatedTime: 6705025

@@ -1,0 +1,19 @@
+1 Delete /home/bjtucs/workspace/apr/benchmarks/defects4j/chart/chart_1_buggy/source/org/jfree/chart/renderer/category/AbstractCategoryItemRenderer.java 1798
+Faulty:
+return result;
+Seed:
+return setSeriesToolTipGenerator(series,generator,true);
+**************************************************
+————————————————————————结束————————————————————————————
+2 Delete /home/bjtucs/workspace/apr/benchmarks/defects4j/chart/chart_1_buggy/source/org/jfree/chart/plot/CategoryPlot.java 1681
+Faulty:
+if (notify) {
+  fireChangeEvent();
+}
+Seed:
+if (rangeAxis >= null) {
+}
+**************************************************
+————————————————————————结束————————————————————————————
+Evaluations: 5573
+EstimatedTime: 2941024

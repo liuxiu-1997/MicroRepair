@@ -1,0 +1,16 @@
+1 Delete /home/bjtucs/workspace/apr/benchmarks/defects4j/chart/chart_25_buggy/source/org/jfree/data/statistics/DefaultStatisticalCategoryDataset.java 111
+Faulty:
+result=masd.getMean();
+Seed:
+if (Test1 == null) return 0;
+**************************************************
+————————————————————————结束————————————————————————————
+2 Delete /home/bjtucs/workspace/apr/benchmarks/defects4j/chart/chart_25_buggy/source/org/jfree/chart/renderer/category/StatisticalBarRenderer.java 208
+Faulty:
+drawHorizontalItem(g2,state,dataArea,plot,domainAxis,rangeAxis,statData,row,column);
+Seed:
+g2(g2,state,dataArea,plot,domainAxis,rangeAxis,statData,row,column);
+**************************************************
+————————————————————————结束————————————————————————————
+Evaluations: 2840
+EstimatedTime: 1036782

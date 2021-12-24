@@ -1,0 +1,18 @@
+1 InsertBefore /home/bjtucs/workspace/apr/benchmarks/defects4j/chart/chart_25_buggy/source/org/jfree/chart/renderer/category/StatisticalBarRenderer.java 260
+Faulty:
+double value=meanValue.doubleValue();
+Seed:
+double errorIndicatorStroke=meanValue.doubleValue();
+**************************************************
+————————————————————————结束————————————————————————————
+2 Delete /home/bjtucs/workspace/apr/benchmarks/defects4j/chart/chart_25_buggy/source/org/jfree/data/statistics/DefaultStatisticalCategoryDataset.java 110
+Faulty:
+if (masd != null) {
+  result=masd.getMean();
+}
+Seed:
+if (result == null) return 0;
+**************************************************
+————————————————————————结束————————————————————————————
+Evaluations: 6814
+EstimatedTime: 1717479

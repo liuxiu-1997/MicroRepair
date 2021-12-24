@@ -57,14 +57,12 @@ import us.msu.cse.repair.core.util.Patch;
 import us.msu.cse.repair.filterExpression.DirectIngredientExpressionScreener;
 import us.msu.cse.repair.informationExpression.ExpressionInfo;
 import us.msu.cse.repair.repairExpression.RepairExpression;
-import us.msu.cse.repair.toolsExpression.SimilarTarTemplateCheck;
-import us.msu.cse.repair.toolsExpression.TemplateBoolean;
+import us.msu.cse.repair.toolsExpression.*;
 
 public abstract class AbstractRepairProblem extends Problem {
     /**
-     *     void invokeExpressionProduct(); 这个函数里面三个模板，这主要是我产生补丁的地方
-     *     invokeIngredientScreener(); 这主要是我产生 表达式 的地方
-     *
+     * void invokeExpressionProduct(); 这个函数里面三个模板，这主要是我产生补丁的地方
+     * invokeIngredientScreener(); 这主要是我产生 表达式 的地方
      */
     private static final long serialVersionUID = 1L;
 
@@ -160,7 +158,8 @@ public abstract class AbstractRepairProblem extends Problem {
 
         gzoltarDataDir = (String) parameters.get("gzoltarDataDir");
 
-        String id = Helper.getRandomID();
+//        String id = Helper.getRandomID();
+        String id = GetPatchId.getId(srcJavaDir);
 
         thr = (Double) parameters.get("thr");
         if (thr == null)
@@ -266,12 +265,8 @@ public abstract class AbstractRepairProblem extends Problem {
         invokeFaultLocalizer();
         invokeSeedLineGenerator();
         invokeASTRequestor();
-//		invokeLocalVarDetector();
-//		invokeFieldVarDetector();
-//		invokeMethodDetector();//Field与Method都是在选自修改点的所在类与继承类的（“public”、“protected”、“同包下的private”的变量和方法）
         invokeIngredientScreener();
         invokeManipulationInitializer();
-//		invokeModificationPointsTrimmer();//modification修改点的整理——删除不必要的不符合理论逻辑的修改点
         invokeExpressionProduct();
         invokeTestFilter();
         invokeCompilerOptionsInitializer();
@@ -403,7 +398,7 @@ public abstract class AbstractRepairProblem extends Problem {
         System.out.println("Initialization of manipulations is finished!");
     }
 
-    void invokeExpressionProduct() {
+    void invokeExpressionProduct() throws IOException, InterruptedException {
         // TODO Auto-generated method stub
         //这里主要是产生初始化补丁成分，产生我的补丁，是我自己的补丁
         System.out.println("modification-initial of expressionIngredient starts...");
@@ -411,44 +406,34 @@ public abstract class AbstractRepairProblem extends Problem {
         int size = modificationPoints.size();
         List<ModificationPoint> tmp = new ArrayList<>();//过滤掉一些修改点，仅仅保留我需要的那几个
         for (int i = 0; i < size; i++) {
-            boolean flag = true;
-
             ModificationPoint modificationPoint = modificationPoints.get(i);
             RepairExpression repairExpression = new RepairExpression(modificationPoint);
             Statement statement = modificationPoint.getStatement();
-
-            /**
-             * 当为特定的语句类型 并且 表达式成分不为空时执行
-             */
             //——————————————————————————————————————————— 修复— ——————————————————————————————————————————————————————————
             //——————————————————————Ifstatement—WhileStatement—DoWhileStatement—ReturnStatement—————————————————————————-
             if (statement instanceof IfStatement) {
                 boolean mid = repairExpression.ifRepair();
-                while(mid){
+                while (mid) {
                     mid = repairExpression.ifRepair();
-                    flag=false;
                 }
             }
             if ((statement instanceof WhileStatement)) {
                 boolean mid = repairExpression.whileRepair();
-                while(mid){
+                while (mid) {
                     mid = repairExpression.whileRepair();
-                    flag = false;
                 }
 
             }
             if ((statement instanceof ReturnStatement)) {
                 boolean mid = repairExpression.returnRepair();
-                while(mid){
+                while (mid) {
                     mid = repairExpression.returnRepair();
-                    flag=false;
                 }
             }
             if ((statement instanceof DoStatement)) {
                 boolean mid = repairExpression.doWhileRepair();
-                while(mid){
+                while (mid) {
                     mid = repairExpression.doWhileRepair();
-                    flag=false;
                 }
             }
             //——————————————————————————————————————————— 修复二 ——————————————————————————————————————————————————————————
@@ -463,23 +448,20 @@ public abstract class AbstractRepairProblem extends Problem {
                  *///这里还要进行进一步过滤，因为有时候人家已经写了这个函数了
                 Expression etem = expression.getExpression();
                 if ((etem instanceof CastExpression) &&
-                        (!TemplateBoolean.templateBooleanCheck(modificationPoints.get(i), expression.getExpressionStr()))&&
-                        (!SimilarTarTemplateCheck.templateCheck(etem,"CastExpression"))) {
+                        (!TemplateBoolean.templateBooleanCheck(modificationPoints.get(i), expression.getExpressionStr())) &&
+                        (!SimilarTarTemplateCheck.templateCheck(etem, "CastExpression"))) {
                     repairExpression.castTypeRepair((CastExpression) etem);
                     modificationPoint.getTemplateBoolean().put(expression.getExpressionStr(), true);
-                    flag = false;
                 } else if ((etem instanceof ArrayAccess) &&
-                        (!TemplateBoolean.templateBooleanCheck(modificationPoint, expression.getExpressionStr()))&&
-                        (!SimilarTarTemplateCheck.templateCheck(etem,"ArrayAccess"))) {
+                        (!TemplateBoolean.templateBooleanCheck(modificationPoint, expression.getExpressionStr())) &&
+                        (!SimilarTarTemplateCheck.templateCheck(etem, "ArrayAccess"))) {
                     repairExpression.arrayRepair((ArrayAccess) etem);
                     modificationPoint.getTemplateBoolean().put(expression.getExpressionStr(), true);
-                    flag = false;
                 } else if ((etem instanceof FieldAccess) &&
-                        (!TemplateBoolean.templateBooleanCheck(modificationPoint, expression.getExpressionStr()))&&
-                        (!SimilarTarTemplateCheck.templateCheck(etem,"FieldAccess"))) {
+                        (!TemplateBoolean.templateBooleanCheck(modificationPoint, expression.getExpressionStr())) &&
+                        (!SimilarTarTemplateCheck.templateCheck(etem, "FieldAccess"))) {
                     repairExpression.fieldRepair((FieldAccess) etem);
                     modificationPoint.getTemplateBoolean().put(expression.getExpressionStr(), true);
-                    flag = false;
                 }
             }
             //——————————————————————————————————————————— 修复三——————————————————————————————————————————————————————————
@@ -490,39 +472,65 @@ public abstract class AbstractRepairProblem extends Problem {
                 ModificationPointRepairVisitor mpVisitor = new ModificationPointRepairVisitor(modificationPoint);
                 AST ast = AST.newAST(AST.JLS8);
                 List<Statement> ingredientList = new ArrayList<>();
-                while(visitorRepairFlag){
-                    Statement sta = (Statement) ASTNode.copySubtree(ast,statement);
+                String staClass = "public class Test1{\n";
+                staClass+=statement.toString();
+                staClass+="}\n";
+                CompilationUnit compilationUnit = GetCompilationUnit.getCompilationUnitOfString(staClass);
+                while (visitorRepairFlag) {
+                    int number = 0;
+                    if (modificationPoint.getIngredients() != null) {
+                        number = modificationPoint.getIngredients().size();
+                    }
+                    Statement sta = mpVisitor.getStatement();
                     mpVisitor.setRepaired(false);
-                    sta.accept(mpVisitor);
+                    compilationUnit.accept(mpVisitor);
                     visitorRepairFlag = mpVisitor.isRepaired();
-                    if(visitorRepairFlag){
+
+                    if ((modificationPoint.getIngredients() != null)&&(sta!=null)) {
+                        if (number != modificationPoint.getIngredients().size()) {
+                        } else {
+                            ingredientList.add(sta);
+                        }
+                    } else if (visitorRepairFlag&&(sta!=null)) {
                         ingredientList.add(sta);
                     }
                 }
-                if(ingredientList.size()>0){
-                    if (modificationPoint.getIngredients()==null){
-                        modificationPoint.setIngredients(ingredientList);
-                    }else {
-                        modificationPoint.getIngredients().addAll(ingredientList);
+                if (modificationPoint.getIngredients() == null) {
+                    modificationPoint.setIngredients(ingredientList);
+                } else {
+                    modificationPoint.getIngredients().addAll(ingredientList);
+                }
+            }
+            if (modificationPoint.getIngredients()!=null)
+                if (modificationPoint.getIngredients().size()>0)
+                  tmp.add(modificationPoint);
+        }
+        for (ModificationPoint mp : tmp) {
+            List<Statement> l = new ArrayList<>();
+            if (mp.getIngredients()!=null) {
+                for (Statement sOut : mp.getIngredients()) {
+                    boolean containFlag = false;
+                    if (l.size() > 0) {
+                        for (Statement sIn : l) {
+                            if (sIn!=null&&sOut!=null) {
+                                if (sIn.toString().equals(sOut.toString())) {
+                                    containFlag = true;
+                                    break;
+                                }
+                            }
+                        }
                     }
-                    flag = false;
+                    if ((!containFlag)&&(sOut!=null)) {
+                        l.add(sOut);
+                    }
                 }
-
             }
-            if (!flag)
-                tmp.add(modificationPoint);
+            mp.setIngredients(l);
         }
-
+        if (tmp.size()>0){
+            System.out.println("533");
+        }
         modificationPoints = tmp;
-        for (ModificationPoint modificationPoint : modificationPoints) {
-            List<ExpressionInfo> list = new ArrayList<>();
-            for (ExpressionInfo e:modificationPoint.getExpressionInfosIngredients()) {
-                if (!list.contains(e)){
-                    list.add(e);
-                }
-            }
-            modificationPoint.setIngredientsExpressionInfo(list);
-        }
         System.out.println("modification-initial of expressionIngredient finish...");
     }
 
@@ -583,29 +591,6 @@ public abstract class AbstractRepairProblem extends Problem {
         if (dependences != null)
             tempList.addAll(dependences);
         progURLs = Helper.getURLs(tempList);
-    }
-
-    void invokeModificationPointsTrimmer() {
-        int i = 0;
-        while (i < modificationPoints.size()) {
-            ModificationPoint mp = modificationPoints.get(i);
-            List<String> manips = availableManipulations.get(i);
-
-            if (mp.getIngredients().isEmpty()) {
-                Iterator<String> iter = manips.iterator();
-                while (iter.hasNext()) {
-                    String manipName = iter.next();
-                    if (!manipName.equalsIgnoreCase("Delete"))
-                        iter.remove();
-                }
-            }
-
-            if (manips.isEmpty()) {
-                modificationPoints.remove(i);
-                availableManipulations.remove(i);
-            } else
-                i++;
-        }
     }
 
     protected Map<String, String> getModifiedJavaSources(Map<String, ASTRewrite> astRewriters) {

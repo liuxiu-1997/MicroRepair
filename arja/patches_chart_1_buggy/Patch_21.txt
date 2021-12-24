@@ -1,0 +1,9 @@
+1 Delete /home/bjtucs/workspace/apr/benchmarks/defects4j/chart/chart_1_buggy/source/org/jfree/chart/renderer/category/AbstractCategoryItemRenderer.java 1798
+Faulty:
+return result;
+Seed:
+return !ObjectUtilities.equal(this.legendItemToolTipGenerator,that.legendItemToolTipGenerator);
+**************************************************
+————————————————————————结束————————————————————————————
+Evaluations: 107
+EstimatedTime: 57145

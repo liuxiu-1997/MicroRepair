@@ -1,0 +1,14 @@
+1 Delete /home/bjtucs/workspace/apr/benchmarks/defects4j/chart/chart_25_buggy/source/org/jfree/chart/renderer/category/StatisticalBarRenderer.java 207
+Faulty:
+if (orientation == PlotOrientation.HORIZONTAL) {
+  drawHorizontalItem(g2,state,dataArea,plot,domainAxis,rangeAxis,statData,row,column);
+}
+ else if (orientation == PlotOrientation.VERTICAL) {
+  drawVerticalItem(g2,state,dataArea,plot,domainAxis,rangeAxis,statData,row,column);
+}
+Seed:
+y1rawVerticalItem(g2,state,y1ataArea,plot,y1omainAxis,rangeAxis,statData,row,column);
+**************************************************
+————————————————————————结束————————————————————————————
+Evaluations: 141
+EstimatedTime: 845762

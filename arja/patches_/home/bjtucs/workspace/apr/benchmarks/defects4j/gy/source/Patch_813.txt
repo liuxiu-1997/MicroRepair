@@ -1,0 +1,28 @@
+1 InsertBefore /home/bjtucs/workspace/apr/benchmarks/defects4j/chart/chart_25_buggy/source/org/jfree/data/statistics/MeanAndStandardDeviation.java 104
+Faulty:
+return this.standardDeviation;
+Seed:
+if (this.standardDeviation != null) return this.standardDeviation;
+**************************************************
+————————————————————————结束————————————————————————————
+2 InsertBefore /home/bjtucs/workspace/apr/benchmarks/defects4j/chart/chart_25_buggy/source/org/jfree/chart/renderer/category/StatisticalBarRenderer.java 208
+Faulty:
+drawHorizontalItem(g2,state,dataArea,plot,domainAxis,rangeAxis,statData,row,column);
+Seed:
+if (drawHorizontalItem == null) return 1;
+**************************************************
+————————————————————————结束————————————————————————————
+3 Delete /home/bjtucs/workspace/apr/benchmarks/defects4j/chart/chart_25_buggy/source/org/jfree/chart/renderer/category/StatisticalBarRenderer.java 207
+Faulty:
+if (orientation == PlotOrientation.HORIZONTAL) {
+  drawHorizontalItem(g2,state,dataArea,plot,domainAxis,rangeAxis,statData,row,column);
+}
+ else if (orientation == PlotOrientation.VERTICAL) {
+  drawVerticalItem(g2,state,dataArea,plot,domainAxis,rangeAxis,statData,row,column);
+}
+Seed:
+drawVerticalItem(g2,state,dataArea,plot,domainAxis,rangeAxis,transX1,row,column);
+**************************************************
+————————————————————————结束————————————————————————————
+Evaluations: 6480
+EstimatedTime: 1669964

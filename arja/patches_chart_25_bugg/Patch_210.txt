@@ -1,0 +1,21 @@
+1 Replace /home/bjtucs/workspace/apr/benchmarks/defects4j/chart/chart_25_buggy/source/org/jfree/chart/renderer/category/StatisticalBarRenderer.java 204
+Faulty:
+StatisticalCategoryDataset statData=(StatisticalCategoryDataset)data;
+Seed:
+StatisticalCategoryDataset shape=(StatisticalCategoryDataset)data;
+**************************************************
+————————————————————————结束————————————————————————————
+2 Delete /home/bjtucs/workspace/apr/benchmarks/defects4j/chart/chart_25_buggy/source/org/jfree/chart/renderer/category/StatisticalBarRenderer.java 207
+Faulty:
+if (orientation == PlotOrientation.HORIZONTAL) {
+  drawHorizontalItem(g2,state,dataArea,plot,domainAxis,rangeAxis,statData,row,column);
+}
+ else if (orientation == PlotOrientation.VERTICAL) {
+  drawVerticalItem(g2,state,dataArea,plot,domainAxis,rangeAxis,statData,row,column);
+}
+Seed:
+drawVerticalItem(g2,state,dataArea,transY1,domainAxis,rangeAxis,statData,row,column);
+**************************************************
+————————————————————————结束————————————————————————————
+Evaluations: 1858
+EstimatedTime: 193164

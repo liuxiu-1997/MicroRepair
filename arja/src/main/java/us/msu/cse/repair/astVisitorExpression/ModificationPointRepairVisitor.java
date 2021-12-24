@@ -2,7 +2,9 @@ package us.msu.cse.repair.astVisitorExpression;
 
 import org.eclipse.jdt.core.dom.*;
 import us.msu.cse.repair.core.parser.ModificationPoint;
+import us.msu.cse.repair.formWorkExpression.makeFormWorkStatement;
 import us.msu.cse.repair.informationExpression.ExpressionInfo;
+import us.msu.cse.repair.toolsExpression.ChangeSimpleName;
 import us.msu.cse.repair.toolsExpression.OperatorInformation;
 import us.msu.cse.repair.toolsExpression.TemplateBoolean;
 import us.msu.cse.repair.toolsExpression.TypeInformation;
@@ -13,12 +15,12 @@ import java.util.Objects;
 
 /**
  * 设置了一个共享变量isRepaied，目的每次只修改一个位置，将这个语句放入成分空间中。
- *
  */
 public class ModificationPointRepairVisitor extends ASTVisitor {
     private ModificationPoint mp = null;
     private volatile boolean isRepaired = false;
     private List<ExpressionInfo> expressionInfoList = null;
+    private  Statement s = null;
 
     public ModificationPointRepairVisitor(ModificationPoint mp) {
         this.mp = mp;
@@ -45,8 +47,8 @@ public class ModificationPointRepairVisitor extends ASTVisitor {
     public boolean visit(ArrayAccess node) {
         if ((!isRepaired)) {
             ExpressionInfo expressionInfo = TypeInformation.getArrayAccessTypeInfo(node);
-            if (expressionInfo==null)
-                expressionInfo = TypeInformation.getSourceVariable(mp.getSourceFilePath(),node.getArray().toString());
+            if (expressionInfo == null)
+                expressionInfo = TypeInformation.getSourceVariable(mp.getSourceFilePath(), node.getArray().toString());
             if (expressionInfo != null) {
                 for (ExpressionInfo e : expressionInfoList) {
                     if (e.getVarType() instanceof ArrayType) {
@@ -103,13 +105,13 @@ public class ModificationPointRepairVisitor extends ASTVisitor {
                 if ((ASTNode.nodeClassForType(eLeft.getNodeType()).getSimpleName().toString()).equals("FieldAccess")) {
                     FieldAccess access = (FieldAccess) eLeft;
                     ExpressionInfo expressionInfo = TypeInformation.getTypeInformation(access.getName(), mp);
-                    if (expressionInfo==null)
-                        expressionInfo = TypeInformation.getSourceVariable(mp.getSourceFilePath(),access.getExpression().toString());
+                    if (expressionInfo == null)
+                        expressionInfo = TypeInformation.getSourceVariable(mp.getSourceFilePath(), access.getExpression().toString());
                     if (expressionInfo != null) {
                         if (expressionInfo.getVarType() != null) {
                             Type typeAssign = expressionInfo.getVarType();
                             for (ExpressionInfo e : expressionInfoList) {
-                                if ((e.getVarType()!=null)&&(e.getExpression() instanceof Name) && (typeAssign.toString().equals(e.getVarType().toString())) && (!(TemplateBoolean.templateBooleanCheck(mp, e.getExpressionStr() + "asleftfield")))) {
+                                if ((e.getVarType() != null) && (e.getExpression() instanceof Name) && (typeAssign.toString().equals(e.getVarType().toString())) && (!(TemplateBoolean.templateBooleanCheck(mp, e.getExpressionStr() + "asleftfield")))) {
                                     SimpleName simpleName = (SimpleName) ASTNode.copySubtree(eLeft.getAST(), e.getExpression());
                                     ((FieldAccess) eLeft).setName(simpleName);
                                     mp.getTemplateBoolean().put(e.getExpressionStr() + "asleftfield", true);
@@ -122,13 +124,13 @@ public class ModificationPointRepairVisitor extends ASTVisitor {
                 } else if ((ASTNode.nodeClassForType(eLeft.getNodeType()).getSimpleName().toString()).equals("SimpleName")) {
                     SimpleName name = (SimpleName) eLeft;
                     ExpressionInfo expressionInfo = TypeInformation.getTypeInformation(name, mp);
-                    if (expressionInfo==null)
-                        expressionInfo = TypeInformation.getSourceVariable(mp.getSourceFilePath(),name.toString());
+                    if (expressionInfo == null)
+                        expressionInfo = TypeInformation.getSourceVariable(mp.getSourceFilePath(), name.toString());
                     if (expressionInfo != null) {
                         if (expressionInfo.getVarType() != null) {
                             Type typeAssign = expressionInfo.getVarType();
                             for (ExpressionInfo e : expressionInfoList) {
-                                if ((e.getVarType()!=null)&&(e.getVarType()!=null)&&(typeAssign.toString().equals(e.getVarType().toString())) && (!(TemplateBoolean.templateBooleanCheck(mp, e.getExpressionStr() + "asleftsimple")))) {
+                                if ((e.getVarType() != null) && (e.getVarType() != null) && (typeAssign.toString().equals(e.getVarType().toString())) && (!(TemplateBoolean.templateBooleanCheck(mp, e.getExpressionStr() + "asleftsimple")))) {
                                     Expression expression = (Expression) ASTNode.copySubtree(node.getAST(), e.getExpression());
                                     node.setLeftHandSide(expression);
                                     mp.getTemplateBoolean().put(e.getExpressionStr() + "asleftsimple", true);
@@ -155,13 +157,13 @@ public class ModificationPointRepairVisitor extends ASTVisitor {
                 if ((ASTNode.nodeClassForType(eRight.getNodeType()).getSimpleName().toString()).equals("FieldAccess")) {
                     FieldAccess access = (FieldAccess) eRight;
                     ExpressionInfo expressionInfo = TypeInformation.getTypeInformation(access.getName(), mp);
-                    if (expressionInfo==null)
-                        expressionInfo = TypeInformation.getSourceVariable(mp.getSourceFilePath(),access.getExpression().toString());
+                    if (expressionInfo == null)
+                        expressionInfo = TypeInformation.getSourceVariable(mp.getSourceFilePath(), access.getExpression().toString());
                     if (expressionInfo != null) {
                         if (expressionInfo.getVarType() != null) {
                             Type typeAssign = expressionInfo.getVarType();
                             for (ExpressionInfo e : expressionInfoList) {
-                                if ((e.getVarType()!=null)&&(e.getExpression() instanceof Name) && (typeAssign.toString().equals(e.getVarType().toString())) && (!(TemplateBoolean.templateBooleanCheck(mp, e.getExpressionStr() + "asrightfield")))) {
+                                if ((e.getVarType() != null) && (e.getExpression() instanceof Name) && (typeAssign.toString().equals(e.getVarType().toString())) && (!(TemplateBoolean.templateBooleanCheck(mp, e.getExpressionStr() + "asrightfield")))) {
                                     SimpleName simpleName = (SimpleName) ASTNode.copySubtree(access.getAST(), e.getExpression());
                                     access.setName(simpleName);
                                     mp.getTemplateBoolean().put(e.getExpressionStr() + "asrightfield", true);
@@ -174,13 +176,13 @@ public class ModificationPointRepairVisitor extends ASTVisitor {
                 } else if ((ASTNode.nodeClassForType(eRight.getNodeType()).getSimpleName().toString()).equals("SimpleName")) {
                     SimpleName name = (SimpleName) eRight;
                     ExpressionInfo expressionInfo = TypeInformation.getTypeInformation(name, mp);
-                    if (expressionInfo==null)
-                        expressionInfo = TypeInformation.getSourceVariable(mp.getSourceFilePath(),name.toString());
+                    if (expressionInfo == null)
+                        expressionInfo = TypeInformation.getSourceVariable(mp.getSourceFilePath(), name.toString());
                     if (expressionInfo != null) {
                         Type typeAssign = expressionInfo.getVarType();
                         if (typeAssign != null) {
                             for (ExpressionInfo e : expressionInfoList) {
-                                if ((e.getVarType()!=null)&&(typeAssign.toString().equals(e.getVarType().toString()))
+                                if ((e.getVarType() != null) && (typeAssign.toString().equals(e.getVarType().toString()))
                                         && (!(TemplateBoolean.templateBooleanCheck(mp, e.getExpressionStr() + "asrightsimple")))) {
                                     Expression expression = (Expression) ASTNode.copySubtree(node.getAST(), e.getExpression());
                                     node.setRightHandSide(expression);
@@ -204,7 +206,25 @@ public class ModificationPointRepairVisitor extends ASTVisitor {
                 }
             }
         }
+        if ((!TemplateBoolean.templateBooleanCheck(mp,node.toString()+mp.getStatement().toString()+"formwork"))){
+            List<Statement> statementList = makeFormWorkStatement.getStatement(mp,node);
+            if (mp.getIngredients()==null){
+                mp.setIngredients(statementList);
+            }else {
+                mp.getIngredients().addAll(statementList);
+            }
+            mp.getTemplateBoolean().put(node.toString()+mp.getStatement().toString()+"formwork",true);
+        }
         return false;
+    }
+    void putIngredient(ModificationPoint mp,Statement statement){
+        if (mp.getIngredients() == null) {
+            List<Statement> list = new ArrayList<>();
+            list.add(statement);
+            mp.setIngredients(list);
+        } else {
+            mp.getIngredients().add(statement);
+        }
     }
 
     @Override
@@ -240,6 +260,21 @@ public class ModificationPointRepairVisitor extends ASTVisitor {
         return super.visit(node);
     }
 
+    @Override
+    public boolean visit(ConstructorInvocation node) {
+        if (node.arguments()!=null) {
+            if ((!TemplateBoolean.templateBooleanCheck(mp, node.toString() + mp.getStatement().toString() + "cons"))) {
+                List<Statement> statementList = ChangeSimpleName.getChangedConstructor(mp, node.toString(), node.arguments());
+                if (mp.getIngredients() == null) {
+                    mp.setIngredients(statementList);
+                } else {
+                    mp.getIngredients().addAll(statementList);
+                }
+                mp.getTemplateBoolean().put(node.toString() + mp.getStatement().toString() + "cons", true);
+            }
+        }
+        return super.visit(node);
+    }
 
     @Override
     public boolean visit(EnumConstantDeclaration node) {
@@ -253,30 +288,33 @@ public class ModificationPointRepairVisitor extends ASTVisitor {
 
     @Override
     public boolean visit(FieldAccess node) {
-        ExpressionInfo expressionInfo = TypeInformation.getTypeInformation(node.getName(), mp);
-        if (expressionInfo==null)
-            expressionInfo = TypeInformation.getSourceVariable(mp.getSourceFilePath(),node.getName().toString());
-        if (expressionInfo != null) {
-            if (expressionInfo.getVarType() != null) {
-                Type typeAssign = expressionInfo.getVarType();
-                for (ExpressionInfo e : expressionInfoList) {
-                    if ((e.getVarType()!=null)&&(e.getExpression() instanceof Name) && (typeAssign.toString().equals(e.getVarType().toString()))
-                            && (!(TemplateBoolean.templateBooleanCheck(mp, e.getExpressionStr() + "field")))) {
-                        SimpleName s = (SimpleName) ASTNode.copySubtree(node.getAST(), e.getExpression());
-                        node.setName(s);
-                        mp.getTemplateBoolean().put(e.getExpressionStr() + "field", true);
-                        isRepaired = true;
-                        return true;
+        if (!isRepaired) {
+            ExpressionInfo expressionInfo = TypeInformation.getTypeInformation(node.getName(), mp);
+            if (expressionInfo == null)
+                expressionInfo = TypeInformation.getSourceVariable(mp.getSourceFilePath(), node.getName().toString());
+            if (expressionInfo != null) {
+                if (expressionInfo.getVarType() != null) {
+                    Type typeAssign = expressionInfo.getVarType();
+                    for (ExpressionInfo e : expressionInfoList) {
+                        if ((e.getVarType() != null) && (e.getExpression() instanceof Name) && (typeAssign.toString().equals(e.getVarType().toString()))
+                                && (!(TemplateBoolean.templateBooleanCheck(mp, e.getExpressionStr() + "field")))) {
+                            SimpleName s = (SimpleName) ASTNode.copySubtree(node.getAST(), e.getExpression());
+                            node.setName(s);
+                            mp.getTemplateBoolean().put(e.getExpressionStr() + "field", true);
+                            isRepaired = true;
+                            return true;
+                        }
                     }
                 }
             }
         }
+
         return false;
     }
 
     @Override
     public boolean visit(InfixExpression node) {
-        if ((!isRepaired)&&(!(mp.getStatement() instanceof IfStatement))) {
+        if ((!isRepaired) && (!(mp.getStatement() instanceof IfStatement))) {
             InfixExpression.Operator operator = node.getOperator();
             List<InfixExpression.Operator> listTDRPM = OperatorInformation.getTDRPM();// * / % + -
             List<InfixExpression.Operator> listLRR = OperatorInformation.getLRR();// << >> >>>
@@ -360,29 +398,14 @@ public class ModificationPointRepairVisitor extends ASTVisitor {
 
     @Override
     public boolean visit(MethodInvocation node) {
-        //仅仅去修改了一个表达式，其余的没有修改
-        if (!isRepaired) {
-            Expression expression = node.getExpression();
-            if ((expression != null)) {
-                if (expression instanceof SimpleName) {
-                    ExpressionInfo expressionInfo = TypeInformation.getTypeInformation((Name) expression, mp);
-                    if (expressionInfo==null)
-                        expressionInfo = TypeInformation.getSourceVariable(mp.getSourceFilePath(),expression.toString());
-                    if (expressionInfo != null) {
-                        Type typeAssign = expressionInfo.getVarType();
-                        if (typeAssign != null) {
-                            for (ExpressionInfo e : expressionInfoList) {
-                                if ((e.getVarType()!=null)&&(typeAssign.toString().equals(e.getVarType().toString()))
-                                        && (!(TemplateBoolean.templateBooleanCheck(mp, e.getExpressionStr() + "methodexp")))) {
-                                    Expression expr = (Expression) ASTNode.copySubtree(node.getAST(), e.getExpression());
-                                    node.setExpression(expr);
-                                    mp.getTemplateBoolean().put(e.getExpressionStr() + "methodexp", true);
-                                    isRepaired = true;
-                                    return true;
-                                }
-                            }
-                        }
-                    }
+        if (!isRepaired){
+            for (ExpressionInfo e:expressionInfoList){
+                if (!TemplateBoolean.templateBooleanCheck(mp,mp.getStatement().toString()+e+"MethodInvocation")&&(e.getExpression() instanceof Name)){
+                    Expression eMid = (Expression)ASTNode.copySubtree(node.getAST(),e.getExpression());
+                    node.setExpression(eMid);
+                    mp.getTemplateBoolean().put(mp.getStatement().toString()+e+"MethodInvocation",true);
+                    isRepaired = true;
+                    return true;
                 }
             }
         }
@@ -431,53 +454,53 @@ public class ModificationPointRepairVisitor extends ASTVisitor {
 
     @Override
     public boolean visit(PostfixExpression node) {
-        if (!isRepaired) {
-            List<PostfixExpression.Operator> listID = new ArrayList<>();
-            PostfixExpression.Operator operator = node.getOperator();
-            listID.add(PostfixExpression.Operator.DECREMENT);
-            listID.add(PostfixExpression.Operator.INCREMENT);
-            if (listID.contains(operator)) {
-                for (PostfixExpression.Operator value : listID) {
-                    if ((!value.equals(operator)) && (!TemplateBoolean.templateBooleanCheck(mp, value.toString() + "post"))) {
-                        node.setOperator(value);
-                        mp.getTemplateBoolean().put(value.toString() + "post", true);
-                        isRepaired = true;
-                        return true;
-                    }
-                }
-            }
-        }
+//        if (!isRepaired) {
+//            List<PostfixExpression.Operator> listID = new ArrayList<>();
+//            PostfixExpression.Operator operator = node.getOperator();
+//            listID.add(PostfixExpression.Operator.DECREMENT);
+//            listID.add(PostfixExpression.Operator.INCREMENT);
+//            if (listID.contains(operator)) {
+//                for (PostfixExpression.Operator value : listID) {
+//                    if ((!value.equals(operator)) && (!TemplateBoolean.templateBooleanCheck(mp, value.toString() + "post"))) {
+//                        node.setOperator(value);
+//                        mp.getTemplateBoolean().put(value.toString() + "post", true);
+//                        isRepaired = true;
+//                        return true;
+//                    }
+//                }
+//            }
+//        }
         return false;
     }
 
     @Override
     public boolean visit(PrefixExpression node) {
-        if (!isRepaired) {
-            // ++  INCREMENT
-            // --  DECREMENT
-            // +  PLUS
-            // -  MINUS
-            // ~  COMPLEMENT
-            // !  NOT
-            List<PrefixExpression.Operator> listIDPMCN= new ArrayList<>();
-            PrefixExpression.Operator operator = node.getOperator();
-            listIDPMCN.add(PrefixExpression.Operator.INCREMENT);
-            listIDPMCN.add(PrefixExpression.Operator.DECREMENT);
-            listIDPMCN.add(PrefixExpression.Operator.PLUS);
-            listIDPMCN.add(PrefixExpression.Operator.MINUS);
-            listIDPMCN.add(PrefixExpression.Operator.COMPLEMENT);
-            listIDPMCN.add(PrefixExpression.Operator.NOT);
-            if (listIDPMCN.contains(operator)) {
-                for (PrefixExpression.Operator value : listIDPMCN) {
-                    if ((!value.equals(operator)) && (!TemplateBoolean.templateBooleanCheck(mp, value.toString() + "pre"))) {
-                        node.setOperator(value);
-                        mp.getTemplateBoolean().put(value.toString() + "pre", true);
-                        isRepaired = true;
-                        return true;
-                    }
-                }
-            }
-        }
+//        if (!isRepaired) {
+//            // ++  INCREMENT
+//            // --  DECREMENT
+//            // +  PLUS
+//            // -  MINUS
+//            // ~  COMPLEMENT
+//            // !  NOT
+//            List<PrefixExpression.Operator> listIDPMCN = new ArrayList<>();
+//            PrefixExpression.Operator operator = node.getOperator();
+//            listIDPMCN.add(PrefixExpression.Operator.INCREMENT);
+//            listIDPMCN.add(PrefixExpression.Operator.DECREMENT);
+//            listIDPMCN.add(PrefixExpression.Operator.PLUS);
+//            listIDPMCN.add(PrefixExpression.Operator.MINUS);
+//            listIDPMCN.add(PrefixExpression.Operator.COMPLEMENT);
+//            listIDPMCN.add(PrefixExpression.Operator.NOT);
+//            if (listIDPMCN.contains(operator)) {
+//                for (PrefixExpression.Operator value : listIDPMCN) {
+//                    if ((!value.equals(operator)) && (!TemplateBoolean.templateBooleanCheck(mp, value.toString() + "pre"))) {
+//                        node.setOperator(value);
+//                        mp.getTemplateBoolean().put(value.toString() + "pre", true);
+//                        isRepaired = true;
+//                        return true;
+//                    }
+//                }
+//            }
+//        }
         return false;
     }
 
@@ -503,7 +526,26 @@ public class ModificationPointRepairVisitor extends ASTVisitor {
 
     @Override
     public boolean visit(SimpleName node) {
-        return super.visit(node);
+        if ((!TemplateBoolean.templateBooleanCheck(mp,node.toString()+mp.getStatement().toString()+"simpleRepair"))){
+            List<Statement> statementList = ChangeSimpleName.getChangedSimpleName(mp,node.toString());
+            if (mp.getIngredients()==null){
+                mp.setIngredients(statementList);
+            }else {
+                mp.getIngredients().addAll(statementList);
+            }
+            mp.getTemplateBoolean().put(node.toString()+mp.getStatement().toString()+"simpleRepair",true);
+        }
+        if ((!TemplateBoolean.templateBooleanCheck(mp,node.toString()+mp.getStatement().toString()+"formwork"))){
+            List<Statement> statementList = makeFormWorkStatement.getStatement(mp,node);
+            if (mp.getIngredients()==null){
+                mp.setIngredients(statementList);
+            }else {
+                mp.getIngredients().addAll(statementList);
+            }
+            mp.getTemplateBoolean().put(node.toString()+mp.getStatement().toString()+"formwork",true);
+        }
+
+        return false;
     }
 
     @Override
@@ -513,16 +555,16 @@ public class ModificationPointRepairVisitor extends ASTVisitor {
 
     @Override
     public boolean visit(StringLiteral node) {
-        if (!isRepaired) {
-            for (ExpressionInfo e : expressionInfoList) {
-                if ((e.getExpression() instanceof StringLiteral) && (!(TemplateBoolean.templateBooleanCheck(mp, e.getExpressionStr() + "string")))) {
-                    node.setLiteralValue(node.toString());
-                    mp.getTemplateBoolean().put(e.getExpressionStr() + "string", true);
-                    isRepaired = true;
-                    return true;
-                }
-            }
-        }
+//        if (!isRepaired) {
+//            for (ExpressionInfo e : expressionInfoList) {
+//                if ((e.getExpression() instanceof StringLiteral) && (!(TemplateBoolean.templateBooleanCheck(mp, e.getExpressionStr() + "string")))) {
+//                    node.setLiteralValue(node.toString());
+//                    mp.getTemplateBoolean().put(e.getExpressionStr() + "string", true);
+//                    isRepaired = true;
+//                    return true;
+//                }
+//            }
+//        }
         return super.visit(node);
     }
 
@@ -607,8 +649,20 @@ public class ModificationPointRepairVisitor extends ASTVisitor {
     }
 
     @Override
+    public boolean visit(SuperConstructorInvocation node) {
+        if (!isRepaired){
+            if (node.arguments().size()>0){
+                List<Statement> staListIngre = ChangeSimpleName.getChangedNameStaOfSuperConstructor(mp,node,node.arguments());
+                System.out.println("_________________676_______________________\n"+staListIngre.toString());
+            }
+            isRepaired = true;
+        }
+        return true;
+    }
+
+    @Override
     public boolean visit(VariableDeclarationFragment node) {
-        if ((!isRepaired)&&(node.getInitializer()!=null)) {
+        if ((!isRepaired) && (node.getInitializer() != null)) {
             int nodeType = node.getInitializer().getNodeType();
             for (ExpressionInfo e : expressionInfoList) {
                 if (nodeType == e.getExpression().getNodeType()) {
@@ -631,6 +685,15 @@ public class ModificationPointRepairVisitor extends ASTVisitor {
         return super.visit(node);
     }
 
+    @Override
+    public void endVisit(Block node) {
+        if ((node.statements().size()>0))
+            s= (Statement) node.statements().get(0);
+    }
+
+    public Statement getStatement(){
+        return s;
+    }
     public boolean isRepaired() {
         return isRepaired;
     }

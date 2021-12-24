@@ -180,9 +180,8 @@ public class RepairExpression {
             } else {
                 for (int i = 0; i < modiIngreExpList.size(); i++) {
                     Expression expression = modiIngreExpList.get(i).getExpression();
-                    boolean flag1 = (stReturn.getNodeType() == modiIngreExpList.get(i).getExpression().getNodeType());
                     boolean flag2 = TemplateBoolean.templateBooleanCheck(modificationPoint,expression.toString() + "reelsenode");
-                    if(flag1&&(!flag2)){
+                    if(!flag2){
 
                         modificationPoint.getTemplateBoolean().put(expression.toString() + "reelsenode", true);
                         returnStatement = ast.newReturnStatement();
@@ -271,9 +270,6 @@ public class RepairExpression {
         IfStatement ifStatement = ast.newIfStatement();
         FieldAccess fieldAccess = (FieldAccess) ASTNode.copySubtree(ifStatement.getAST(), expression);
         Statement statementThen = (Statement) ASTNode.copySubtree(ifStatement.getAST(), modificationPoint.getStatement());
-        //这里检测
-        //if（ a ！= null ）
-        //   语句;
         InfixExpression infixExpression1 = ast.newInfixExpression();
         infixExpression1.setOperator(InfixExpression.Operator.NOT_EQUALS);
         infixExpression1.setLeftOperand(fieldAccess);
@@ -282,10 +278,6 @@ public class RepairExpression {
         ifStatement.setThenStatement(statementThen);
         clearAndSetIngredient(ifStatement);
 
-        //if（ a ！= null ）
-        //   语句;
-        //else
-        //   return;
         ReturnStatement returnStatement = ast.newReturnStatement();
         IfStatement ifelse = (IfStatement) ASTNode.copySubtree(ast,ifStatement);
         ifelse.setElseStatement(returnStatement);
@@ -318,16 +310,16 @@ public class RepairExpression {
         InfixExpression.Operator operator = e.getOperator();
         List<InfixExpression.Operator> opList = new ArrayList<>();//<,<=,>,>=
         List<InfixExpression.Operator> opListAndOr = new ArrayList<>();
-        opList.add(InfixExpression.Operator.LESS);
-        opList.add(InfixExpression.Operator.EQUALS);
-        opList.add(InfixExpression.Operator.NOT_EQUALS);
-        opList.add(InfixExpression.Operator.LESS_EQUALS);
-        opList.add(InfixExpression.Operator.GREATER);
-        opList.add(InfixExpression.Operator.GREATER_EQUALS);
-        opListAndOr.add(InfixExpression.Operator.AND);
-        opListAndOr.add(InfixExpression.Operator.CONDITIONAL_AND);
-        opListAndOr.add(InfixExpression.Operator.OR);
-        opListAndOr.add(InfixExpression.Operator.CONDITIONAL_OR);
+        opList.add(InfixExpression.Operator.LESS);// <
+        opList.add(InfixExpression.Operator.EQUALS);// ==
+        opList.add(InfixExpression.Operator.NOT_EQUALS);// !=
+        opList.add(InfixExpression.Operator.LESS_EQUALS);// <=
+        opList.add(InfixExpression.Operator.GREATER);// >
+        opList.add(InfixExpression.Operator.GREATER_EQUALS);// >=
+        opListAndOr.add(InfixExpression.Operator.AND); // &&
+        opListAndOr.add(InfixExpression.Operator.CONDITIONAL_AND); // &
+        opListAndOr.add(InfixExpression.Operator.OR); //  ||
+        opListAndOr.add(InfixExpression.Operator.CONDITIONAL_OR); // |
         boolean flag = true;
         if (opList.contains(operator)) {
             for (InfixExpression.Operator value : opList) {
