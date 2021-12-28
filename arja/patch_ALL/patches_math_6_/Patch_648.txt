@@ -1,0 +1,9 @@
+1 Replace /home/bjtucs/workspace/apr/benchmarks/defects4j/math/math_6_buggy/src/main/java/org/apache/commons/math3/optim/BaseOptimizer.java 93
+Faulty:
+return iterations.getCount();
+Seed:
+return evaluations.getCount();
+**************************************************
+————————————————————————结束————————————————————————————
+Evaluations: 3613
+EstimatedTime: 2244019

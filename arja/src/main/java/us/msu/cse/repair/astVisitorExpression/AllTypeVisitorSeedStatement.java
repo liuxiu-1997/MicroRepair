@@ -11,7 +11,6 @@ import us.msu.cse.repair.toolsExpression.TypeInformation;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 /**
  * 对种子语句进行扫描，提取成分

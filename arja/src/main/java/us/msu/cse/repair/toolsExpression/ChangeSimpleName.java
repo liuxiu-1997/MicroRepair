@@ -105,25 +105,220 @@ public class ChangeSimpleName {
         String[] strings = new String[50];
         //模式一，只替换一个变量
         for (ExpressionInfo eInfo : expressionInfoList) {
-            if ((eInfo.getExpression() instanceof SimpleName) && (!TemplateBoolean.templateBooleanCheck(mp, eInfo.getExpressionStr() + modiSta + simpleName + "s1"))) {
-                String modiExp = eInfo.getExpression().toString();
-                if (i < 49) {
-                    CharSequence c1 = simpleName.subSequence(0, simpleName.length());
-                    CharSequence c2 = modiExp.subSequence(0, modiExp.length());
-                    strings[i++] = modiSta.replace(c1,c2);
+            String midStr = "";
+            if (mp.getMethodName().contains(simpleName) && mp.getMethodName().contains(eInfo.getExpression().toString())) {
+                if ( (!TemplateBoolean.templateBooleanCheck(mp, eInfo.getExpressionStr() + modiSta + simpleName + "s1"))) {
+                    if (i < 49) {
+//                    char[] modiIngreExp = eInfo.getExpression().toString().toCharArray();
+//                    String str="";
+//                    int iIn=0,jIn=0,kIn=0;
+//                    char[] modiPointExp = modiPointChar.clone();
+//                    char[] aaChar;
+//                    for (iIn=0;iIn<modiPointExp.length;iIn++){
+//                        if (modiPointExp[iIn] == simpleNameChar[0]){
+//                            boolean Flags = true;
+//                            for (jIn=0,kIn = iIn;jIn < simpleNameChar.length ; jIn++,kIn++){
+//                                if (((kIn>=modiPointExp.length)||(modiPointExp[kIn]!=simpleNameChar[jIn]))){
+//                                    Flags = false;
+//                                    break;
+//                                }
+//                            }
+//                            if (jIn == simpleNameChar.length){
+//                                if ((iIn-1>=0)&&((('a'<modiPointExp[iIn-1])&&(modiPointExp[iIn-1]<'z'))||(('A'<modiPointExp[iIn-1])&&(modiPointExp[iIn-1]<'Z')))) {
+//                                    Flags = false;
+//                                }
+//                                if ((kIn<modiPointExp.length)&&((('a'<modiPointExp[kIn])&&(modiPointExp[kIn]<'z'))||(('A'<modiPointExp[kIn])&&(modiPointExp[kIn]<'Z')))){
+//                                    Flags = false;
+//                                }
+//                                if (Flags){
+//                                    int len = modiIngreExp.length - simpleNameChar.length;
+//                                    aaChar = new char[modiPointExp.length + len];
+//                                    str = "";
+//                                    if (len>0) {
+//                                        for (int m = modiPointExp.length + len-1,n=modiPointExp.length-1; n>= iIn + simpleNameChar.length; m--,n--) {
+//                                            aaChar[m] = modiPointExp[n];
+//                                        }
+//                                        System.arraycopy(modiPointExp, 0, aaChar, 0, iIn + 1);
+//                                        for (int m = iIn, n = 0; m < iIn + modiIngreExp.length; m++, n++) {
+//                                            aaChar[m] = modiIngreExp[n];
+//                                        }
+//                                        if (simpleName.equals("minMiddleIndex")) {
+//                                            System.out.println("len>0:" );
+//                                            for (char c : aaChar)
+//                                                System.out.print(c);
+//                                            System.out.println();
+//                                        }
+//                                    }else if (len < 0) {
+//                                        for (int m = iIn+modiIngreExp.length, n = iIn + simpleName.length(); n < modiPointExp.length - 2; m++, n++)
+//                                            aaChar[m] = modiPointExp[n];
+//                                        System.arraycopy(modiPointExp, 0, aaChar, 0, iIn);
+//                                        for (int m = iIn, n = 0; m < iIn + modiIngreExp.length; m++, n++) {
+//                                            aaChar[m] = modiIngreExp[n];
+//                                        }
+//                                        if (simpleName.equals("minMiddleIndex")) {
+//                                            System.out.println("len<0:");
+//                                            for (char c : aaChar)
+//                                                System.out.print(c);
+//                                            System.out.println();
+//                                        }
+//                                    }else {
+//                                        for (int m=iIn,n=0;n<modiIngreExp.length;m++,n++)
+//                                            aaChar[m] = modiIngreExp[n];
+//                                        if (simpleName.equals("minMiddleIndex")) {
+//                                            System.out.println("len==0:" );
+//                                            for (char c : aaChar)
+//                                                System.out.print(c);
+//                                            System.out.println();
+//                                        }
+//                                    }
+//                                    for (char c : aaChar)
+//                                        str += c;
+//
+//                                    if (simpleName.equals("minMiddleIndex")&&(str!=null))
+//                                        System.out.println("162-----str:"+str+"\ni: "+(i+1)+"\n"+mp.getLCNode().getLineNumber());
+//                                    strings[i++]=str;
+//                                    modiPointExp = aaChar;
+//                                }
+//
+//                            }
+//                        }
+//                    }
+//                    CharSequence c1 = simpleName.subSequence(0, simpleName.length());
+//                    CharSequence c2 = modiExp.subSequence(0, modiExp.length());
+//                    strings[i++] = modiSta.replace(c1,c2);
+//                    strings[i++] = str;
+                        int num = 0;
+                        if (modiSta.split(simpleName).length >= 3)
+                            num = 3;
+                        else if (modiSta.split(simpleName).length == 2)
+                            num = 2;
+
+                        if (num == 2) {
+                            String[] array = modiSta.split(simpleName, num);
+                            midStr += array[0] + eInfo.getExpression().toString();
+                            midStr += array[1];
+                        } else if (num == 3) {
+                            String[] array = modiSta.split(simpleName, num);
+                            midStr += array[0] + eInfo.getExpression().toString();
+                            midStr += array[1] + eInfo.getExpression().toString();
+                            midStr += array[2];
+                        }
+                        strings[i++] = midStr;
+                    }
+                    mp.getTemplateBoolean().put(eInfo.getExpressionStr() + modiSta + simpleName + "s1", true);
                 }
-                mp.getTemplateBoolean().put(eInfo.getExpressionStr() + modiSta + simpleName + "s1", true);
+            }else if (mp.getVariableName().contains(simpleName) && mp.getVariableName().contains(eInfo.getExpression().toString())) {
+                if ( (!TemplateBoolean.templateBooleanCheck(mp, eInfo.getExpressionStr() + modiSta + simpleName + "s1"))) {
+                    if (i < 49) {
+//                    char[] modiIngreExp = eInfo.getExpression().toString().toCharArray();
+//                    String str="";
+//                    int iIn=0,jIn=0,kIn=0;
+//                    char[] modiPointExp = modiPointChar.clone();
+//                    char[] aaChar;
+//                    for (iIn=0;iIn<modiPointExp.length;iIn++){
+//                        if (modiPointExp[iIn] == simpleNameChar[0]){
+//                            boolean Flags = true;
+//                            for (jIn=0,kIn = iIn;jIn < simpleNameChar.length ; jIn++,kIn++){
+//                                if (((kIn>=modiPointExp.length)||(modiPointExp[kIn]!=simpleNameChar[jIn]))){
+//                                    Flags = false;
+//                                    break;
+//                                }
+//                            }
+//                            if (jIn == simpleNameChar.length){
+//                                if ((iIn-1>=0)&&((('a'<modiPointExp[iIn-1])&&(modiPointExp[iIn-1]<'z'))||(('A'<modiPointExp[iIn-1])&&(modiPointExp[iIn-1]<'Z')))) {
+//                                    Flags = false;
+//                                }
+//                                if ((kIn<modiPointExp.length)&&((('a'<modiPointExp[kIn])&&(modiPointExp[kIn]<'z'))||(('A'<modiPointExp[kIn])&&(modiPointExp[kIn]<'Z')))){
+//                                    Flags = false;
+//                                }
+//                                if (Flags){
+//                                    int len = modiIngreExp.length - simpleNameChar.length;
+//                                    aaChar = new char[modiPointExp.length + len];
+//                                    str = "";
+//                                    if (len>0) {
+//                                        for (int m = modiPointExp.length + len-1,n=modiPointExp.length-1; n>= iIn + simpleNameChar.length; m--,n--) {
+//                                            aaChar[m] = modiPointExp[n];
+//                                        }
+//                                        System.arraycopy(modiPointExp, 0, aaChar, 0, iIn + 1);
+//                                        for (int m = iIn, n = 0; m < iIn + modiIngreExp.length; m++, n++) {
+//                                            aaChar[m] = modiIngreExp[n];
+//                                        }
+//                                        if (simpleName.equals("minMiddleIndex")) {
+//                                            System.out.println("len>0:" );
+//                                            for (char c : aaChar)
+//                                                System.out.print(c);
+//                                            System.out.println();
+//                                        }
+//                                    }else if (len < 0) {
+//                                        for (int m = iIn+modiIngreExp.length, n = iIn + simpleName.length(); n < modiPointExp.length - 2; m++, n++)
+//                                            aaChar[m] = modiPointExp[n];
+//                                        System.arraycopy(modiPointExp, 0, aaChar, 0, iIn);
+//                                        for (int m = iIn, n = 0; m < iIn + modiIngreExp.length; m++, n++) {
+//                                            aaChar[m] = modiIngreExp[n];
+//                                        }
+//                                        if (simpleName.equals("minMiddleIndex")) {
+//                                            System.out.println("len<0:");
+//                                            for (char c : aaChar)
+//                                                System.out.print(c);
+//                                            System.out.println();
+//                                        }
+//                                    }else {
+//                                        for (int m=iIn,n=0;n<modiIngreExp.length;m++,n++)
+//                                            aaChar[m] = modiIngreExp[n];
+//                                        if (simpleName.equals("minMiddleIndex")) {
+//                                            System.out.println("len==0:" );
+//                                            for (char c : aaChar)
+//                                                System.out.print(c);
+//                                            System.out.println();
+//                                        }
+//                                    }
+//                                    for (char c : aaChar)
+//                                        str += c;
+//
+//                                    if (simpleName.equals("minMiddleIndex")&&(str!=null))
+//                                        System.out.println("162-----str:"+str+"\ni: "+(i+1)+"\n"+mp.getLCNode().getLineNumber());
+//                                    strings[i++]=str;
+//                                    modiPointExp = aaChar;
+//                                }
+//
+//                            }
+//                        }
+//                    }
+//                    CharSequence c1 = simpleName.subSequence(0, simpleName.length());
+//                    CharSequence c2 = modiExp.subSequence(0, modiExp.length());
+//                    strings[i++] = modiSta.replace(c1,c2);
+//                    strings[i++] = str;
+                        int num = 0;
+                        if (modiSta.split(simpleName).length >= 3)
+                            num = 3;
+                        else if (modiSta.split(simpleName).length == 2)
+                            num = 2;
+
+                        if (num == 2) {
+                            String[] array = modiSta.split(simpleName, num);
+                            midStr += array[0] + eInfo.getExpression().toString();
+                            midStr += array[1];
+                        } else if (num == 3) {
+                            String[] array = modiSta.split(simpleName, num);
+                            midStr += array[0] + eInfo.getExpression().toString();
+                            midStr += array[1] + eInfo.getExpression().toString();
+                            midStr += array[2];
+                        }
+                        strings[i++] = midStr;
+                    }
+                    mp.getTemplateBoolean().put(eInfo.getExpressionStr() + modiSta + simpleName + "s1", true);
+                }
             }
         }
-
         for (int k = 0; k < 50; k++) {
             if (strings[k] != null) {
                 String staClass = "public class Test{\n{\n";
                 staClass += strings[k];
                 staClass += "}\n}";
                 Statement statement = ChangeSimpleName.getStatement(staClass);
-                if (statement != null)
+                if (statement != null) {
                     statementList.add(statement);
+                }
             }
         }
         return statementList;

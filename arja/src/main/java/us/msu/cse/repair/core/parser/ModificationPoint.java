@@ -1,5 +1,6 @@
 package us.msu.cse.repair.core.parser;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -39,10 +40,29 @@ public class ModificationPoint {
 
 	boolean isInStaticMethod;
 
+	List<String> methodAndTypeNameToFilter = new ArrayList<>();
+	List<String> variableName = new ArrayList<>();
+	List<String> methodName = new ArrayList<>();
+
 	Map<String, Boolean> templateBoolean = new HashMap<>();//对应的木板仅仅作为成分的补充，使用一次后（已有补丁成分）则舍弃
 
 	public MethClaPacOfExpName getMethClaPacOfExpName() {
 		return methClaPacOfExpName;
+	}
+
+	public List<String> getVariableName() {
+		return variableName;
+	}
+	public void setVariableName(List<String> variableName) {
+		this.variableName = variableName;
+	}
+
+	public List<String> getMethodName() {
+		return methodName;
+	}
+
+	public void setMethodName(List<String> methodName) {
+		this.methodName = methodName;
 	}
 
 	public void setMethClaPacOfExpName(MethClaPacOfExpName methClaPacOfExpName) {
@@ -59,6 +79,14 @@ public class ModificationPoint {
 
 	public void setSuspValue(double suspValue) {
 		this.suspValue = suspValue;
+	}
+
+	public List<String> getMethodAndTypeNameToFilter() {
+		return methodAndTypeNameToFilter;
+	}
+
+	public void setMethodAndTypeNameToFilter(List<String> methodAndTypeNameToFilter) {
+		this.methodAndTypeNameToFilter = methodAndTypeNameToFilter;
 	}
 
 	public double getSuspValue() {

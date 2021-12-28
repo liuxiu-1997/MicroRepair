@@ -1,0 +1,13 @@
+1 InsertBefore /home/bjtucs/workspace/apr/benchmarks/defects4j/math/math_5_buggy/src/main/java/org/apache/commons/math3/complex/Complex.java 340
+Faulty:
+if (this == other) {
+  return true;
+}
+Seed:
+if (isNaN) {
+  return true;
+}
+**************************************************
+————————————————————————结束————————————————————————————
+Evaluations: 2599
+EstimatedTime: 874925

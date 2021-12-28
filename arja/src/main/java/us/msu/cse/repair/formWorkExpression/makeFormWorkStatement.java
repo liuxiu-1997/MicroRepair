@@ -23,7 +23,7 @@ public class makeFormWorkStatement {
             IfStatement ifStatement1 = (IfStatement) ASTNode.copySubtree(ast,ifStatement);
             infixExpression1.setLeftOperand(simpleName1);
             infixExpression1.setRightOperand(nullLiteral1);
-            infixExpression1.setOperator(InfixExpression.Operator.GREATER_EQUALS);
+            infixExpression1.setOperator(InfixExpression.Operator.NOT_EQUALS);
             ifStatement1.setExpression(infixExpression1);
             list.add(ifStatement1);
             IfStatement ifStatement11 = (IfStatement)ASTNode.copySubtree(ast,ifStatement1);
@@ -32,9 +32,9 @@ public class makeFormWorkStatement {
 
             // 3)	if(sum != null){放着这条语句的父类}
             IfStatement ifStatement2 = (IfStatement)ASTNode.copySubtree(ast,ifStatement1);
-            ifStatement2.setThenStatement((Statement) ASTNode.copySubtree(ifStatement2.getAST(),mp.getStatement().getParent()));
+            ifStatement2.setThenStatement((Statement) ASTNode.copySubtree(ifStatement2.getAST(),mp.getStatement()));
             list.add(ifStatement2);
-            IfStatement ifStatement22 = (IfStatement)ASTNode.copySubtree(ast,ifStatement1);
+            IfStatement ifStatement22 = (IfStatement)ASTNode.copySubtree(ast,ifStatement2);
             ((InfixExpression)ifStatement22.getExpression()).setOperator(InfixExpression.Operator.EQUALS);
             list.add(ifStatement22);
 
@@ -43,7 +43,7 @@ public class makeFormWorkStatement {
             ReturnStatement returnStatement3 = (ReturnStatement) ASTNode.copySubtree(ast,returnStatement);
             ifStatement3.setThenStatement(returnStatement3);
             list.add(ifStatement3);
-            IfStatement ifStatement33 = (IfStatement)ASTNode.copySubtree(ast,ifStatement1);
+            IfStatement ifStatement33 = (IfStatement)ASTNode.copySubtree(ast,ifStatement3);
             ((InfixExpression)ifStatement33.getExpression()).setOperator(InfixExpression.Operator.EQUALS);
             list.add(ifStatement33);
 
@@ -54,9 +54,10 @@ public class makeFormWorkStatement {
             returnStatement4.setExpression(booleanLiteral4);
             ifStatement4.setThenStatement(returnStatement4);
             list.add(ifStatement4);
-            IfStatement ifStatement44 = (IfStatement)ASTNode.copySubtree(ast,ifStatement1);
+            IfStatement ifStatement44 = (IfStatement)ASTNode.copySubtree(ast,ifStatement4);
             ((InfixExpression)ifStatement44.getExpression()).setOperator(InfixExpression.Operator.EQUALS);
             list.add(ifStatement44);
+
 
             //9)	if(sum != null) return false;
             IfStatement ifStatement5 = (IfStatement) ASTNode.copySubtree(ast,ifStatement1);
@@ -65,7 +66,7 @@ public class makeFormWorkStatement {
             returnStatement5.setExpression(booleanLiteral5);
             ifStatement5.setThenStatement(returnStatement5);
             list.add(ifStatement5);
-            IfStatement ifStatement55 = (IfStatement)ASTNode.copySubtree(ast,ifStatement1);
+            IfStatement ifStatement55 = (IfStatement)ASTNode.copySubtree(ast,ifStatement5);
             ((InfixExpression)ifStatement55.getExpression()).setOperator(InfixExpression.Operator.EQUALS);
             list.add(ifStatement55);
 
@@ -76,7 +77,7 @@ public class makeFormWorkStatement {
             returnStatement6.setExpression(numberLiteral6);
             ifStatement6.setThenStatement(returnStatement6);
             list.add(ifStatement6);
-            IfStatement ifStatement66 = (IfStatement)ASTNode.copySubtree(ast,ifStatement1);
+            IfStatement ifStatement66 = (IfStatement)ASTNode.copySubtree(ast,ifStatement6);
             ((InfixExpression)ifStatement66.getExpression()).setOperator(InfixExpression.Operator.EQUALS);
             list.add(ifStatement66);
 
@@ -87,9 +88,18 @@ public class makeFormWorkStatement {
             returnStatement7.setExpression(numberLiteral7);
             ifStatement7.setThenStatement(returnStatement7);
             list.add(ifStatement7);
-            IfStatement ifStatement77 = (IfStatement)ASTNode.copySubtree(ast,ifStatement1);
+            IfStatement ifStatement77 = (IfStatement)ASTNode.copySubtree(ast,ifStatement7);
             ((InfixExpression)ifStatement77.getExpression()).setOperator(InfixExpression.Operator.EQUALS);
             list.add(ifStatement77);
+
+            //8)	if(sum == null) return null;
+            IfStatement ifStatement8 = (IfStatement) ASTNode.copySubtree(ast,ifStatement1);
+            ((InfixExpression)ifStatement8.getExpression()).setOperator(InfixExpression.Operator.EQUALS);
+            NullLiteral nullLiteral8 = ast.newNullLiteral();
+            ReturnStatement returnStatement8 = (ReturnStatement) ASTNode.copySubtree(ast,returnStatement);
+            returnStatement8.setExpression(nullLiteral8);
+            ifStatement8.setThenStatement(returnStatement8);
+            list.add(ifStatement8);
         }
         return list;
     }

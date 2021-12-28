@@ -11,11 +11,8 @@ public class RandCheck {
            bits.set(j,false);
         }
         bits.set(rand,true);
-        if (rand>(size/2)){
-            rand = random.nextInt(bits.size() + 1);
-            bits.set(rand,true);
-            rand = random.nextInt(bits.size() + 1);
-            bits.set(rand,true);
-        }
+        rand = random.nextInt(bits.size() + 1);
+        bits.set(rand,true);
+
     }
 }

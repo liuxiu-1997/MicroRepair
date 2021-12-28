@@ -11,8 +11,7 @@ import java.util.Map.Entry;
 
 import javax.tools.JavaFileObject;
 
-import jmetal.encodings.variable.ArrayInt;
-import jmetal.encodings.variable.Binary;
+import jmetal.metaheuristics.moead.Utils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.SuffixFileFilter;
 import org.apache.commons.io.filefilter.TrueFileFilter;
@@ -24,28 +23,23 @@ import org.eclipse.jface.text.Document;
 import org.eclipse.text.edits.TextEdit;
 
 import jmetal.core.Problem;
-import jmetal.metaheuristics.moead.Utils;
 import jmetal.util.Configuration;
 import jmetal.util.JMException;
-import us.msu.cse.repair.astVisitorExpression.ModificationPointRepairVisitor;
+import us.msu.cse.repair.AbstractClass.ASTVisitorPlus;
+import us.msu.cse.repair.IngredientFilterRule;
+import us.msu.cse.repair.astVisitorExpression.*;
 import us.msu.cse.repair.core.compiler.JavaJDKCompiler;
 import us.msu.cse.repair.core.coverage.SeedLineGeneratorProcess;
 import us.msu.cse.repair.core.coverage.TestFilterProcess;
 import us.msu.cse.repair.core.faultlocalizer.*;
-import us.msu.cse.repair.core.filterrules.IngredientFilterRule;
 import us.msu.cse.repair.core.manipulation.AbstractManipulation;
 import us.msu.cse.repair.core.manipulation.ManipulationFactory;
-import us.msu.cse.repair.core.parser.FieldVarDetector;
 import us.msu.cse.repair.core.parser.FileASTRequestorImpl;
 import us.msu.cse.repair.core.parser.LCNode;
-import us.msu.cse.repair.core.parser.LocalVarDetector;
-import us.msu.cse.repair.core.parser.MethodDetector;
 import us.msu.cse.repair.core.parser.ModificationPoint;
 import us.msu.cse.repair.core.parser.SeedStatement;
 import us.msu.cse.repair.core.parser.SeedStatementInfo;
-import us.msu.cse.repair.core.parser.ingredient.AbstractIngredientScreener;
 import us.msu.cse.repair.core.parser.ingredient.IngredientMode;
-import us.msu.cse.repair.core.parser.ingredient.IngredientScreenerFactory;
 import us.msu.cse.repair.core.testexecutors.ExternalTestExecutor;
 import us.msu.cse.repair.core.testexecutors.ITestExecutor;
 import us.msu.cse.repair.core.testexecutors.InternalTestExecutor;
@@ -55,7 +49,6 @@ import us.msu.cse.repair.core.util.Helper;
 import us.msu.cse.repair.core.util.IO;
 import us.msu.cse.repair.core.util.Patch;
 import us.msu.cse.repair.filterExpression.DirectIngredientExpressionScreener;
-import us.msu.cse.repair.informationExpression.ExpressionInfo;
 import us.msu.cse.repair.repairExpression.RepairExpression;
 import us.msu.cse.repair.toolsExpression.*;
 
@@ -139,7 +132,7 @@ public abstract class AbstractRepairProblem extends Problem {
     protected static long launchTime;
     protected static int evaluations;
 
-
+    int testMid = 0;
     @SuppressWarnings("unchecked")
     public AbstractRepairProblem(Map<String, Object> parameters) throws Exception {
         binJavaDir = (String) parameters.get("binJavaDir");
@@ -403,6 +396,7 @@ public abstract class AbstractRepairProblem extends Problem {
         //这里主要是产生初始化补丁成分，产生我的补丁，是我自己的补丁
         System.out.println("modification-initial of expressionIngredient starts...");
 
+
         int size = modificationPoints.size();
         List<ModificationPoint> tmp = new ArrayList<>();//过滤掉一些修改点，仅仅保留我需要的那几个
         for (int i = 0; i < size; i++) {
@@ -414,12 +408,14 @@ public abstract class AbstractRepairProblem extends Problem {
             if (statement instanceof IfStatement) {
                 boolean mid = repairExpression.ifRepair();
                 while (mid) {
+                    System.out.println("If:"+(++testMid));
                     mid = repairExpression.ifRepair();
                 }
             }
             if ((statement instanceof WhileStatement)) {
                 boolean mid = repairExpression.whileRepair();
                 while (mid) {
+                    System.out.println("while:"+(++testMid));
                     mid = repairExpression.whileRepair();
                 }
 
@@ -427,92 +423,101 @@ public abstract class AbstractRepairProblem extends Problem {
             if ((statement instanceof ReturnStatement)) {
                 boolean mid = repairExpression.returnRepair();
                 while (mid) {
+                    System.out.println("return:"+(++testMid));
                     mid = repairExpression.returnRepair();
                 }
             }
             if ((statement instanceof DoStatement)) {
                 boolean mid = repairExpression.doWhileRepair();
                 while (mid) {
+                    System.out.println("dowhile:"+(++testMid));
                     mid = repairExpression.doWhileRepair();
                 }
             }
             //——————————————————————————————————————————— 修复二 ——————————————————————————————————————————————————————————
             //———————————————————————————————————强制类型转换、数组调用、变量调用检查——————————————————————————————————————————————-
-            for (ExpressionInfo expression : modificationPoint.getModificationPointExpressionInfosList()) {
-                /**
-                 * 当修改点部位ifStatement、whileStatement、doWhile时，看是否满足：
-                 * 1.强制类型转换;
-                 * 2.数组调用;
-                 * 3.变量调用;
-                 * 如果满足以上条件，则进行补丁的生成。并且此条补丁生成之后，不再进行使用。
-                 *///这里还要进行进一步过滤，因为有时候人家已经写了这个函数了
-                Expression etem = expression.getExpression();
-                if ((etem instanceof CastExpression) &&
-                        (!TemplateBoolean.templateBooleanCheck(modificationPoints.get(i), expression.getExpressionStr())) &&
-                        (!SimilarTarTemplateCheck.templateCheck(etem, "CastExpression"))) {
-                    repairExpression.castTypeRepair((CastExpression) etem);
-                    modificationPoint.getTemplateBoolean().put(expression.getExpressionStr(), true);
-                } else if ((etem instanceof ArrayAccess) &&
-                        (!TemplateBoolean.templateBooleanCheck(modificationPoint, expression.getExpressionStr())) &&
-                        (!SimilarTarTemplateCheck.templateCheck(etem, "ArrayAccess"))) {
-                    repairExpression.arrayRepair((ArrayAccess) etem);
-                    modificationPoint.getTemplateBoolean().put(expression.getExpressionStr(), true);
-                } else if ((etem instanceof FieldAccess) &&
-                        (!TemplateBoolean.templateBooleanCheck(modificationPoint, expression.getExpressionStr())) &&
-                        (!SimilarTarTemplateCheck.templateCheck(etem, "FieldAccess"))) {
-                    repairExpression.fieldRepair((FieldAccess) etem);
-                    modificationPoint.getTemplateBoolean().put(expression.getExpressionStr(), true);
-                }
-            }
+//            for (ExpressionInfo expression : modificationPoint.getModificationPointExpressionInfosList()) {
+//                /**
+//                 * 当修改点部位ifStatement、whileStatement、doWhile时，看是否满足：
+//                 * 1.强制类型转换;
+//                 * 2.数组调用;
+//                 * 3.变量调用;
+//                 * 如果满足以上条件，则进行补丁的生成。并且此条补丁生成之后，不再进行使用。
+//                 *///这里还要进行进一步过滤，因为有时候人家已经写了这个函数了
+//                Expression etem = expression.getExpression();
+//                if ((etem instanceof CastExpression) &&
+//                        (!TemplateBoolean.templateBooleanCheck(modificationPoints.get(i), expression.getExpressionStr())) &&
+//                        (!SimilarTarTemplateCheck.templateCheck(etem, "CastExpression"))) {
+//                    repairExpression.castTypeRepair((CastExpression) etem);
+//                    modificationPoint.getTemplateBoolean().put(expression.getExpressionStr(), true);
+//                } else if ((etem instanceof ArrayAccess) &&
+//                        (!TemplateBoolean.templateBooleanCheck(modificationPoint, expression.getExpressionStr())) &&
+//                        (!SimilarTarTemplateCheck.templateCheck(etem, "ArrayAccess"))) {
+//                    repairExpression.arrayRepair((ArrayAccess) etem);
+//                    modificationPoint.getTemplateBoolean().put(expression.getExpressionStr(), true);
+//                } else if ((etem instanceof FieldAccess) &&
+//                        (!TemplateBoolean.templateBooleanCheck(modificationPoint, expression.getExpressionStr())) &&
+//                        (!SimilarTarTemplateCheck.templateCheck(etem, "FieldAccess"))) {
+//                    repairExpression.fieldRepair((FieldAccess) etem);
+//                    modificationPoint.getTemplateBoolean().put(expression.getExpressionStr(), true);
+//                }
+//            }
             //——————————————————————————————————————————— 修复三——————————————————————————————————————————————————————————
             //—————————————————————————————————————对修改点在ASTVisitor上进行修复————————————————————————————————————————————-
             {
-                //两个修改方式的目的都是为了增加成分，在第二种修改方式中，只要是通过ASTVisitor 进行修改
-                boolean visitorRepairFlag = true;
-                ModificationPointRepairVisitor mpVisitor = new ModificationPointRepairVisitor(modificationPoint);
-                AST ast = AST.newAST(AST.JLS8);
-                List<Statement> ingredientList = new ArrayList<>();
-                String staClass = "public class Test1{\n";
-                staClass+=statement.toString();
-                staClass+="}\n";
+                String staClass = "public class Test1{\n{\n";
+                staClass += modificationPoint.getStatement();
+                staClass += "\n}\n}";
                 CompilationUnit compilationUnit = GetCompilationUnit.getCompilationUnitOfString(staClass);
-                while (visitorRepairFlag) {
-                    int number = 0;
-                    if (modificationPoint.getIngredients() != null) {
-                        number = modificationPoint.getIngredients().size();
-                    }
-                    Statement sta = mpVisitor.getStatement();
-                    mpVisitor.setRepaired(false);
-                    compilationUnit.accept(mpVisitor);
-                    visitorRepairFlag = mpVisitor.isRepaired();
 
-                    if ((modificationPoint.getIngredients() != null)&&(sta!=null)) {
-                        if (number != modificationPoint.getIngredients().size()) {
-                        } else {
-                            ingredientList.add(sta);
-                        }
-                    } else if (visitorRepairFlag&&(sta!=null)) {
-                        ingredientList.add(sta);
-                    }
-                }
-                if (modificationPoint.getIngredients() == null) {
-                    modificationPoint.setIngredients(ingredientList);
-                } else {
-                    modificationPoint.getIngredients().addAll(ingredientList);
-                }
+                StringLiteralRepairVisitor stringLiteralRepairVisitor = new StringLiteralRepairVisitor(modificationPoint);
+                push(modificationPoint,compilationUnit,stringLiteralRepairVisitor);
+
+                SimpleNameRepairVisitor simpleNameRepairVisitor = new SimpleNameRepairVisitor(modificationPoint);
+                push(modificationPoint,compilationUnit,simpleNameRepairVisitor);
+
+                MethodInvocationRepairVisitor methodInvocationRepairVisitor = new MethodInvocationRepairVisitor(modificationPoint);
+                push(modificationPoint,compilationUnit,methodInvocationRepairVisitor);
+
+                FieldAccessRepairVisitor fieldAccessRepairVisitor = new FieldAccessRepairVisitor(modificationPoint);
+                push(modificationPoint,compilationUnit,fieldAccessRepairVisitor);
+
+                ConstructorInvocationRepairVisitor constructorInvocationRepairVisitor = new ConstructorInvocationRepairVisitor(modificationPoint);
+                push(modificationPoint,compilationUnit,constructorInvocationRepairVisitor);
+
+                CharacterLiteralRepairVisitor characterLiteralRepairVisitor = new CharacterLiteralRepairVisitor(modificationPoint);
+                push(modificationPoint,compilationUnit,characterLiteralRepairVisitor);
+
+                AssignmentRepairVisitor assignmentRepairVisitor = new AssignmentRepairVisitor(modificationPoint);
+                push(modificationPoint,compilationUnit,assignmentRepairVisitor);
+
+                ArrayCreationRepairVisitor arrayCreationRepairVisitor = new ArrayCreationRepairVisitor(modificationPoint);
+                push(modificationPoint,compilationUnit,arrayCreationRepairVisitor);
+
+                ArrayAccessRepairVisitor arrayAccessRepairVisitor = new ArrayAccessRepairVisitor(modificationPoint);
+                push(modificationPoint,compilationUnit,arrayAccessRepairVisitor);
+
+                BooleanRepairVisitor booleanOperatorRepairVisitor = new BooleanRepairVisitor(modificationPoint);
+                push(modificationPoint,compilationUnit,booleanOperatorRepairVisitor);
+
+                MixRepairVisitor mixRepairVisitor = new MixRepairVisitor(modificationPoint);
+                push(modificationPoint,compilationUnit,mixRepairVisitor);
+
             }
-            if (modificationPoint.getIngredients()!=null)
-                if (modificationPoint.getIngredients().size()>0)
-                  tmp.add(modificationPoint);
+            if (modificationPoint.getIngredients() != null)
+                if (modificationPoint.getIngredients().size() > 0)
+                    tmp.add(modificationPoint);
         }
         for (ModificationPoint mp : tmp) {
             List<Statement> l = new ArrayList<>();
-            if (mp.getIngredients()!=null) {
+            if (mp.getIngredients() != null) {
+                //用于Ingredients的去重
                 for (Statement sOut : mp.getIngredients()) {
                     boolean containFlag = false;
+                    boolean ruleFlag ;
                     if (l.size() > 0) {
                         for (Statement sIn : l) {
-                            if (sIn!=null&&sOut!=null) {
+                            if (sIn != null && sOut != null) {
                                 if (sIn.toString().equals(sOut.toString())) {
                                     containFlag = true;
                                     break;
@@ -520,18 +525,48 @@ public abstract class AbstractRepairProblem extends Problem {
                             }
                         }
                     }
-                    if ((!containFlag)&&(sOut!=null)) {
+                    ruleFlag = IngredientFilterRule.getIsMatchRule(sOut,mp);
+                    if ((!containFlag)&&(!ruleFlag) && (sOut != null)) {
                         l.add(sOut);
                     }
                 }
             }
             mp.setIngredients(l);
         }
-        if (tmp.size()>0){
-            System.out.println("533");
-        }
         modificationPoints = tmp;
         System.out.println("modification-initial of expressionIngredient finish...");
+    }
+
+    void push(ModificationPoint modificationPoint, CompilationUnit compilationUnit, ASTVisitorPlus mpVisitor) {
+        boolean visitorRepairFlag = true;
+        AST ast = AST.newAST(AST.JLS8);
+        List<Statement> ingredientList = new ArrayList<>();
+        while (visitorRepairFlag) {
+            System.out.println("push "+modificationPoint.getLCNode().getLineNumber()+" :"+(++testMid));
+            int number = 0;
+            if (modificationPoint.getIngredients() != null) {
+                number = modificationPoint.getIngredients().size();
+            }
+            mpVisitor.setRepaired(false);
+            CompilationUnit compilationUnitIn = (CompilationUnit) ASTNode.copySubtree(ast, compilationUnit);
+            compilationUnitIn.accept(mpVisitor);
+            visitorRepairFlag = mpVisitor.isRepaired();
+            Statement sta = mpVisitor.getStatement();
+
+
+            if ((modificationPoint.getIngredients() != null) && (sta != null)) {
+                if (number == modificationPoint.getIngredients().size()) {
+                    ingredientList.add(sta);
+                }
+            } else if (visitorRepairFlag && (sta != null)) {
+                ingredientList.add(sta);
+            }
+        }
+        if (modificationPoint.getIngredients() == null) {
+            modificationPoint.setIngredients(ingredientList);
+        } else {
+            modificationPoint.getIngredients().addAll(ingredientList);
+        }
     }
 
     void invokeTestFilter() throws IOException, InterruptedException {

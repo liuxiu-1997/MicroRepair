@@ -1,0 +1,9 @@
+1 Replace /home/bjtucs/workspace/apr/benchmarks/defects4j/chart/chart_7_buggy/source/org/jfree/data/time/TimePeriodValues.java 300
+Faulty:
+long s=getDataItem(this.minMiddleIndex).getPeriod().getStart().getTime();
+Seed:
+long s=getDataItem(this.maxMiddleIndex).getPeriod().getStart().getTime();
+**************************************************
+————————————————————————结束————————————————————————————
+Evaluations: 6035
+EstimatedTime: 544375

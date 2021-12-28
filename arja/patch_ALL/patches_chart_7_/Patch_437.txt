@@ -1,0 +1,16 @@
+1 Replace /home/bjtucs/workspace/apr/benchmarks/defects4j/chart/chart_7_buggy/source/org/jfree/data/time/TimePeriodValues.java 302
+Faulty:
+long e=getDataItem(this.minMiddleIndex).getPeriod().getEnd().getTime();
+Seed:
+long e=getDataItem(this.minMiddleIndex).getPeriod().getEnd().getTime();
+**************************************************
+————————————————————————结束————————————————————————————
+2 Replace /home/bjtucs/workspace/apr/benchmarks/defects4j/chart/chart_7_buggy/source/org/jfree/data/time/TimePeriodValues.java 306
+Faulty:
+this.maxMiddleIndex=index;
+Seed:
+this.maxMiddleIndex=maxStartIndex;
+**************************************************
+————————————————————————结束————————————————————————————
+Evaluations: 2347
+EstimatedTime: 190164

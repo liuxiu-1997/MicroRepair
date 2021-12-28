@@ -1,5 +1,6 @@
 package us.msu.cse.repair.toolsExpression;
 
+import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jdt.core.dom.ASTParser;
 import org.eclipse.jdt.core.dom.CompilationUnit;
@@ -9,6 +10,7 @@ import us.msu.cse.repair.informationExpression.ExpressionInfo;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.Map;
 
 public class GetCompilationUnit {
     public static CompilationUnit getCompilationUnitOfPath(String sourcePath){
@@ -43,6 +45,11 @@ public class GetCompilationUnit {
         astParser.setResolveBindings(true);
         astParser.setStatementsRecovery(true);
         astParser.setSource(strOfClass.toCharArray());
+
+        Map options = JavaCore.getOptions();
+        JavaCore.setComplianceOptions(JavaCore.VERSION_1_7,options);
+        astParser.setCompilerOptions(options);
+
         CompilationUnit compilationUnit = (CompilationUnit)astParser.createAST(null);
         return compilationUnit;
     }

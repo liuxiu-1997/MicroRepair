@@ -1,0 +1,13 @@
+1 Replace /home/bjtucs/workspace/apr/benchmarks/defects4j/chart/chart_1_buggy/source/org/jfree/chart/renderer/category/AbstractCategoryItemRenderer.java 1797
+Faulty:
+if (dataset != null) {
+  return result;
+}
+Seed:
+if (result == null) {
+  return result;
+}
+**************************************************
+————————————————————————结束————————————————————————————
+Evaluations: 1804
+EstimatedTime: 1632075

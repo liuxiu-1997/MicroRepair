@@ -20,12 +20,14 @@ public class AllTypeVisitorModificationPoint extends ASTVisitor {
     private MethClaPacOfExpName methClaPacOfExpName = null;
     private LineAndNodeType lineAndNodeType = null;
     private CompilationUnit compilationUnit = null;
+    private ModificationPoint mp = null;
 
 
     public AllTypeVisitorModificationPoint(ModificationPoint mp, CompilationUnit compilationUnit) {
         this.methClaPacOfExpName = mp.getMethClaPacOfExpName();
         this.lineAndNodeType = mp.getLineAndNodeType();
         this.compilationUnit = compilationUnit;
+        this.mp = mp;
     }
 
     @Override
@@ -356,6 +358,8 @@ public class AllTypeVisitorModificationPoint extends ASTVisitor {
         return true;
     }
 
+
+
     @Override
     public boolean visit(IfStatement node) {
         Expression expression = node.getExpression();
@@ -458,6 +462,10 @@ public class AllTypeVisitorModificationPoint extends ASTVisitor {
 
     @Override
     public boolean visit(MemberRef node) {
+
+        if(!mp.getMethodName().contains(node.getName().toString())){
+            mp.getMethodName().add(node.getName().toString()) ;
+        }
         return super.visit(node);
     }
 
@@ -468,11 +476,18 @@ public class AllTypeVisitorModificationPoint extends ASTVisitor {
 
     @Override
     public boolean visit(MethodRef node) {
+        if(!mp.getMethodName().contains(node.getName().toString())){
+            mp.getMethodName().add(node.getName().toString()) ;
+        }
         return super.visit(node);
     }
 
     @Override
     public boolean visit(MethodRefParameter node) {
+
+        if(!mp.getMethodName().contains(node.getName().toString())){
+            mp.getMethodName().add(node.getName().toString()) ;
+        }
         return super.visit(node);
     }
 
@@ -492,6 +507,9 @@ public class AllTypeVisitorModificationPoint extends ASTVisitor {
 
     @Override
     public boolean visit(MethodInvocation node) {
+        if (!mp.getMethodAndTypeNameToFilter().contains(node.getName().toString())){
+            mp.getMethodAndTypeNameToFilter().add(node.getName().toString());
+        }
 
         Expression expression = node.getExpression();
         LineAndNodeType lineNode = new LineAndNodeType(node.getStartPosition(), node.getNodeType());
@@ -597,6 +615,7 @@ public class AllTypeVisitorModificationPoint extends ASTVisitor {
         ExpressionInfo expressionInfo = TypeInformation.getTypeInformation(node, methClaPacOfExpName, lineNode);
         if (expressionInfo != null)
             list.add(expressionInfo);
+        list.add(new ExpressionInfo(node,methClaPacOfExpName,lineAndNodeType));
         return super.visit(node);
     }
 
@@ -740,6 +759,10 @@ public class AllTypeVisitorModificationPoint extends ASTVisitor {
 
     @Override
     public boolean visit(VariableDeclarationStatement node) {
+        if (!mp.getMethodAndTypeNameToFilter().contains(node.getType().toString())){
+            mp.getMethodAndTypeNameToFilter().add(node.getType().toString());
+        }
+
         LineAndNodeType lineNode = new LineAndNodeType(node.getStartPosition(), node.getNodeType());
         for (Object obj : node.fragments()) {
             VariableDeclarationFragment v = (VariableDeclarationFragment) obj;
@@ -757,6 +780,11 @@ public class AllTypeVisitorModificationPoint extends ASTVisitor {
         Expression expression = node.getInitializer();
         if (expression != null)
             list.add(new ExpressionInfo(expression, methClaPacOfExpName, lineNode));
+
+       if(!mp.getVariableName().contains(node.getName().toString())){
+          mp.getVariableName().add(node.getName().toString()) ;
+       }
+
         return true;
     }
 

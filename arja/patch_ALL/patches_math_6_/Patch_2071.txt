@@ -1,0 +1,16 @@
+1 Delete /home/bjtucs/workspace/apr/benchmarks/defects4j/math/math_6_buggy/src/main/java/org/apache/commons/math3/optim/nonlinear/scalar/noderiv/CMAESOptimizer.java 437
+Faulty:
+bestValue=bestFitness;
+Seed:
+steepestDescent=bestFitness;
+**************************************************
+————————————————————————结束————————————————————————————
+2 InsertBefore /home/bjtucs/workspace/apr/benchmarks/defects4j/math/math_6_buggy/src/main/java/org/apache/commons/math3/optim/BaseOptimizer.java 93
+Faulty:
+return iterations.getCount();
+Seed:
+if (iterations != null) return 1;
+**************************************************
+————————————————————————结束————————————————————————————
+Evaluations: 11240
+EstimatedTime: 6923287

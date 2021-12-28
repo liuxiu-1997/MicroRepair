@@ -70,38 +70,45 @@ public class DirectIngredientExpressionScreener {
         }
     }
 
-//    public List<ExpressionInfo> expressionFilter(){
-//        /**
-//         * 返回所有语句SeedStatement中的过滤掉后的内容
-//         */
-//        List<ExpressionInfo> listFinal = new ArrayList<>();
-//        for (ExpressionInfo e:list) {
-//            if (!listFinal.contains(e)){
-//                listFinal.add(e);
-//            }
-//        }
-//        return listFinal;
-//    }
+    public List<ExpressionInfo> expressionFilter(){
+        /**
+         * 返回所有语句SeedStatement中的过滤掉后的内容
+         */
+        List<ExpressionInfo> listFinal = new ArrayList<>();
+        for (ExpressionInfo e:list) {
+            if (!listFinal.contains(e)){
+                listFinal.add(e);
+            }
+        }
+        return listFinal;
+    }
     public void  allocatonExpressionForModificationPoints()  {
         screenModifications();
         screenIngredientExpression();
 //        List<ExpressionInfo> expressionInfoList = expressionFilter();
         List<ExpressionInfo> expressionInfoList = list;//在这里我先不去过滤，以后去过滤
+        List<ExpressionInfo> expressionInfoFinalList = null;
         for (ModificationPoint mp:modificationPoints) {
-            List<ExpressionInfo> list = new ArrayList<>();
+            List<ExpressionInfo> listIn = new ArrayList<>();
+            expressionInfoFinalList = new ArrayList<>();
             for (ExpressionInfo e:expressionInfoList) {
                 boolean boolean1 = TypeFilter(mp,e);
                 boolean boolean2 = LineFilter(mp,e);
                 boolean boolean3 = LocalFilter(mp,e);
-                if ( boolean1 && boolean2 && boolean3){
+                if ( boolean1 && boolean2 && boolean3 ){
                     try {
-                        list.add((ExpressionInfo) e.clone());
+                        listIn.add((ExpressionInfo) e.clone());
                     } catch (CloneNotSupportedException ex) {
                         ex.printStackTrace();
                     }
                 }
             }
-            mp.setIngredientsExpressionInfo(list);
+            for (ExpressionInfo e:listIn){
+                if (!expressionInfoFinalList.contains(e)){
+                    expressionInfoFinalList.add(e);
+                }
+            }
+            mp.setIngredientsExpressionInfo(expressionInfoFinalList);
         }
     }
     public boolean TypeFilter(ModificationPoint mp,ExpressionInfo e){

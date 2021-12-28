@@ -1,0 +1,36 @@
+1 Replace /home/bjtucs/workspace/apr/benchmarks/defects4j/chart/chart_7_buggy/source/org/jfree/data/time/TimePeriodValues.java 248
+Faulty:
+fireSeriesChanged();
+Seed:
+fireSeriesChanged();
+**************************************************
+————————————————————————结束————————————————————————————
+2 InsertBefore /home/bjtucs/workspace/apr/benchmarks/defects4j/chart/chart_7_buggy/source/org/jfree/data/time/TimePeriodValues.java 285
+Faulty:
+if (this.minMiddleIndex >= 0) {
+  long s=getDataItem(this.minMiddleIndex).getPeriod().getStart().getTime();
+  long e=getDataItem(this.minMiddleIndex).getPeriod().getEnd().getTime();
+  long minMiddle=s + (e - s) / 2;
+  if (middle < minMiddle) {
+    this.minMiddleIndex=index;
+  }
+}
+ else {
+  this.minMiddleIndex=index;
+}
+Seed:
+if (this.minMiddleIndex == 0) {
+  long s=getDataItem(this.minMiddleIndex).getPeriod().getStart().getTime();
+  long e=getDataItem(this.minMiddleIndex).getPeriod().getEnd().getTime();
+  long minMiddle=s + (e - s) / 2;
+  if (middle < minMiddle) {
+    this.minMiddleIndex=index;
+  }
+}
+ else {
+  this.minMiddleIndex=index;
+}
+**************************************************
+————————————————————————结束————————————————————————————
+Evaluations: 12511
+EstimatedTime: 994444

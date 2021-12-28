@@ -14,9 +14,9 @@ import java.util.Objects;
 
 /**
  * 第一种修复方式，模板修复：
- *   1.对if、while、do-while语句修改：  换运算符——换左边的变量——换右边的变量
- *   2.对return修改，换与函数返回类型相同的变量
- *   3.三种模板修复{空指针、数组越界、强制类型转换检查}
+ * 1.对if、while、do-while语句修改：  换运算符——换左边的变量——换右边的变量
+ * 2.对return修改，换与函数返回类型相同的变量
+ * 3.三种模板修复{空指针、数组越界、强制类型转换检查}
  */
 
 public class RepairExpression {
@@ -58,8 +58,8 @@ public class RepairExpression {
             }
         }
 
+        //__________________________________________________________________________________________________________________
         Expression expression = null;
-
         //坚决不能用原先的表达式，因为会修改掉之前的
         if (ifExp instanceof InfixExpression) {
             /**
@@ -68,134 +68,96 @@ public class RepairExpression {
              *
              */
             expression = InfixOperatorRepair((InfixExpression) ifStatement.getExpression(), ifStatement);
-            if ((expression == null) && (!TemplateBoolean.templateBooleanCheck(modificationPoint, "LEFT" + modificationPoint.getStatement()))) {
-                expression = InfixFieldRepairL((InfixExpression) ifStatement.getExpression(), ifStatement);
+            if (expression == null) {
+                InfixExpression eInfixLeft = (InfixExpression) ASTNode.copySubtree(ifStatement.getAST(), ifStatement.getExpression());
+                expression = InfixFieldRepairL(eInfixLeft, ifStatement);
             }
             if (expression == null) {
-                expression = InfixFieldRepairR((InfixExpression) ifStatement.getExpression(), ifStatement);
+                InfixExpression eInfixRight = (InfixExpression) ASTNode.copySubtree(ifStatement.getAST(), ifStatement.getExpression());
+                expression = InfixFieldRepairL(eInfixRight, ifStatement);
             }
-        }
-        if (expression == null){
-            for (int i=0;i<modificationPoint.getExpressionInfosIngredients().size();i++){
-                ExpressionInfo expInfo = modificationPoint.getExpressionInfosIngredients().get(i);
-                if ((Objects.equals(expInfo.getVarNameStr(), "ifexpression"))&&(!TemplateBoolean.templateBooleanCheck(modificationPoint,expInfo.getExpressionStr()+"ie"))){
-                    expression = expInfo.getExpression();
-                    modificationPoint.getTemplateBoolean().put(expInfo.getExpressionStr()+"ie",true);
-                    break;
+            if (expression == null) {
+                for (ExpressionInfo expressionInfo : modificationPoint.getExpressionInfosIngredients()) {
+                    Expression exp = expressionInfo.getExpression();
+                    if ((exp instanceof InfixExpression) && (!TemplateBoolean.templateBooleanCheck(modificationPoint, exp.toString() + "infixOfIf"))) {
+                        expression = (Expression) ASTNode.copySubtree(ast, exp);
+                        modificationPoint.getTemplateBoolean().put(exp.toString() + "infixOfIf", true);
+                    }
                 }
             }
         }
         if (expression != null) {
-            Expression exp = (Expression) ASTNode.copySubtree(ifStatement.getAST(), expression);
-            //留有接口，为以后的其他类型的if语句修改使用
-            ifStatement.setExpression(exp);
+            ifStatement.setExpression(expression);
             clearAndSetIngredient(ifStatement);
             return true;
-        }else
+        } else
             return false;
 
     }
 
     public boolean whileRepair() {
 
-        WhileStatement whileSta = (WhileStatement) modificationPoint.getStatement();
-        WhileStatement whileStatement = ast.newWhileStatement();
-        Expression whileExp = whileSta.getExpression();
-        if (whileSta.getBody() != null) {
-            Statement statement = (Statement) ASTNode.copySubtree(whileStatement.getAST(), whileSta.getBody());
-            whileStatement.setBody(statement);
-        }
-        if (whileSta.getExpression() != null) {
-            Expression expression = (Expression) ASTNode.copySubtree(whileStatement.getAST(), whileSta.getExpression());
-            whileStatement.setExpression(expression);
-        }
-
-        Expression expression = null;
-        if (whileExp instanceof InfixExpression) {
-            expression = InfixOperatorRepair((InfixExpression) whileStatement.getExpression(), whileStatement);
-            if (expression == null) {
-                expression = InfixFieldRepairL((InfixExpression) whileStatement.getExpression(), whileStatement);
+        if (((WhileStatement)modificationPoint.getStatement()).getExpression()!=null) {
+            WhileStatement whileSta = (WhileStatement) modificationPoint.getStatement();
+            WhileStatement whileStatement = ast.newWhileStatement();
+            Expression whileExp = whileSta.getExpression();
+            if (whileSta.getBody() != null) {
+                Statement statement = (Statement) ASTNode.copySubtree(whileStatement.getAST(), whileSta.getBody());
+                whileStatement.setBody(statement);
             }
-            if (expression == null) {
-                expression = InfixFieldRepairR((InfixExpression) whileStatement.getExpression(), whileStatement);
+            if (whileSta.getExpression() != null) {
+                Expression expression = (Expression) ASTNode.copySubtree(whileStatement.getAST(), whileSta.getExpression());
+                whileStatement.setExpression(expression);
             }
-        }
-        Expression exp = null;
-        if (expression != null) {
-            exp = (Expression) ASTNode.copySubtree(whileStatement.getAST(), expression);
-            //留有接口，为以后的其他类型的if语句修改使用
-            whileStatement.setExpression(exp);
-            clearAndSetIngredient(whileStatement);
-            return true;
+            //------------------------------上面是复制，下面是修复----------------------------------------------------
+            Expression expression = null;
+            if (whileExp instanceof InfixExpression) {
+                expression = InfixOperatorRepair((InfixExpression) whileStatement.getExpression(), whileStatement);
+                if (expression == null) {
+                    InfixExpression eInfixLeft = (InfixExpression) ASTNode.copySubtree(ast, whileStatement.getExpression());
+                    expression = InfixFieldRepairL(eInfixLeft, whileStatement);
+                }
+                if (expression == null) {
+                    InfixExpression eInfixRight = (InfixExpression) ASTNode.copySubtree(ast, whileStatement.getExpression());
+                    expression = InfixFieldRepairR(eInfixRight, whileStatement);
+                }
+                if (expression == null) {
+                    for (ExpressionInfo expressionInfo : modificationPoint.getExpressionInfosIngredients()) {
+                        Expression exp = expressionInfo.getExpression();
+                        if ((exp instanceof InfixExpression) && (!TemplateBoolean.templateBooleanCheck(modificationPoint, exp.toString() + "infixOfWhile"))) {
+                            expression = (Expression) ASTNode.copySubtree(ast, exp);
+                            modificationPoint.getTemplateBoolean().put(exp.toString() + "infixOfWhile", true);
+                        }
+                    }
+                }
+            }
+            if (expression != null) {
+                whileStatement.setExpression(expression);
+                clearAndSetIngredient(whileStatement);
+                return true;
+            }
         }
         return false;
     }
 
     public boolean returnRepair() {
-        Expression stReturn = ((ReturnStatement) modificationPoint.getStatement()).getExpression();
-        /**
-         * 1.普通的return则普通对待
-         * 2.如果return为boolean，则制造相应相反的boolean值
-         * 3.如果NumberLiteral、MethodInvocation、ArrayAccess、FieldAccess、StringLiteral、ConditionalExpression
-         *   则返回相应的类型
-         * 4.如果有是Name我则用相同的类型进行替换
-         *
-         * ！！！！！！！！！这里的方法调用，需要进一步修改，保持返回值相等
-         *
-         */
-        //没有使用过，我则需要
-        ReturnStatement returnStatement = null;
-        if ((stReturn instanceof BooleanLiteral) && (!TemplateBoolean.templateBooleanCheck(modificationPoint, "return"))) {
-            returnStatement = ast.newReturnStatement();
-            BooleanLiteral booleanLiteral = null;
-            if (((BooleanLiteral) stReturn).booleanValue()) {//这里是真，我则修改为假
-                booleanLiteral = ast.newBooleanLiteral(false);
-
-            } else {
-                booleanLiteral = ast.newBooleanLiteral(true);
-            }
-            returnStatement.setExpression(booleanLiteral);
-            modificationPoint.getTemplateBoolean().put("return", true);
-        } else {
-            String returnTypeStr = checkReturnType((ReturnStatement) modificationPoint.getStatement());
-            List<ExpressionInfo> modiIngreExpList = modificationPoint.getExpressionInfosIngredients();
-            double maxSort = -1;
-            int mid = -1;
-            for (int i = 0; i < modiIngreExpList.size(); i++) {
-                ExpressionInfo ex = modiIngreExpList.get(i);
-                if (Objects.equals(ex.getVarTypeStr(), returnTypeStr)) {
-                    if ((ex.getPriority() > maxSort) &&
-                            (!TemplateBoolean.templateBooleanCheck(modificationPoint, ex.getExpression().toString() + "reelse"))) {
-                        maxSort = ex.getPriority();
-                        mid = i;
-                    }
+        if (((ReturnStatement) modificationPoint.getStatement()).getExpression()!=null) {
+            Expression returnOfExpression = ((ReturnStatement) modificationPoint.getStatement()).getExpression();
+            ReturnStatement returnStatement = null;
+            for (ExpressionInfo e : modificationPoint.getExpressionInfosIngredients()) {
+                if ((!TemplateBoolean.templateBooleanCheck(modificationPoint, e.toString() + "returnRepair"))
+                        && (returnOfExpression.getNodeType() == e.getExpression().getNodeType())) {
+                    Expression expression = e.getExpression();
+                    modificationPoint.getTemplateBoolean().put(e.toString() + "returnRepair", true);
+                    returnStatement = ast.newReturnStatement();
+                    Expression expressionCopy = (Expression) ASTNode.copySubtree(returnStatement.getAST(), expression);
+                    returnStatement.setExpression(expressionCopy);
                 }
             }
-            if (mid >= 0) {
-                Expression expression = modiIngreExpList.get(mid).getExpression();
-                modificationPoint.getTemplateBoolean().put(expression.toString() + "reelse", true);
-                returnStatement = ast.newReturnStatement();
-                Expression exp = (Expression) ASTNode.copySubtree(returnStatement.getAST(), expression);
-                returnStatement.setExpression(exp);
-            } else {
-                for (int i = 0; i < modiIngreExpList.size(); i++) {
-                    Expression expression = modiIngreExpList.get(i).getExpression();
-                    boolean flag2 = TemplateBoolean.templateBooleanCheck(modificationPoint,expression.toString() + "reelsenode");
-                    if(!flag2){
-
-                        modificationPoint.getTemplateBoolean().put(expression.toString() + "reelsenode", true);
-                        returnStatement = ast.newReturnStatement();
-                        Expression exp = (Expression) ASTNode.copySubtree(returnStatement.getAST(), expression);
-                        returnStatement.setExpression(exp);
-                        break;
-                    }
-                }
+            if (returnStatement != null) {
+                clearAndSetIngredient(returnStatement);
+                return true;
             }
-        }
-
-        if (returnStatement != null) {
-            clearAndSetIngredient(returnStatement);
-            return true;
         }
         return false;
     }
@@ -215,96 +177,108 @@ public class RepairExpression {
                 doStatement.setExpression(expression);
         }
 
-
+        //______________________________________________________________________________________________________________
         Expression expression = null;
         if (doExp instanceof InfixExpression) {
             expression = InfixOperatorRepair((InfixExpression) doStatement.getExpression(), doStatement);
             if (expression == null) {
-                expression = InfixFieldRepairL((InfixExpression) doStatement.getExpression(), doStatement);
+                InfixExpression infixExpressionLeft = (InfixExpression)ASTNode.copySubtree(ast,doStatement.getExpression()) ;
+                expression = InfixFieldRepairL(infixExpressionLeft ,doStatement);
             }
             if (expression == null) {
-                expression = InfixFieldRepairR((InfixExpression) doStatement.getExpression(), doStatement);
+                InfixExpression infixExpressionRight = (InfixExpression)ASTNode.copySubtree(ast,doStatement.getExpression()) ;
+                expression = InfixFieldRepairR(infixExpressionRight, doStatement);
+            }
+            if (expression == null){
+                for (ExpressionInfo expressionInfo : modificationPoint.getExpressionInfosIngredients()) {
+                    Expression exp = expressionInfo.getExpression();
+                    if ((exp instanceof InfixExpression) && (!TemplateBoolean.templateBooleanCheck(modificationPoint, exp.toString() + "infixOfDoWhile"))) {
+                        expression = (Expression) ASTNode.copySubtree(ast, exp);
+                        modificationPoint.getTemplateBoolean().put(exp.toString() + "infixOfDoWhile", true);
+                    }
+                }
             }
         }
-
-        Expression exp = null;
         if (expression != null) {
-            exp = (Expression) ASTNode.copySubtree(doStatement.getAST(), expression);
-            doStatement.setExpression(exp);
+            doStatement.setExpression(expression);
             clearAndSetIngredient(doStatement);
             return true;
         }
         return false;
     }
 
-    public void castTypeRepair(CastExpression castExpression) {
-        InstanceofExpression instanceofExpression = ast.newInstanceofExpression();
-        Expression expressionCast = (Expression) ASTNode.copySubtree(instanceofExpression.getAST(), castExpression.getExpression());
-        Type type = (Type) ASTNode.copySubtree(instanceofExpression.getAST(), castExpression.getType());
-        instanceofExpression.setLeftOperand(expressionCast);
-        instanceofExpression.setRightOperand(type);
-        IfStatement ifStatement = ast.newIfStatement();
-        ifStatement.setExpression(instanceofExpression);
-        Statement statementThen = (Statement) ASTNode.copySubtree(ifStatement.getAST(), modificationPoint.getStatement());
-        ifStatement.setThenStatement(statementThen);
-        clearAndSetIngredient(ifStatement);
-    }
-
-    public void arrayRepair(ArrayAccess access) {
-        String s = access.getArray().toString() + ".length";
-        Name name = ast.newName(s);
-        IfStatement ifStatement = ast.newIfStatement();
-        InfixExpression infixExpression = ast.newInfixExpression();
-        Expression access1 = (Expression) ASTNode.copySubtree(infixExpression.getAST(), access.getIndex());
-        infixExpression.setLeftOperand(access1);
-        infixExpression.setRightOperand(name);
-        infixExpression.setOperator(InfixExpression.Operator.LESS);
-        ifStatement.setExpression(infixExpression);
-        Statement statemenThen = (Statement) ASTNode.copySubtree(ifStatement.getAST(), modificationPoint.getStatement());
-        ifStatement.setThenStatement(statemenThen);
-        clearAndSetIngredient(ifStatement);
-    }
-
-    public void fieldRepair(FieldAccess expression) {
-        NullLiteral nullLiteral = ast.newNullLiteral();
-        IfStatement ifStatement = ast.newIfStatement();
-        FieldAccess fieldAccess = (FieldAccess) ASTNode.copySubtree(ifStatement.getAST(), expression);
-        Statement statementThen = (Statement) ASTNode.copySubtree(ifStatement.getAST(), modificationPoint.getStatement());
-        InfixExpression infixExpression1 = ast.newInfixExpression();
-        infixExpression1.setOperator(InfixExpression.Operator.NOT_EQUALS);
-        infixExpression1.setLeftOperand(fieldAccess);
-        infixExpression1.setRightOperand(nullLiteral);
-        ifStatement.setExpression(infixExpression1);
-        ifStatement.setThenStatement(statementThen);
-        clearAndSetIngredient(ifStatement);
-
-        ReturnStatement returnStatement = ast.newReturnStatement();
-        IfStatement ifelse = (IfStatement) ASTNode.copySubtree(ast,ifStatement);
-        ifelse.setElseStatement(returnStatement);
-        clearAndSetIngredient(ifelse);
-
-    }
+//    public void castTypeRepair(CastExpression castExpression) {
+//        InstanceofExpression instanceofExpression = ast.newInstanceofExpression();
+//        Expression expressionCast = (Expression) ASTNode.copySubtree(instanceofExpression.getAST(), castExpression.getExpression());
+//        Type type = (Type) ASTNode.copySubtree(instanceofExpression.getAST(), castExpression.getType());
+//        instanceofExpression.setLeftOperand(expressionCast);
+//        instanceofExpression.setRightOperand(type);
+//        IfStatement ifStatement = ast.newIfStatement();
+//        ifStatement.setExpression(instanceofExpression);
+//        Statement statementThen = (Statement) ASTNode.copySubtree(ifStatement.getAST(), modificationPoint.getStatement());
+//        ifStatement.setThenStatement(statementThen);
+//        clearAndSetIngredient(ifStatement);
+//    }
+//
+//    public void arrayRepair(ArrayAccess access) {
+//        String s = access.getArray().toString() + ".length";
+//        Name name = ast.newName(s);
+//        IfStatement ifStatement = ast.newIfStatement();
+//        InfixExpression infixExpression = ast.newInfixExpression();
+//        Expression access1 = (Expression) ASTNode.copySubtree(infixExpression.getAST(), access.getIndex());
+//        infixExpression.setLeftOperand(access1);
+//        infixExpression.setRightOperand(name);
+//        infixExpression.setOperator(InfixExpression.Operator.LESS);
+//        ifStatement.setExpression(infixExpression);
+//        Statement statemenThen = (Statement) ASTNode.copySubtree(ifStatement.getAST(), modificationPoint.getStatement());
+//        ifStatement.setThenStatement(statemenThen);
+//        clearAndSetIngredient(ifStatement);
+//    }
+//
+//    public void fieldRepair(FieldAccess expression) {
+//        NullLiteral nullLiteral = ast.newNullLiteral();
+//        IfStatement ifStatement = ast.newIfStatement();
+//        FieldAccess fieldAccess = (FieldAccess) ASTNode.copySubtree(ifStatement.getAST(), expression);
+//        Statement statementThen = (Statement) ASTNode.copySubtree(ifStatement.getAST(), modificationPoint.getStatement());
+//        InfixExpression infixExpression1 = ast.newInfixExpression();
+//        infixExpression1.setOperator(InfixExpression.Operator.NOT_EQUALS);
+//        infixExpression1.setLeftOperand(fieldAccess);
+//        infixExpression1.setRightOperand(nullLiteral);
+//        ifStatement.setExpression(infixExpression1);
+//        ifStatement.setThenStatement(statementThen);
+//        clearAndSetIngredient(ifStatement);
+//
+//        ReturnStatement returnStatement = ast.newReturnStatement();
+//        IfStatement ifelse = (IfStatement) ASTNode.copySubtree(ast, ifStatement);
+//        ifelse.setElseStatement(returnStatement);
+//        clearAndSetIngredient(ifelse);
+//
+//    }
 
 
     public void clearAndSetIngredient(Statement s) {
         if (s != null) {
+            ingredients = new ArrayList<>();
             ingredients.add(s);
-            modificationPoint.setIngredients(ingredients);
+            if (modificationPoint.getIngredients()==null)
+                modificationPoint.setIngredients(ingredients);
+            else
+                modificationPoint.getIngredients().addAll(ingredients);
         }
     }
 
-    public String checkReturnType(ReturnStatement r) {
-        ASTNode astNode = r;
-        String typeStr = null;
-        while ((astNode != null) && (!(astNode instanceof MethodDeclaration))) {
-            astNode = astNode.getParent();
-        }
-        if (astNode != null) {
-            MethodDeclaration methodDeclaration = (MethodDeclaration) astNode;
-            typeStr = methodDeclaration.getReturnType2().toString();
-        }
-        return typeStr;
-    }
+//    public String checkReturnType(ReturnStatement r) {
+//        ASTNode astNode = r;
+//        String typeStr = null;
+//        while ((astNode != null) && (!(astNode instanceof MethodDeclaration))) {
+//            astNode = astNode.getParent();
+//        }
+//        if (astNode != null) {
+//            MethodDeclaration methodDeclaration = (MethodDeclaration) astNode;
+//            typeStr = methodDeclaration.getReturnType2().toString();
+//        }
+//        return typeStr;
+//    }
 
     public Expression InfixOperatorRepair(InfixExpression e, Statement statement) {
         InfixExpression.Operator operator = e.getOperator();
@@ -351,69 +325,17 @@ public class RepairExpression {
     public Expression InfixFieldRepairL(InfixExpression e, Statement statement) {
 
         Expression expLeft = e.getLeftOperand();
-
-
-        Expression expression1 = null;
-        Expression expression2 = null;
-        if (expLeft instanceof Name) {
-            ExpressionInfo expressionInfo = TypeInformation.getTypeInformation((Name) expLeft, modificationPoint);
-            if (expressionInfo == null) {
-                expressionInfo = TypeInformation.getSourceVariable(modificationPoint.getSourceFilePath(), expLeft.toString());
-            }
-            if (expressionInfo != null) {
-                List<ExpressionInfo> modiIngreExpList = modificationPoint.getExpressionInfosIngredients();
-                /**
-                 * 目的是选取满足条件中，分数最大的表达式;
-                 */
-                double maxSort = -1;
-                int mid = -1;
-                for (int i = 0; i < modiIngreExpList.size(); i++) {
-                    ExpressionInfo ex = modiIngreExpList.get(i);
-                    if ((expressionInfo.getVarTypeStr() != null) && (ex.getVarTypeStr() != null) &&
-                            Objects.equals(ex.getVarTypeStr(), expressionInfo.getVarTypeStr()) &&
-                            (GlobalVariableCheck.globalVariable(modificationPoint, expressionInfo))) {
-                        if ((ex.getPriority() > maxSort) &&
-                                (!TemplateBoolean.templateBooleanCheck(modificationPoint, ex.getExpression().toString() + modificationPoint.getStatement().toString() + "infixl"))) {
-                            maxSort = ex.getPriority();
-                            mid = i;
-                        }
-                    }
+        List<ExpressionInfo> modiExpressionList = modificationPoint.getExpressionInfosIngredients();
+        for (ExpressionInfo expressionInfo : modiExpressionList) {
+            if (!TemplateBoolean.templateBooleanCheck(modificationPoint, expressionInfo.getExpression().toString() + "infixLeftVar")) {
+                if (expressionInfo.getExpression().getNodeType() == expLeft.getNodeType()) {
+                    modificationPoint.getTemplateBoolean().put(expressionInfo.getExpression().toString() + "left", true);
+                    Expression expression = expressionInfo.getExpression();
+                    Expression expressionCopy1 = (Expression) ASTNode.copySubtree(statement.getAST(), expression);
+                    e.setLeftOperand(expressionCopy1);
+                    modificationPoint.getTemplateBoolean().put(expressionInfo.getExpression().toString() + "infixLeftVar", true);
+                    return (Expression) ASTNode.copySubtree(statement.getAST(), e);
                 }
-                if (mid >= 0) {
-                    Expression expression = modiIngreExpList.get(mid).getExpression();
-                    modificationPoint.getTemplateBoolean().put(expression.toString() + modificationPoint.getStatement().toString() + "infixl", true);
-                    expression1 = (Expression) ASTNode.copySubtree(statement.getAST(), expression);
-                    e.setLeftOperand(expression1);
-                    expression2 = (Expression) ASTNode.copySubtree(statement.getAST(), e);
-                    return expression2;
-                }
-            }
-        }
-        if ((expLeft instanceof CharacterLiteral) || (expLeft instanceof NumberLiteral) || (expLeft instanceof StringLiteral)) {
-
-            List<ExpressionInfo> modiIngreExpList = modificationPoint.getExpressionInfosIngredients();
-            /**
-             * 目的是选取满足条件中，分数最大的表达式;
-             */
-            double maxSort = -1;
-            int mid = -1;
-            for (int i = 0; i < modiIngreExpList.size(); i++) {
-                if (expLeft.getNodeType() == modiIngreExpList.get(i).getExpressionNodeType()) {
-                    boolean flag1 = (modiIngreExpList.get(i).getPriority() > maxSort);
-                    boolean flag2 = TemplateBoolean.templateBooleanCheck(modificationPoint,
-                            modiIngreExpList.get(i).getExpression().toString() + modificationPoint.getStatement().toString() + "cnsl");
-                    if (flag1 && (!flag2)) {
-                        maxSort = modiIngreExpList.get(i).getPriority();
-                        mid = i;
-                    }
-                }
-            }
-            if (mid >= 0) {
-                modificationPoint.getTemplateBoolean().put(modiIngreExpList.get(mid).getExpression().toString() + modificationPoint.getStatement().toString() + "cnsl", true);
-                expression1 = (Expression) ASTNode.copySubtree(statement.getAST(), modiIngreExpList.get(mid).getExpression());
-                e.setLeftOperand(expression1);
-                expression2 = (Expression) ASTNode.copySubtree(statement.getAST(), e);
-                return expression2;
             }
         }
         return null;
@@ -422,66 +344,17 @@ public class RepairExpression {
     public Expression InfixFieldRepairR(InfixExpression e, Statement statement) {
 
         Expression expRight = e.getRightOperand();
-
-        Expression expression1 = null;
-        Expression expression2 = null;
-
-        if (expRight instanceof Name) {
-            ExpressionInfo expressionInfo = TypeInformation.getTypeInformation((Name) expRight, modificationPoint);
-            if (expressionInfo == null) {
-                expressionInfo = TypeInformation.getSourceVariable(modificationPoint.getSourceFilePath(), expRight.toString());
-            }
-            if (expressionInfo != null) {
-                List<ExpressionInfo> modiIngreExpList = modificationPoint.getModificationPointExpressionInfosList();
-                double maxSort = -1;
-                int mid = -1;
-                for (int i = 0; i < modiIngreExpList.size(); i++) {
-                    ExpressionInfo ex = modiIngreExpList.get(i);
-                    if ((expressionInfo.getVarTypeStr() != null) && (ex.getVarTypeStr() != null) &&
-                            Objects.equals(ex.getVarTypeStr(), expressionInfo.getVarTypeStr()) &&
-                            (GlobalVariableCheck.globalVariable(modificationPoint, expressionInfo))) {
-                        if ((ex.getPriority() > maxSort) &&
-                                (!TemplateBoolean.templateBooleanCheck(modificationPoint, ex.getExpression().toString() + modificationPoint.getStatement().toString() + "infixr"))) {
-                            maxSort = modiIngreExpList.get(i).getPriority();
-                            mid = i;
-                        }
-                    }
+        List<ExpressionInfo> modiExpressionList = modificationPoint.getExpressionInfosIngredients();
+        for (ExpressionInfo expressionInfo : modiExpressionList) {
+            if (!TemplateBoolean.templateBooleanCheck(modificationPoint, expressionInfo.getExpression().toString() + "infixRightVar")) {
+                if (expressionInfo.getExpression().getNodeType() == expRight.getNodeType()) {
+                    modificationPoint.getTemplateBoolean().put(expressionInfo.getExpression().toString() + "Right", true);
+                    Expression expression = expressionInfo.getExpression();
+                    Expression expressionCopy1 = (Expression) ASTNode.copySubtree(statement.getAST(), expression);
+                    e.setRightOperand(expressionCopy1);
+                    modificationPoint.getTemplateBoolean().put(expressionInfo.getExpression().toString() + "infixRightVar", true);
+                    return (Expression) ASTNode.copySubtree(statement.getAST(), e);
                 }
-                if (mid >= 0) {
-                    Expression expression = modiIngreExpList.get(mid).getExpression();
-                    modificationPoint.getTemplateBoolean().put(expression.toString() + modificationPoint.getStatement().toString() + "infixr", true);
-                    expression1 = (Expression) ASTNode.copySubtree(statement.getAST(), modiIngreExpList.get(mid).getExpression());
-                    e.setLeftOperand(expression1);
-                    expression2 = (Expression) ASTNode.copySubtree(statement.getAST(), e);
-                    return expression2;
-                }
-            }
-        }
-        if ((expRight instanceof CharacterLiteral) || (expRight instanceof NumberLiteral) || (expRight instanceof StringLiteral)) {
-
-            List<ExpressionInfo> modiIngreExpList = modificationPoint.getExpressionInfosIngredients();
-            /**
-             * 目的是选取满足条件中，分数最大的表达式;
-             */
-            double maxSort = -1;
-            int mid = -1;
-            for (int i = 0; i < modiIngreExpList.size(); i++) {
-                ExpressionInfo ex = modiIngreExpList.get(i);
-                if (expRight.getNodeType() == ex.getExpressionNodeType()) {
-                    if ((ex.getPriority() > maxSort) &&
-                            (!TemplateBoolean.templateBooleanCheck(modificationPoint, ex.getExpression().toString() + modificationPoint.getStatement().toString() + "cnsr"))) {
-                        maxSort = ex.getPriority();
-                        mid = i;
-                    }
-                }
-            }
-            if (mid >= 0) {
-                Expression expression = modiIngreExpList.get(mid).getExpression();
-                modificationPoint.getTemplateBoolean().put(expression.toString() + modificationPoint.getStatement().toString() + "cnsr", true);
-                expression1 = (Expression) ASTNode.copySubtree(statement.getAST(), modiIngreExpList.get(mid).getExpression());
-                e.setLeftOperand(expression1);
-                expression2 = (Expression) ASTNode.copySubtree(statement.getAST(), e);
-                return expression2;
             }
         }
         return null;

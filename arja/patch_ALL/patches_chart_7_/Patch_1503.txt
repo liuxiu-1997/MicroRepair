@@ -1,0 +1,20 @@
+1 Replace /home/bjtucs/workspace/apr/benchmarks/defects4j/chart/chart_7_buggy/source/org/jfree/data/time/TimePeriodValues.java 300
+Faulty:
+long s=getDataItem(this.minMiddleIndex).getPeriod().getStart().getTime();
+Seed:
+long s=getDataItem(this.maxStartIndex).getPeriod().getStart().getTime();
+**************************************************
+————————————————————————结束————————————————————————————
+2 InsertBefore /home/bjtucs/workspace/apr/benchmarks/defects4j/chart/chart_7_buggy/source/org/jfree/data/time/TimePeriodValues.java 243
+Faulty:
+if (item == null) {
+  throw new IllegalArgumentException("Null item not allowed.");
+}
+Seed:
+if (item == null) {
+  throw new IllegalArgumentException("\"Null item not allowed.\"");
+}
+**************************************************
+————————————————————————结束————————————————————————————
+Evaluations: 7216
+EstimatedTime: 706409

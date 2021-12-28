@@ -163,14 +163,8 @@ public class ExpressionInfo implements Cloneable{
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ExpressionInfo that = (ExpressionInfo) o;
-//        if ((((ExpressionInfo) o).expressionStr!=null)&&(expressionStr!=null)) {
-//            if ((that.varTypeStr != null) && (varTypeStr != null)) {
-//                return (Objects.equals(expressionStr, that.expressionStr) || (Objects.equals(varTypeStr, that.varTypeStr) && Objects.equals(varType.toString(), that.varType.toString())));
-//            }
-//            return Objects.equals(expressionStr, that.expressionStr);
-//        }
         if ((that.expressionStr!=null)&&(expressionStr!=null)){
-            return (Objects.equals(that.expressionStr,expressionStr)&&(that.lineAndNodeType.lineOfStaOrExp==lineAndNodeType.lineOfStaOrExp));
+            return Objects.equals(that.expressionStr,expressionStr);
         }else
             return false;
 
@@ -178,7 +172,7 @@ public class ExpressionInfo implements Cloneable{
 
     @Override
     public int hashCode() {
-        return Objects.hash(expressionStr);
+        return Objects.hash(expression.toString());
     }
 
     @Override

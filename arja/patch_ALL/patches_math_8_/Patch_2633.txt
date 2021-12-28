@@ -1,0 +1,16 @@
+1 Replace /home/bjtucs/workspace/apr/benchmarks/defects4j/math/math_8_buggy/src/main/java/org/apache/commons/math3/distribution/DiscreteDistribution.java 190
+Faulty:
+out[i]=sample();
+Seed:
+if (out == null) out[i]=sample();
+**************************************************
+————————————————————————结束————————————————————————————
+2 InsertBefore /home/bjtucs/workspace/apr/benchmarks/defects4j/math/math_8_buggy/src/main/java/org/apache/commons/math3/util/MathArrays.java 1255
+Faulty:
+double sum=0d;
+Seed:
+double a1High=0d;
+**************************************************
+————————————————————————结束————————————————————————————
+Evaluations: 9977
+EstimatedTime: 1520857
