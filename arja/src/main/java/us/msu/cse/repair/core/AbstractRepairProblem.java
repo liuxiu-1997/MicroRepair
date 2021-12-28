@@ -408,14 +408,14 @@ public abstract class AbstractRepairProblem extends Problem {
             if (statement instanceof IfStatement) {
                 boolean mid = repairExpression.ifRepair();
                 while (mid) {
-                    System.out.println("If:"+(++testMid));
+//                    System.out.println("If:"+(++testMid));
                     mid = repairExpression.ifRepair();
                 }
             }
             if ((statement instanceof WhileStatement)) {
                 boolean mid = repairExpression.whileRepair();
                 while (mid) {
-                    System.out.println("while:"+(++testMid));
+//         /           System.out.println("while:"+(++testMid));
                     mid = repairExpression.whileRepair();
                 }
 
@@ -423,14 +423,14 @@ public abstract class AbstractRepairProblem extends Problem {
             if ((statement instanceof ReturnStatement)) {
                 boolean mid = repairExpression.returnRepair();
                 while (mid) {
-                    System.out.println("return:"+(++testMid));
+//                    System.out.println("return:"+(++testMid));
                     mid = repairExpression.returnRepair();
                 }
             }
             if ((statement instanceof DoStatement)) {
                 boolean mid = repairExpression.doWhileRepair();
                 while (mid) {
-                    System.out.println("dowhile:"+(++testMid));
+//                    System.out.println("dowhile:"+(++testMid));
                     mid = repairExpression.doWhileRepair();
                 }
             }
@@ -542,7 +542,7 @@ public abstract class AbstractRepairProblem extends Problem {
         AST ast = AST.newAST(AST.JLS8);
         List<Statement> ingredientList = new ArrayList<>();
         while (visitorRepairFlag) {
-            System.out.println("push "+modificationPoint.getLCNode().getLineNumber()+" :"+(++testMid));
+//            System.out.println("push "+modificationPoint.getLCNode().getLineNumber()+" :"+(++testMid));
             int number = 0;
             if (modificationPoint.getIngredients() != null) {
                 number = modificationPoint.getIngredients().size();
