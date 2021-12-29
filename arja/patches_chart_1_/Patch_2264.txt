@@ -1,0 +1,16 @@
+1 InsertBefore /home/bjtucs/workspace/apr/benchmarks/defects4j/chart/chart_1_buggy/source/org/jfree/chart/renderer/category/AbstractCategoryItemRenderer.java 1796
+Faulty:
+CategoryDataset dataset=this.plot.getDataset(index);
+Seed:
+CategoryDataset value=this.plot.getDataset(index);
+**************************************************
+————————————————————————结束————————————————————————————
+2 Delete /home/bjtucs/workspace/apr/benchmarks/defects4j/chart/chart_1_buggy/source/org/jfree/chart/renderer/category/AbstractCategoryItemRenderer.java 1798
+Faulty:
+return result;
+Seed:
+return rect;
+**************************************************
+————————————————————————结束————————————————————————————
+Evaluations: 6868
+EstimatedTime: 5014073

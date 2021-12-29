@@ -1,0 +1,20 @@
+1 Delete /home/bjtucs/workspace/apr/benchmarks/defects4j/chart/chart_1_buggy/source/org/jfree/chart/renderer/category/AbstractCategoryItemRenderer.java 1797
+Faulty:
+if (dataset != null) {
+  return result;
+}
+Seed:
+if (cp != null) {
+  return result;
+}
+**************************************************
+————————————————————————结束————————————————————————————
+2 Replace /home/bjtucs/workspace/apr/benchmarks/defects4j/chart/chart_1_buggy/source/org/jfree/chart/plot/CategoryPlot.java 1339
+Faulty:
+setDataset(0,dataset);
+Seed:
+setDataset(0,dataset);
+**************************************************
+————————————————————————结束————————————————————————————
+Evaluations: 7724
+EstimatedTime: 5647751

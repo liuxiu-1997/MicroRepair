@@ -1,0 +1,18 @@
+1 Delete /home/bjtucs/workspace/apr/benchmarks/defects4j/chart/chart_1_buggy/source/org/jfree/chart/renderer/category/AbstractCategoryItemRenderer.java 1798
+Faulty:
+return result;
+Seed:
+return cri;
+**************************************************
+————————————————————————结束————————————————————————————
+2 Delete /home/bjtucs/workspace/apr/benchmarks/defects4j/chart/chart_1_buggy/source/org/jfree/chart/plot/CategoryPlot.java 1353
+Faulty:
+if (existing != null) {
+  existing.removeChangeListener(this);
+}
+Seed:
+shadowGenerator.removeChangeListener(this);
+**************************************************
+————————————————————————结束————————————————————————————
+Evaluations: 2744
+EstimatedTime: 1876111

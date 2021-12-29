@@ -1,0 +1,16 @@
+1 Delete /home/bjtucs/workspace/apr/benchmarks/defects4j/chart/chart_1_buggy/source/org/jfree/chart/renderer/category/AbstractCategoryItemRenderer.java 1798
+Faulty:
+return result;
+Seed:
+if (result != null) return 0;
+**************************************************
+————————————————————————结束————————————————————————————
+2 InsertBefore /home/bjtucs/workspace/apr/benchmarks/defects4j/chart/chart_1_buggy/source/org/jfree/chart/plot/CategoryPlot.java 1045
+Faulty:
+Plot parent=getParent();
+Seed:
+Plot rangePannable=getParent();
+**************************************************
+————————————————————————结束————————————————————————————
+Evaluations: 5367
+EstimatedTime: 3827089

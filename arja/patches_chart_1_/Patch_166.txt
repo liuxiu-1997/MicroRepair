@@ -1,0 +1,20 @@
+1 Delete /home/bjtucs/workspace/apr/benchmarks/defects4j/chart/chart_1_buggy/source/org/jfree/chart/renderer/category/AbstractCategoryItemRenderer.java 1798
+Faulty:
+return result;
+Seed:
+if (result == null) return;
+**************************************************
+————————————————————————结束————————————————————————————
+2 InsertBefore /home/bjtucs/workspace/apr/benchmarks/defects4j/chart/chart_1_buggy/source/org/jfree/chart/plot/CategoryPlot.java 1681
+Faulty:
+if (notify) {
+  fireChangeEvent();
+}
+Seed:
+if (notify) {
+  fireChangeEvent();
+}
+**************************************************
+————————————————————————结束————————————————————————————
+Evaluations: 498
+EstimatedTime: 352345

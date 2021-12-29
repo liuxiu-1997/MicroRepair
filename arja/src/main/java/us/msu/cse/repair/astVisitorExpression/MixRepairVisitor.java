@@ -54,7 +54,7 @@ public class MixRepairVisitor extends ASTVisitorPlus {
     @Override
     public boolean visit(ArrayCreation node) {
         for (ExpressionInfo e : expressionInfoList) {
-            if ((e.getVarType() instanceof ArrayType) && (e.getExpression() instanceof ArrayAccess)) {
+            if ((e.getVarType() instanceof ArrayType) && (e.getExpression() instanceof ArrayCreation)) {
                 ArrayType t1 = (ArrayType) e.getVarType();
                 ArrayType t2 = node.getType();
                 String t1S = t1.getElementType().toString();

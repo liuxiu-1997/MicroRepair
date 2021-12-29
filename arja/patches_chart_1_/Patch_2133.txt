@@ -1,0 +1,16 @@
+1 InsertBefore /home/bjtucs/workspace/apr/benchmarks/defects4j/chart/chart_1_buggy/source/org/jfree/chart/renderer/category/AbstractCategoryItemRenderer.java 1795
+Faulty:
+int index=this.plot.getIndexOf(this);
+Seed:
+int x1=this.plot.getIndexOf(this);
+**************************************************
+————————————————————————结束————————————————————————————
+2 Delete /home/bjtucs/workspace/apr/benchmarks/defects4j/chart/chart_1_buggy/source/org/jfree/chart/renderer/category/AbstractCategoryItemRenderer.java 1798
+Faulty:
+return result;
+Seed:
+return row;
+**************************************************
+————————————————————————结束————————————————————————————
+Evaluations: 6501
+EstimatedTime: 4716645

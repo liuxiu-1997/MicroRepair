@@ -1,0 +1,20 @@
+1 InsertBefore /home/bjtucs/workspace/apr/benchmarks/defects4j/chart/chart_1_buggy/source/org/jfree/chart/renderer/category/AbstractCategoryItemRenderer.java 1793
+Faulty:
+return result;
+Seed:
+if (result != null) return result;
+**************************************************
+————————————————————————结束————————————————————————————
+2 Delete /home/bjtucs/workspace/apr/benchmarks/defects4j/chart/chart_1_buggy/source/org/jfree/chart/renderer/category/AbstractCategoryItemRenderer.java 1797
+Faulty:
+if (dataset != null) {
+  return result;
+}
+Seed:
+if (Layer != null) {
+  return result;
+}
+**************************************************
+————————————————————————结束————————————————————————————
+Evaluations: 1415
+EstimatedTime: 973664

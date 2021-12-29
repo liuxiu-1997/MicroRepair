@@ -1,0 +1,20 @@
+1 InsertBefore /home/bjtucs/workspace/apr/benchmarks/defects4j/chart/chart_1_buggy/source/org/jfree/chart/renderer/category/AbstractCategoryItemRenderer.java 1796
+Faulty:
+CategoryDataset dataset=this.plot.getDataset(index);
+Seed:
+CategoryDataset labelFont=this.plot.getDataset(index);
+**************************************************
+————————————————————————结束————————————————————————————
+2 Delete /home/bjtucs/workspace/apr/benchmarks/defects4j/chart/chart_1_buggy/source/org/jfree/chart/renderer/category/AbstractCategoryItemRenderer.java 1797
+Faulty:
+if (dataset != null) {
+  return result;
+}
+Seed:
+if (getSeriesURLGenerator != null) {
+  return result;
+}
+**************************************************
+————————————————————————结束————————————————————————————
+Evaluations: 9511
+EstimatedTime: 7079069

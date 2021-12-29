@@ -1,0 +1,9 @@
+1 InsertBefore /home/bjtucs/workspace/apr/benchmarks/defects4j/chart/chart_12_buggy/source/org/jfree/data/general/AbstractDataset.java 160
+Faulty:
+List list=Arrays.asList(this.listenerList.getListenerList());
+Seed:
+if (listenerList != null) return true;
+**************************************************
+————————————————————————结束————————————————————————————
+Evaluations: 1050
+EstimatedTime: 530352
