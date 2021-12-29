@@ -138,6 +138,7 @@ public class BooleanAndTypeRepairVisitor extends ASTVisitorPlus {
                     ||(type instanceof ParameterizedType)) {
                         node.setType(typeCopy);
                         isRepaired = true;
+                        mp.getTemplateBoolean().put(type.toString()+"type",true);
                         break;
                     }
                 }

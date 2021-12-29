@@ -2,6 +2,7 @@ package us.msu.cse.repair.filterExpression;
 
 import org.eclipse.jdt.core.dom.CompilationUnit;
 import org.eclipse.jdt.core.dom.Statement;
+import org.eclipse.jdt.core.dom.Type;
 import us.msu.cse.repair.astVisitorExpression.AllTypeVisitorModificationPoint;
 import us.msu.cse.repair.astVisitorExpression.AllTypeVisitorSeedStatement;
 import us.msu.cse.repair.astVisitorExpression.ModificationPointVisitor;
@@ -93,6 +94,7 @@ public class DirectIngredientExpressionScreener {
                     }
                 }
             }
+            //过滤掉相同的ExpressionInfo
             for (ExpressionInfo e:listIn){
                 if (!expressionInfoFinalList.contains(e)){
                     expressionInfoFinalList.add(e);

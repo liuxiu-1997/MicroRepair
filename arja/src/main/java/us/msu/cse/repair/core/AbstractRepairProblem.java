@@ -526,7 +526,7 @@ public abstract class AbstractRepairProblem extends Problem {
                         }
                     }
                     ruleFlag = IngredientFilterRule.getIsMatchRule(sOut,mp);
-                    if ((!containFlag)&&(!ruleFlag) && (sOut != null)&&(sOut.toString().equals(mp.getStatement().toString()))) {
+                    if ((!containFlag)&&(!ruleFlag) && (sOut != null)&&(!sOut.toString().equals(mp.getStatement().toString()))) {
                         l.add(sOut);
                     }
                 }

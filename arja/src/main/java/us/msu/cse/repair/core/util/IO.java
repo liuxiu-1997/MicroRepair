@@ -247,7 +247,7 @@ public class IO {
 			data += "Seed:\n";
 			data += seed.toString();
 			data += "**************************************************\n";
-			
+
 			data += "提取的表达式成分数量："+mp.getExpressionInfosIngredients().size()+"候选补丁数量："+mp.getIngredients().size();
 
 			FileUtils.writeByteArrayToFile(file, data.getBytes(), true);
