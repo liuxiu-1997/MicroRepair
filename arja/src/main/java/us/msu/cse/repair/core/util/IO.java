@@ -124,21 +124,9 @@ public class IO {
 			data += "Seed:\n";
 			data += (seed == null ? "NULL\n" : seed.toString());
 			data += "**************************************************\n";
-			if (((faulty instanceof IfStatement)||(faulty instanceof WhileStatement)||(faulty instanceof ReturnStatement)||
-					(faulty instanceof DoStatement))&&(ingred == mp.getIngredients().size())){
-				data+="\n\n这是表达式成分修复！\n   修复成功  \n 表达式为：\n";
-				data+=(seed == null ? "NULL\n" : seed.toString());
-				data += "————————————————————————结束————————————————————————————\n";
-			}
-			for (ExpressionInfo expressionInfo:mp.getModificationPointExpressionInfosList()){
-				if (((expressionInfo.getExpression() instanceof CastExpression)||(expressionInfo.getExpression() instanceof ArrayAccess)||
-						(expressionInfo.getExpression() instanceof FieldAccess))&&(ingred ==mp.getIngredients().size())){
-					data+="\n\n这是表达式成分修复！\n   修复成功  \n 表达式为：\n";
-					data+=(seed == null ? "NULL\n" : seed.toString());
-					data += "————————————————————————结束————————————————————————————\n";
-				}
-			}
 
+			data += "修改点位置："+loc+"/"+locList.size()+"操作："+op+"(0-删除;1-替换;2-插入)" +"补丁位置："+ingred+"\n";
+			data += "提取的表达式成分数量："+mp.getExpressionInfosIngredients().size()+"候选补丁数量："+mp.getIngredients().size();
 			FileUtils.writeByteArrayToFile(file, data.getBytes(), true);
 		}
 	}
@@ -176,22 +164,9 @@ public class IO {
 			data += (seed == null ? "NULL\n" : seed.toString());
 			data += "**************************************************\n";
 			data += "————————————————————————结束————————————————————————————\n";
-			//faulty即修改点[Statement]
-			//当fault为if、return、while、表达式wei相应的对象时且成分最最后一个，证明我可以正确修复
-			if (((faulty instanceof IfStatement)||(faulty instanceof WhileStatement)||(faulty instanceof ReturnStatement)||
-					(faulty instanceof DoStatement))&&(ingred == mp.getIngredients().size())){
-				data+="\n\n这是表达式成分修复！\n   修复成功  \n 表达式为：\n";
-				data+=(seed == null ? "NULL\n" : seed.toString());
-				data += "————————————————————————结束————————————————————————————\n";
-			}
-			for (ExpressionInfo expressionInfo:mp.getModificationPointExpressionInfosList()){
-				if (((expressionInfo.getExpression() instanceof CastExpression)||(expressionInfo.getExpression() instanceof ArrayAccess)||
-						(expressionInfo.getExpression() instanceof FieldAccess))&&(ingred ==mp.getIngredients().size())){
-					data+="\n\n这是表达式成分修复！\n   修复成功  \n 表达式为：\n";
-					data+=(seed == null ? "NULL\n" : seed.toString());
-					data += "————————————————————————结束————————————————————————————\n";
-				}
-			}
+
+			data += "修改点位置："+loc+"/"+locList.size()+"操作："+op+"(0-删除;1-替换;2-插入)" +"补丁位置："+ingred+"\n";
+			data += "提取的表达式成分数量："+mp.getExpressionInfosIngredients().size()+"候选补丁数量："+mp.getIngredients().size();
 
 			FileUtils.writeByteArrayToFile(file, data.getBytes(), true);
 		}
@@ -233,24 +208,8 @@ public class IO {
 			data += "Seed:\n";
 			data += (seed == null ? "NULL\n" : seed.toString());
 			data += "**************************************************\n";
-			if ((faulty instanceof IfStatement) || (faulty instanceof WhileStatement) || (faulty instanceof ReturnStatement) ||
-					(faulty instanceof DoStatement)) {
-				if ((mp.getIngredients() != null)&&(var0[id + size] == mp.getIngredients().size())) {
-					data += "\n\n这是表达式成分修复！\n   修复成功  \n 表达式为：\n";
-					data += (seed == null ? "NULL\n" : seed.toString());
-					data += "————————————————————————结束————————————————————————————\n";
-				}
-			}
-			for (ExpressionInfo expressionInfo:mp.getModificationPointExpressionInfosList()){
-				if ((expressionInfo.getExpression() instanceof CastExpression)||(expressionInfo.getExpression() instanceof ArrayAccess)||
-						(expressionInfo.getExpression() instanceof FieldAccess)){
-					if ((mp.getIngredients() != null)&&(var0[id + size] == mp.getIngredients().size())) {
-						data += "\n\n这是表达式成分修复！\n   修复成功  \n 表达式为：\n";
-						data += (seed == null ? "NULL\n" : seed.toString());
-						data += "————————————————————————结束————————————————————————————\n";
-					}
-				}
-			}
+
+			data += "提取的表达式成分数量："+mp.getExpressionInfosIngredients().size()+"候选补丁数量："+mp.getIngredients().size();
 
 			FileUtils.writeByteArrayToFile(file, data.getBytes(), true);
 		}
@@ -288,23 +247,8 @@ public class IO {
 			data += "Seed:\n";
 			data += seed.toString();
 			data += "**************************************************\n";
-
-			if ((faulty instanceof IfStatement) || (faulty instanceof WhileStatement) || (faulty instanceof ReturnStatement) ||
-					(faulty instanceof DoStatement)) {
-				if ((mp.getIngredients() != null)&&(var0[i + size] == mp.getIngredients().size())) {
-					data += "\n\n这是表达式成分修复！\n   修复成功  \n 表达式为：\n";
-					data += "————————————————————————结束————————————————————————————\n";
-				}
-			}
-			for (ExpressionInfo expressionInfo:mp.getModificationPointExpressionInfosList()){
-				if ((expressionInfo.getExpression() instanceof CastExpression)||(expressionInfo.getExpression() instanceof ArrayAccess)||
-						(expressionInfo.getExpression() instanceof FieldAccess)){
-					if ((mp.getIngredients() != null)&&(var0[i + size] == mp.getIngredients().size())) {
-						data += "\n\n这是表达式成分修复！\n   修复成功  \n 表达式为：\n";
-						data += "————————————————————————结束————————————————————————————\n";
-					}
-				}
-			}
+			
+			data += "提取的表达式成分数量："+mp.getExpressionInfosIngredients().size()+"候选补丁数量："+mp.getIngredients().size();
 
 			FileUtils.writeByteArrayToFile(file, data.getBytes(), true);
 		}

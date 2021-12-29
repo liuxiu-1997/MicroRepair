@@ -32,15 +32,6 @@ public class DirectIngredientExpressionScreener {
         this.modificationPoints = modificationPoints;
         this.seedStatements = seedStatements;
     }
-    public void screenModifications(){
-
-        for (ModificationPoint mp:modificationPoints){
-            ModificationPointVisitor modificationPointVisitor = new ModificationPointVisitor(mp.getMethClaPacOfExpName(),mp.getLineAndNodeType());
-            mp.getStatement().accept(modificationPointVisitor);
-            mp.setModificationPointExpressionInfosList(modificationPointVisitor.getExpressionInfos());
-        }
-    }
-
     public void screenIngredientExpression() {
 
         /**
@@ -83,7 +74,6 @@ public class DirectIngredientExpressionScreener {
         return listFinal;
     }
     public void  allocatonExpressionForModificationPoints()  {
-        screenModifications();
         screenIngredientExpression();
 //        List<ExpressionInfo> expressionInfoList = expressionFilter();
         List<ExpressionInfo> expressionInfoList = list;//在这里我先不去过滤，以后去过滤

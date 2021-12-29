@@ -771,6 +771,7 @@ public class AllTypeVisitorModificationPoint extends ASTVisitor {
             list.add(new ExpressionInfo(v.getName(), methClaPacOfExpName, lineNode,
                     varType, varName));
         }
+        mp.getTypeName().add(node.getType());
         return true;
     }
 

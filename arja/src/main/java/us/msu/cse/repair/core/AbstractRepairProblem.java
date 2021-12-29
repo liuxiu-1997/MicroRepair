@@ -497,7 +497,7 @@ public abstract class AbstractRepairProblem extends Problem {
                 ArrayAccessRepairVisitor arrayAccessRepairVisitor = new ArrayAccessRepairVisitor(modificationPoint);
                 push(modificationPoint,compilationUnit,arrayAccessRepairVisitor);
 
-                BooleanRepairVisitor booleanOperatorRepairVisitor = new BooleanRepairVisitor(modificationPoint);
+                BooleanAndTypeRepairVisitor booleanOperatorRepairVisitor = new BooleanAndTypeRepairVisitor(modificationPoint);
                 push(modificationPoint,compilationUnit,booleanOperatorRepairVisitor);
 
                 MixRepairVisitor mixRepairVisitor = new MixRepairVisitor(modificationPoint);
@@ -526,7 +526,7 @@ public abstract class AbstractRepairProblem extends Problem {
                         }
                     }
                     ruleFlag = IngredientFilterRule.getIsMatchRule(sOut,mp);
-                    if ((!containFlag)&&(!ruleFlag) && (sOut != null)) {
+                    if ((!containFlag)&&(!ruleFlag) && (sOut != null)&&(sOut.toString().equals(mp.getStatement().toString()))) {
                         l.add(sOut);
                     }
                 }
@@ -552,6 +552,7 @@ public abstract class AbstractRepairProblem extends Problem {
             compilationUnitIn.accept(mpVisitor);
             visitorRepairFlag = mpVisitor.isRepaired();
             Statement sta = mpVisitor.getStatement();
+
 
 
             if ((modificationPoint.getIngredients() != null) && (sta != null)) {

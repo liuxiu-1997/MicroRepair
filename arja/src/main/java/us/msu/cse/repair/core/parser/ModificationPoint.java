@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.eclipse.jdt.core.dom.Statement;
+import org.eclipse.jdt.core.dom.Type;
 import us.msu.cse.repair.informationExpression.ExpressionInfo;
 import us.msu.cse.repair.informationExpression.LineAndNodeType;
 import us.msu.cse.repair.informationExpression.MethClaPacOfExpName;
@@ -18,7 +19,6 @@ public class ModificationPoint {
 	//以下几种是我重新定义的，定义“表达式列表”的目的是为了进行表达式级别的修复
 	MethClaPacOfExpName methClaPacOfExpName = new MethClaPacOfExpName();
 	LineAndNodeType lineAndNodeType = new LineAndNodeType();
-	List<ExpressionInfo> modificationPointExpressionInfosList;
 
 
 	double suspValue;
@@ -43,6 +43,7 @@ public class ModificationPoint {
 	List<String> methodAndTypeNameToFilter = new ArrayList<>();
 	List<String> variableName = new ArrayList<>();
 	List<String> methodName = new ArrayList<>();
+	List<Type>  typeName = new ArrayList<>();
 
 	Map<String, Boolean> templateBoolean = new HashMap<>();//对应的木板仅仅作为成分的补充，使用一次后（已有补丁成分）则舍弃
 
@@ -194,12 +195,12 @@ public class ModificationPoint {
 		this.expressionInfosIngredients = expressionInfos;
 	}
 
-	public List<ExpressionInfo> getModificationPointExpressionInfosList() {
-		return modificationPointExpressionInfosList;
+	public List<Type> getTypeName() {
+		return typeName;
 	}
 
-	public void setModificationPointExpressionInfosList(List<ExpressionInfo> modificationPointExpressionInfosList) {
-		this.modificationPointExpressionInfosList = modificationPointExpressionInfosList;
+	public void setTypeName(List<Type> typeName) {
+		this.typeName = typeName;
 	}
 
 	public List<ExpressionInfo> getExpressionInfosIngredients() {

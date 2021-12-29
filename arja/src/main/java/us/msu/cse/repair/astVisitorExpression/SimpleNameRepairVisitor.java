@@ -1,6 +1,7 @@
 package us.msu.cse.repair.astVisitorExpression;
 
 
+import jmetal.util.PseudoRandom;
 import org.eclipse.jdt.core.dom.*;
 import us.msu.cse.repair.AbstractClass.ASTVisitorPlus;
 import us.msu.cse.repair.core.parser.ModificationPoint;
@@ -8,6 +9,9 @@ import us.msu.cse.repair.formWorkExpression.makeFormWorkStatement;
 import us.msu.cse.repair.informationExpression.ExpressionInfo;
 import us.msu.cse.repair.toolsExpression.ChangeSimpleName;
 import us.msu.cse.repair.toolsExpression.TemplateBoolean;
+
+import java.awt.*;
+import java.security.Permission;
 import java.util.List;
 
 
@@ -543,7 +547,6 @@ public class SimpleNameRepairVisitor extends ASTVisitorPlus {
             }
             if ((!TemplateBoolean.templateBooleanCheck(mp, node.toString()  + "formwork"))) {
                 List<Statement> statementList = makeFormWorkStatement.getStatement(mp, node);
-
                 if (mp.getIngredients() == null) {
                     mp.setIngredients(statementList);
                 } else {

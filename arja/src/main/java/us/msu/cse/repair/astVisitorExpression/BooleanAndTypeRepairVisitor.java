@@ -9,13 +9,13 @@ import us.msu.cse.repair.toolsExpression.TemplateBoolean;
 import java.util.ArrayList;
 import java.util.List;
 
-public class BooleanRepairVisitor extends ASTVisitorPlus {
+public class BooleanAndTypeRepairVisitor extends ASTVisitorPlus {
     private ModificationPoint mp = null;
     private volatile boolean isRepaired = false;
     private volatile boolean statementFlag = false;
     private Statement s = null;
 
-    public BooleanRepairVisitor(ModificationPoint mp) {
+    public BooleanAndTypeRepairVisitor(ModificationPoint mp) {
         this.mp = mp;
     }
 
@@ -124,6 +124,26 @@ public class BooleanRepairVisitor extends ASTVisitorPlus {
 //            }
 //        return false;
 //    }
+
+
+    @Override
+    public void endVisit(VariableDeclarationStatement node) {
+        if (!isRepaired) {
+            List<Type> list = mp.getTypeName();
+            for (Type type : list) {
+                if (!TemplateBoolean.templateBooleanCheck(mp,type.toString()+"type")) {
+                    Type typeCopy = (Type) ASTNode.copySubtree(node.getAST(),type);
+                    if ((type instanceof PrimitiveType)||(type instanceof ArrayType)||(type instanceof SimpleType)
+                    ||(type instanceof NameQualifiedType)||(type instanceof QualifiedType)||(type instanceof WildcardType)
+                    ||(type instanceof ParameterizedType)) {
+                        node.setType(typeCopy);
+                        isRepaired = true;
+                        break;
+                    }
+                }
+            }
+        }
+    }
 
     @Override
     public void endVisit(Block node) {
