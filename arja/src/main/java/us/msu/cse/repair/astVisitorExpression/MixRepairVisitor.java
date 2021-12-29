@@ -402,42 +402,6 @@ public class MixRepairVisitor extends ASTVisitorPlus {
     }
 
     @Override
-    public boolean visit(SimpleName node) {
-
-        if ((!TemplateBoolean.templateBooleanCheck(mp, node.toString() + "all")) && (!(node.toString().equals("Test1")))) {
-            mp.getTemplateBoolean().put(node.toString() + "all", true);
-            int num = 0;
-            if (mp.getIngredients() != null) {
-                num = mp.getIngredients().size();
-            }
-            if ((!TemplateBoolean.templateBooleanCheck(mp, node.toString() + "simpleRepair"))) {
-                List<Statement> statementList = ChangeSimpleName.getChangedSimpleName(mp, node.toString());
-                if (mp.getIngredients() == null) {
-                    mp.setIngredients(statementList);
-                } else {
-                    mp.getIngredients().addAll(statementList);
-                }
-                mp.getTemplateBoolean().put(node.toString() + "simpleRepair", true);
-            }
-            if ((!TemplateBoolean.templateBooleanCheck(mp, node.toString() + "formwork"))) {
-                List<Statement> statementList = makeFormWorkStatement.getStatement(mp, node);
-
-                if (mp.getIngredients() == null) {
-                    mp.setIngredients(statementList);
-                } else {
-                    mp.getIngredients().addAll(statementList);
-                }
-                mp.getTemplateBoolean().put(node.toString() + "formwork", true);
-            }
-            if (mp.getIngredients() != null) {
-                if (num != mp.getIngredients().size())
-                    isRepaired = true;
-            }
-        }
-        return false;
-    }
-
-    @Override
     public boolean visit(StringLiteral node) {
 
         for (ExpressionInfo e : expressionInfoList) {

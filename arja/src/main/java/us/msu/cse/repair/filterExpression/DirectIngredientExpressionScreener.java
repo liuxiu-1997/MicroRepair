@@ -100,6 +100,20 @@ public class DirectIngredientExpressionScreener {
                     expressionInfoFinalList.add(e);
                 }
             }
+            //过滤掉相同的Type
+            List<Type> finalTypeName = new ArrayList<>();
+            for (Type type:mp.getTypeName()){
+                boolean flag = false;
+                for (Type typeFinal:finalTypeName){
+                    if (typeFinal.toString().equals(type.toString())) {
+                        flag = true;
+                        break;
+                    }
+                }
+                if (!flag)
+                    finalTypeName.add(type);
+            }
+            mp.setTypeName(finalTypeName);
             mp.setIngredientsExpressionInfo(expressionInfoFinalList);
         }
     }

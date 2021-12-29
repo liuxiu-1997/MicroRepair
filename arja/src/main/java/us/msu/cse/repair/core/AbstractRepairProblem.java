@@ -542,7 +542,6 @@ public abstract class AbstractRepairProblem extends Problem {
         AST ast = AST.newAST(AST.JLS8);
         List<Statement> ingredientList = new ArrayList<>();
         while (visitorRepairFlag) {
-//            System.out.println("push "+modificationPoint.getLCNode().getLineNumber()+" :"+(++testMid));
             int number = 0;
             if (modificationPoint.getIngredients() != null) {
                 number = modificationPoint.getIngredients().size();
@@ -552,8 +551,6 @@ public abstract class AbstractRepairProblem extends Problem {
             compilationUnitIn.accept(mpVisitor);
             visitorRepairFlag = mpVisitor.isRepaired();
             Statement sta = mpVisitor.getStatement();
-
-
 
             if ((modificationPoint.getIngredients() != null) && (sta != null)) {
                 if (number == modificationPoint.getIngredients().size()) {
