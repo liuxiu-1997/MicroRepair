@@ -22,7 +22,7 @@ public class IngredientFilterRule {
             if ((((IfStatement) statement).getExpression() instanceof InfixExpression)) {
                 String str = ((InfixExpression) ((IfStatement) statement).getExpression()).getLeftOperand().toString();
                 for (String s : list) {
-                    if (s.equals(str)||(s.contains(str.subSequence(0,str.length())))) {
+                    if (((str.charAt(0)>='A')&&(str.charAt(0)<='Z'))||s.equals(str)||(s.contains(str.subSequence(0,str.length())))) {
                         return true;
                     }
                 }
