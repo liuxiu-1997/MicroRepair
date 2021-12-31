@@ -57,7 +57,6 @@ public class AllTypeVisitorSeedStatement extends ASTVisitor {
                 }
 
             } else {
-
                 for (Object obj : methodDeclaration.parameters()) {
                     SingleVariableDeclaration vd = (SingleVariableDeclaration) obj;
                     if (vd != null) {
@@ -128,7 +127,6 @@ public class AllTypeVisitorSeedStatement extends ASTVisitor {
 
     @Override
     public boolean visit(Assignment node) {
-
         Expression expressionLeft = node.getLeftHandSide();
         Expression expressionRight = node.getRightHandSide();
         if (expressionLeft != null) {
@@ -189,7 +187,6 @@ public class AllTypeVisitorSeedStatement extends ASTVisitor {
 
     @Override
     public boolean visit(ClassInstanceCreation node) {
-
         list.add(new ExpressionInfo(node,methClaPacOfExpName,lineAndNodeType,node.getType(),node.toString()));
         return true;
     }
@@ -212,7 +209,6 @@ public class AllTypeVisitorSeedStatement extends ASTVisitor {
                     list.add(expressionInfo);
             }
         }
-
         if (expressionElse != null) {
             list.add(new ExpressionInfo(expressionElse, methClaPacOfExpName, lineAndNodeType));
             if (expressionElse instanceof Name) {
@@ -263,8 +259,6 @@ public class AllTypeVisitorSeedStatement extends ASTVisitor {
                     list.add(expressionInfo);
             }
         }
-
-
         return true;
     }
 
@@ -316,9 +310,7 @@ public class AllTypeVisitorSeedStatement extends ASTVisitor {
 
     @Override
     public boolean visit(FieldAccess node) {
-
         list.add(new ExpressionInfo(node, methClaPacOfExpName, lineAndNodeType));
-
         ExpressionInfo expressionInfo = TypeInformation.getTypeInformation(node.getName(), methClaPacOfExpName, lineAndNodeType);
         if (expressionInfo != null)
             list.add(expressionInfo);
@@ -328,7 +320,6 @@ public class AllTypeVisitorSeedStatement extends ASTVisitor {
 
     @Override
     public boolean visit(FieldDeclaration node) {
-
         for (Object obj : node.fragments()) {
             VariableDeclarationFragment v = (VariableDeclarationFragment) obj;
             String varName = v.getName().toString();
@@ -339,7 +330,6 @@ public class AllTypeVisitorSeedStatement extends ASTVisitor {
 
     @Override
     public boolean visit(ForStatement node) {
-
         Expression expression = node.getExpression();
         if (expression != null)
             list.add(new ExpressionInfo(expression, methClaPacOfExpName, lineAndNodeType));
@@ -391,7 +381,6 @@ public class AllTypeVisitorSeedStatement extends ASTVisitor {
 
     @Override
     public boolean visit(InfixExpression node) {
-
         Expression expL = node.getLeftOperand();
         Expression expR = node.getRightOperand();
         if (expL instanceof Name){
@@ -509,7 +498,6 @@ public class AllTypeVisitorSeedStatement extends ASTVisitor {
 
     @Override
     public boolean visit(NumberLiteral node) {
-
         list.add(new ExpressionInfo(node, methClaPacOfExpName, lineAndNodeType));
         return super.visit(node);
     }
@@ -526,7 +514,6 @@ public class AllTypeVisitorSeedStatement extends ASTVisitor {
 
     @Override
     public boolean visit(ParenthesizedExpression node) {
-
         if (node != null && OperatorFilterPreAndIn.ExpressionFilterReturn(node.getExpression()))
             list.add(new ExpressionInfo(node.getExpression(), methClaPacOfExpName, lineAndNodeType));
         return true;
@@ -544,7 +531,6 @@ public class AllTypeVisitorSeedStatement extends ASTVisitor {
 
     @Override
     public boolean visit(PrefixExpression node) {
-
         list.add(new ExpressionInfo(node, methClaPacOfExpName, lineAndNodeType));
         return true;
     }
@@ -604,8 +590,9 @@ public class AllTypeVisitorSeedStatement extends ASTVisitor {
     @Override
     public boolean visit(ReturnStatement node) {
         Expression expression = node.getExpression();
-        if (expression != null)
+        if (expression != null) {
             list.add(new ExpressionInfo(expression, methClaPacOfExpName, lineAndNodeType));
+        }
         return true;
     }
 
@@ -638,7 +625,7 @@ public class AllTypeVisitorSeedStatement extends ASTVisitor {
 
     @Override
     public boolean visit(StringLiteral node) {
-       list.add(new ExpressionInfo(node,methClaPacOfExpName,lineAndNodeType));
+        list.add(new ExpressionInfo(node,methClaPacOfExpName,lineAndNodeType));
         return false;
     }
 

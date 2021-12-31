@@ -500,6 +500,9 @@ public abstract class AbstractRepairProblem extends Problem {
                 BooleanAndTypeRepairVisitor booleanOperatorRepairVisitor = new BooleanAndTypeRepairVisitor(modificationPoint);
                 push(modificationPoint,compilationUnit,booleanOperatorRepairVisitor);
 
+                QualifiedNameRepairVisitor qualifiedNameRepairVisitor = new QualifiedNameRepairVisitor(modificationPoint);
+                push(modificationPoint,compilationUnit,qualifiedNameRepairVisitor);
+
                 MixRepairVisitor mixRepairVisitor = new MixRepairVisitor(modificationPoint);
                 push(modificationPoint,compilationUnit,mixRepairVisitor);
 

@@ -5,6 +5,7 @@ import us.msu.cse.repair.core.parser.ModificationPoint;
 import us.msu.cse.repair.informationExpression.ExpressionInfo;
 import us.msu.cse.repair.informationExpression.LineAndNodeType;
 import us.msu.cse.repair.informationExpression.MethClaPacOfExpName;
+import us.msu.cse.repair.toolsExpression.GetClassInstance;
 import us.msu.cse.repair.toolsExpression.OperatorFilterPreAndIn;
 import us.msu.cse.repair.toolsExpression.TypeInformation;
 
@@ -49,8 +50,7 @@ public class AllTypeVisitorModificationPoint extends ASTVisitor {
                 for (Object obj : methodDeclaration.parameters()) {
                     SingleVariableDeclaration vd = (SingleVariableDeclaration) obj;
                     if (vd != null) {
-
-                        LineAndNodeType lineNode = new LineAndNodeType(vd.getStartPosition(), vd.getNodeType());
+                        LineAndNodeType lineNode = GetClassInstance.getLineAndNodeType(vd,vd.getNodeType());
                         list.add(new ExpressionInfo(vd.getName(), methClaPacOfExpName, lineNode, vd.getType(), vd.getName().toString()));
 
                     }
@@ -61,7 +61,7 @@ public class AllTypeVisitorModificationPoint extends ASTVisitor {
                 for (Object obj : methodDeclaration.parameters()) {
                     SingleVariableDeclaration vd = (SingleVariableDeclaration) obj;
                     if (vd != null) {
-                        LineAndNodeType lineNode = new LineAndNodeType(vd.getStartPosition(), vd.getNodeType());
+                        LineAndNodeType lineNode = GetClassInstance.getLineAndNodeType(vd,vd.getNodeType());
                         list.add(new ExpressionInfo(vd.getName(), methClaPacOfExpName, lineNode, vd.getType(), vd.getName().toString()));
                     }
                 }
@@ -100,7 +100,7 @@ public class AllTypeVisitorModificationPoint extends ASTVisitor {
         ExpressionInfo expressionInfo = TypeInformation.getArrayAccessTypeInfo(node);
         if (expressionInfo != null) {
             expressionInfo.setMethClaPacOfExpName(methClaPacOfExpName);
-            LineAndNodeType lineNode = new LineAndNodeType(node.getStartPosition(), node.getNodeType());
+            LineAndNodeType lineNode = GetClassInstance.getLineAndNodeType(node,node.getNodeType());
             expressionInfo.setLineAndNodeType(lineNode);
             list.add(expressionInfo);
         }
@@ -110,7 +110,7 @@ public class AllTypeVisitorModificationPoint extends ASTVisitor {
     @Override
     public boolean visit(ArrayCreation node) {
 
-        LineAndNodeType lineNode = new LineAndNodeType(node.getStartPosition(), node.getNodeType());
+        LineAndNodeType lineNode = GetClassInstance.getLineAndNodeType(node,node.getNodeType());
         list.add(new ExpressionInfo(node, methClaPacOfExpName, lineNode, node.getType(), node.dimensions().toString()));
         return super.visit(node);
     }
@@ -135,7 +135,7 @@ public class AllTypeVisitorModificationPoint extends ASTVisitor {
 
         Expression expressionLeft = node.getLeftHandSide();
         Expression expressionRight = node.getRightHandSide();
-        LineAndNodeType lineNode = new LineAndNodeType(node.getStartPosition(), node.getNodeType());
+        LineAndNodeType lineNode = GetClassInstance.getLineAndNodeType(node,node.getNodeType());
         if (expressionLeft != null) {
             list.add(new ExpressionInfo(expressionLeft, methClaPacOfExpName, lineNode));
             if (expressionLeft instanceof Name) {
@@ -188,14 +188,14 @@ public class AllTypeVisitorModificationPoint extends ASTVisitor {
 
     @Override
     public boolean visit(CharacterLiteral node) {
-        LineAndNodeType lineNode = new LineAndNodeType(node.getStartPosition(), node.getNodeType());
+        LineAndNodeType lineNode = GetClassInstance.getLineAndNodeType(node,node.getNodeType());
         list.add(new ExpressionInfo(node, methClaPacOfExpName, lineNode));
         return false;
     }
 
     @Override
     public boolean visit(ClassInstanceCreation node) {
-        LineAndNodeType lineNode = new LineAndNodeType(node.getStartPosition(), node.getNodeType());
+        LineAndNodeType lineNode = GetClassInstance.getLineAndNodeType(node,node.getNodeType());
         list.add(new ExpressionInfo(node, methClaPacOfExpName, lineNode, node.getType(), node.toString()));
         return true;
     }
@@ -210,7 +210,7 @@ public class AllTypeVisitorModificationPoint extends ASTVisitor {
         Expression expressionElse = node.getElseExpression();
         Expression expressionThen = node.getThenExpression();
         Expression expression = node.getExpression();
-        LineAndNodeType lineNode = new LineAndNodeType(node.getStartPosition(), node.getNodeType());
+        LineAndNodeType lineNode = GetClassInstance.getLineAndNodeType(node,node.getNodeType());
         if (expression != null) {
             list.add(new ExpressionInfo(expression, methClaPacOfExpName, lineNode));
             if (expression instanceof Name) {
@@ -262,7 +262,7 @@ public class AllTypeVisitorModificationPoint extends ASTVisitor {
     @Override
     public boolean visit(DoStatement node) {
         Expression expression = node.getExpression();
-        LineAndNodeType lineNode = new LineAndNodeType(node.getStartPosition(), node.getNodeType());
+        LineAndNodeType lineNode = GetClassInstance.getLineAndNodeType(node,node.getNodeType());
         if (expression != null) {
             list.add(new ExpressionInfo(expression, methClaPacOfExpName, lineNode));
             if (expression instanceof Name) {
@@ -284,7 +284,7 @@ public class AllTypeVisitorModificationPoint extends ASTVisitor {
     @Override
     public boolean visit(EnhancedForStatement node) {
         Expression expression = node.getExpression();
-        LineAndNodeType lineNode = new LineAndNodeType(node.getStartPosition(), node.getNodeType());
+        LineAndNodeType lineNode = GetClassInstance.getLineAndNodeType(node,node.getNodeType());
         if (expression instanceof Name) {
             ExpressionInfo expressionInfo = TypeInformation.getTypeInformation((Name) expression, methClaPacOfExpName, lineNode);
             if (expressionInfo != null)
@@ -307,7 +307,7 @@ public class AllTypeVisitorModificationPoint extends ASTVisitor {
     @Override
     public boolean visit(ExpressionMethodReference node) {
         Expression expression = node.getExpression();
-        LineAndNodeType lineNode = new LineAndNodeType(node.getStartPosition(), node.getNodeType());
+        LineAndNodeType lineNode = GetClassInstance.getLineAndNodeType(node,node.getNodeType());
         if (expression != null) {
             list.add(new ExpressionInfo(expression, methClaPacOfExpName, lineNode));
             if (expression instanceof Name) {
@@ -326,7 +326,7 @@ public class AllTypeVisitorModificationPoint extends ASTVisitor {
 
     @Override
     public boolean visit(FieldAccess node) {
-        LineAndNodeType lineNode = new LineAndNodeType(node.getStartPosition(), node.getNodeType());
+        LineAndNodeType lineNode = GetClassInstance.getLineAndNodeType(node,node.getNodeType());
         list.add(new ExpressionInfo(node, methClaPacOfExpName, lineNode));
 
         ExpressionInfo expressionInfo = TypeInformation.getTypeInformation(node.getName(), methClaPacOfExpName, lineNode);
@@ -338,7 +338,7 @@ public class AllTypeVisitorModificationPoint extends ASTVisitor {
 
     @Override
     public boolean visit(FieldDeclaration node) {
-        LineAndNodeType lineNode = new LineAndNodeType(node.getStartPosition(), node.getNodeType());
+        LineAndNodeType lineNode = GetClassInstance.getLineAndNodeType(node,node.getNodeType());
         for (Object obj : node.fragments()) {
             VariableDeclarationFragment v = (VariableDeclarationFragment) obj;
             String varName = v.getName().toString();
@@ -351,7 +351,7 @@ public class AllTypeVisitorModificationPoint extends ASTVisitor {
     public boolean visit(ForStatement node) {
 
         Expression expression = node.getExpression();
-        LineAndNodeType lineNode = new LineAndNodeType(node.getStartPosition(), node.getNodeType());
+        LineAndNodeType lineNode = GetClassInstance.getLineAndNodeType(node,node.getNodeType());
         if (expression != null)
             list.add(new ExpressionInfo(expression, methClaPacOfExpName, lineNode));
 
@@ -364,7 +364,7 @@ public class AllTypeVisitorModificationPoint extends ASTVisitor {
     public boolean visit(IfStatement node) {
         Expression expression = node.getExpression();
         String s = "ifexpression" ;
-        LineAndNodeType lineNode = new LineAndNodeType(node.getStartPosition(), node.getNodeType());
+        LineAndNodeType lineNode = GetClassInstance.getLineAndNodeType(node,node.getNodeType());
         list.add(new ExpressionInfo(expression,methClaPacOfExpName,lineNode,s));
         if (expression instanceof InfixExpression) {
             Expression expL = ((InfixExpression) expression).getLeftOperand();
@@ -406,7 +406,7 @@ public class AllTypeVisitorModificationPoint extends ASTVisitor {
 
     @Override
     public boolean visit(InfixExpression node) {
-        LineAndNodeType lineNode = new LineAndNodeType(node.getStartPosition(), node.getNodeType());
+        LineAndNodeType lineNode = GetClassInstance.getLineAndNodeType(node,node.getNodeType());
         Expression expL = node.getLeftOperand();
         Expression expR = node.getRightOperand();
         if (expL instanceof Name) {
@@ -493,7 +493,7 @@ public class AllTypeVisitorModificationPoint extends ASTVisitor {
 
     @Override
     public boolean visit(MethodDeclaration node) {
-        LineAndNodeType lineNode = new LineAndNodeType(node.getStartPosition(), node.getNodeType());
+        LineAndNodeType lineNode = GetClassInstance.getLineAndNodeType(node,node.getNodeType());
         String methodName = node.getName().getFullyQualifiedName();
         List<SingleVariableDeclaration> parameters = node.parameters();
         for (SingleVariableDeclaration parameter : parameters) {
@@ -512,7 +512,7 @@ public class AllTypeVisitorModificationPoint extends ASTVisitor {
         }
 
         Expression expression = node.getExpression();
-        LineAndNodeType lineNode = new LineAndNodeType(node.getStartPosition(), node.getNodeType());
+        LineAndNodeType lineNode = GetClassInstance.getLineAndNodeType(node,node.getNodeType());
         list.add(new ExpressionInfo(node,methClaPacOfExpName,lineNode,"methodinvocation"));
         if (expression != null && OperatorFilterPreAndIn.ExpressionFilterReturn(expression))
             list.add(new ExpressionInfo(expression, methClaPacOfExpName, lineNode));
@@ -541,7 +541,7 @@ public class AllTypeVisitorModificationPoint extends ASTVisitor {
 
     @Override
     public boolean visit(NumberLiteral node) {
-        LineAndNodeType lineNode = new LineAndNodeType(node.getStartPosition(), node.getNodeType());
+        LineAndNodeType lineNode = GetClassInstance.getLineAndNodeType(node,node.getNodeType());
         list.add(new ExpressionInfo(node, methClaPacOfExpName, lineNode));
         return super.visit(node);
     }
@@ -558,7 +558,7 @@ public class AllTypeVisitorModificationPoint extends ASTVisitor {
 
     @Override
     public boolean visit(ParenthesizedExpression node) {
-        LineAndNodeType lineNode = new LineAndNodeType(node.getStartPosition(), node.getNodeType());
+        LineAndNodeType lineNode = GetClassInstance.getLineAndNodeType(node,node.getNodeType());
 
         if (node != null && OperatorFilterPreAndIn.ExpressionFilterReturn(node.getExpression()))
             list.add(new ExpressionInfo(node.getExpression(), methClaPacOfExpName, lineNode));
@@ -567,7 +567,7 @@ public class AllTypeVisitorModificationPoint extends ASTVisitor {
 
     @Override
     public boolean visit(PostfixExpression node) {
-        LineAndNodeType lineNode = new LineAndNodeType(node.getStartPosition(), node.getNodeType());
+        LineAndNodeType lineNode = GetClassInstance.getLineAndNodeType(node,node.getNodeType());
         Expression expL = node.getOperand();
         if (expL instanceof Name) {
             list.add(new ExpressionInfo(expL, methClaPacOfExpName, lineNode));
@@ -578,7 +578,7 @@ public class AllTypeVisitorModificationPoint extends ASTVisitor {
 
     @Override
     public boolean visit(PrefixExpression node) {
-        LineAndNodeType lineNode = new LineAndNodeType(node.getStartPosition(), node.getNodeType());
+        LineAndNodeType lineNode = GetClassInstance.getLineAndNodeType(node,node.getNodeType());
         list.add(new ExpressionInfo(node, methClaPacOfExpName, lineNode));
         return true;
     }
@@ -602,7 +602,7 @@ public class AllTypeVisitorModificationPoint extends ASTVisitor {
 
     @Override
     public boolean visit(ReturnStatement node) {
-        LineAndNodeType lineNode = new LineAndNodeType(node.getStartPosition(), node.getNodeType());
+        LineAndNodeType lineNode = GetClassInstance.getLineAndNodeType(node,node.getNodeType());
         Expression expression = node.getExpression();
         if (expression != null)
             list.add(new ExpressionInfo(expression, methClaPacOfExpName, lineNode));
@@ -611,7 +611,7 @@ public class AllTypeVisitorModificationPoint extends ASTVisitor {
 
     @Override
     public boolean visit(SimpleName node) {
-        LineAndNodeType lineNode = new LineAndNodeType(node.getStartPosition(), node.getNodeType());
+        LineAndNodeType lineNode = GetClassInstance.getLineAndNodeType(node,node.getNodeType());
         ExpressionInfo expressionInfo = TypeInformation.getTypeInformation(node, methClaPacOfExpName, lineNode);
         if (expressionInfo != null)
             list.add(expressionInfo);
@@ -631,7 +631,7 @@ public class AllTypeVisitorModificationPoint extends ASTVisitor {
 
     @Override
     public boolean visit(SingleVariableDeclaration node) {
-        LineAndNodeType lineNode = new LineAndNodeType(node.getStartPosition(), node.getNodeType());
+        LineAndNodeType lineNode = GetClassInstance.getLineAndNodeType(node,node.getNodeType());
         Expression expression = node.getInitializer();
         if (expression != null)
             list.add(new ExpressionInfo(expression, methClaPacOfExpName, lineNode));
@@ -640,7 +640,7 @@ public class AllTypeVisitorModificationPoint extends ASTVisitor {
 
     @Override
     public boolean visit(StringLiteral node) {
-        LineAndNodeType lineNode = new LineAndNodeType(node.getStartPosition(), node.getNodeType());
+        LineAndNodeType lineNode = GetClassInstance.getLineAndNodeType(node,node.getNodeType());
         list.add(new ExpressionInfo(node, methClaPacOfExpName, lineNode));
         return false;
     }
@@ -763,7 +763,7 @@ public class AllTypeVisitorModificationPoint extends ASTVisitor {
             mp.getMethodAndTypeNameToFilter().add(node.getType().toString());
         }
 
-        LineAndNodeType lineNode = new LineAndNodeType(node.getStartPosition(), node.getNodeType());
+        LineAndNodeType lineNode = GetClassInstance.getLineAndNodeType(node,node.getNodeType());
         for (Object obj : node.fragments()) {
             VariableDeclarationFragment v = (VariableDeclarationFragment) obj;
             Type varType = node.getType();
@@ -777,7 +777,7 @@ public class AllTypeVisitorModificationPoint extends ASTVisitor {
 
     @Override
     public boolean visit(VariableDeclarationFragment node) {
-        LineAndNodeType lineNode = new LineAndNodeType(node.getStartPosition(), node.getNodeType());
+        LineAndNodeType lineNode = GetClassInstance.getLineAndNodeType(node,node.getNodeType());
         Expression expression = node.getInitializer();
         if (expression != null)
             list.add(new ExpressionInfo(expression, methClaPacOfExpName, lineNode));
@@ -791,7 +791,7 @@ public class AllTypeVisitorModificationPoint extends ASTVisitor {
 
     @Override
     public boolean visit(WhileStatement node) {
-        LineAndNodeType lineNode = new LineAndNodeType(node.getStartPosition(), node.getNodeType());
+        LineAndNodeType lineNode = GetClassInstance.getLineAndNodeType(node,node.getNodeType());
         Expression expression = node.getExpression();
         if (expression != null)
             list.add(new ExpressionInfo(expression, methClaPacOfExpName, lineNode));
