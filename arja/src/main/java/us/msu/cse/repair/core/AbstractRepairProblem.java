@@ -408,14 +408,12 @@ public abstract class AbstractRepairProblem extends Problem {
             if (statement instanceof IfStatement) {
                 boolean mid = repairExpression.ifRepair();
                 while (mid) {
-//                    System.out.println("If:"+(++testMid));
                     mid = repairExpression.ifRepair();
                 }
             }
             if ((statement instanceof WhileStatement)) {
                 boolean mid = repairExpression.whileRepair();
                 while (mid) {
-//         /           System.out.println("while:"+(++testMid));
                     mid = repairExpression.whileRepair();
                 }
 
@@ -423,14 +421,12 @@ public abstract class AbstractRepairProblem extends Problem {
             if ((statement instanceof ReturnStatement)) {
                 boolean mid = repairExpression.returnRepair();
                 while (mid) {
-//                    System.out.println("return:"+(++testMid));
                     mid = repairExpression.returnRepair();
                 }
             }
             if ((statement instanceof DoStatement)) {
                 boolean mid = repairExpression.doWhileRepair();
                 while (mid) {
-//                    System.out.println("dowhile:"+(++testMid));
                     mid = repairExpression.doWhileRepair();
                 }
             }
@@ -472,40 +468,52 @@ public abstract class AbstractRepairProblem extends Problem {
 
                 StringLiteralRepairVisitor stringLiteralRepairVisitor = new StringLiteralRepairVisitor(modificationPoint);
                 push(modificationPoint,compilationUnit,stringLiteralRepairVisitor);
-
+//                if (modificationPoint.getIngredients()!=null)
+//                    System.out.println("471: "+modificationPoint.getIngredients().size());
                 SimpleNameRepairVisitor simpleNameRepairVisitor = new SimpleNameRepairVisitor(modificationPoint);
                 push(modificationPoint,compilationUnit,simpleNameRepairVisitor);
-
+//                if (modificationPoint.getIngredients()!=null)
+//                    System.out.println("472: "+modificationPoint.getIngredients().size());
                 MethodInvocationRepairVisitor methodInvocationRepairVisitor = new MethodInvocationRepairVisitor(modificationPoint);
                 push(modificationPoint,compilationUnit,methodInvocationRepairVisitor);
-
+//                if (modificationPoint.getIngredients()!=null)
+//                    System.out.println("473: "+modificationPoint.getIngredients().size());
                 FieldAccessRepairVisitor fieldAccessRepairVisitor = new FieldAccessRepairVisitor(modificationPoint);
                 push(modificationPoint,compilationUnit,fieldAccessRepairVisitor);
-
+//                if (modificationPoint.getIngredients()!=null)
+//                    System.out.println("474: "+modificationPoint.getIngredients().size());
                 ConstructorInvocationRepairVisitor constructorInvocationRepairVisitor = new ConstructorInvocationRepairVisitor(modificationPoint);
                 push(modificationPoint,compilationUnit,constructorInvocationRepairVisitor);
-
+//                if (modificationPoint.getIngredients()!=null)
+//                    System.out.println("475: "+modificationPoint.getIngredients().size());
                 CharacterLiteralRepairVisitor characterLiteralRepairVisitor = new CharacterLiteralRepairVisitor(modificationPoint);
                 push(modificationPoint,compilationUnit,characterLiteralRepairVisitor);
-
+//                if (modificationPoint.getIngredients()!=null)
+//                    System.out.println("476: "+modificationPoint.getIngredients().size());
                 AssignmentRepairVisitor assignmentRepairVisitor = new AssignmentRepairVisitor(modificationPoint);
                 push(modificationPoint,compilationUnit,assignmentRepairVisitor);
-
+//                if (modificationPoint.getIngredients()!=null)
+////                    System.out.println("477: "+modificationPoint.getIngredients().size());
                 ArrayCreationRepairVisitor arrayCreationRepairVisitor = new ArrayCreationRepairVisitor(modificationPoint);
                 push(modificationPoint,compilationUnit,arrayCreationRepairVisitor);
-
+//                if (modificationPoint.getIngredients()!=null)
+//                    System.out.println("478: "+modificationPoint.getIngredients().size());
                 ArrayAccessRepairVisitor arrayAccessRepairVisitor = new ArrayAccessRepairVisitor(modificationPoint);
                 push(modificationPoint,compilationUnit,arrayAccessRepairVisitor);
-
+//                if (modificationPoint.getIngredients()!=null)
+//                    System.out.println("479: "+modificationPoint.getIngredients().size());
                 BooleanAndTypeRepairVisitor booleanOperatorRepairVisitor = new BooleanAndTypeRepairVisitor(modificationPoint);
                 push(modificationPoint,compilationUnit,booleanOperatorRepairVisitor);
-
+//                if (modificationPoint.getIngredients()!=null)
+//                    System.out.println("4710: "+modificationPoint.getIngredients().size());
                 QualifiedNameRepairVisitor qualifiedNameRepairVisitor = new QualifiedNameRepairVisitor(modificationPoint);
                 push(modificationPoint,compilationUnit,qualifiedNameRepairVisitor);
-
+//                if (modificationPoint.getIngredients()!=null)
+//                    System.out.println("4711: "+modificationPoint.getIngredients().size());
                 MixRepairVisitor mixRepairVisitor = new MixRepairVisitor(modificationPoint);
                 push(modificationPoint,compilationUnit,mixRepairVisitor);
-
+//                if (modificationPoint.getIngredients()!=null)
+//                    System.out.println("4712: "+modificationPoint.getIngredients().size());
             }
             if (modificationPoint.getIngredients() != null)
                 if (modificationPoint.getIngredients().size() > 0)

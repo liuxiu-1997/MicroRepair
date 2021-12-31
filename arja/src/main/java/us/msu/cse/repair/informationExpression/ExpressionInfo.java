@@ -164,7 +164,7 @@ public class ExpressionInfo implements Cloneable{
         if (o == null || getClass() != o.getClass()) return false;
         ExpressionInfo that = (ExpressionInfo) o;
         if ((that.expressionStr!=null)&&(expressionStr!=null)){
-            return Objects.equals(that.expressionStr,expressionStr)&&Objects.equals(that.lineAndNodeType,lineAndNodeType);
+            return Objects.equals(that.expressionStr,expressionStr);
         }else
             return false;
 
