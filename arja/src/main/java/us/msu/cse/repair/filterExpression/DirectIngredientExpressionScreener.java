@@ -3,8 +3,10 @@ package us.msu.cse.repair.filterExpression;
 import org.eclipse.jdt.core.dom.CompilationUnit;
 import org.eclipse.jdt.core.dom.Statement;
 import org.eclipse.jdt.core.dom.Type;
+import org.eclipse.jdt.core.util.IEnclosingMethodAttribute;
 import us.msu.cse.repair.astVisitorExpression.AllTypeVisitorModificationPoint;
 import us.msu.cse.repair.astVisitorExpression.AllTypeVisitorSeedStatement;
+import us.msu.cse.repair.astVisitorExpression.MethodInvocationRepairVisitor;
 import us.msu.cse.repair.astVisitorExpression.ModificationPointVisitor;
 import us.msu.cse.repair.core.parser.ModificationPoint;
 import us.msu.cse.repair.core.parser.SeedStatement;
@@ -63,23 +65,39 @@ public class DirectIngredientExpressionScreener {
         }
     }
 
-    public List<ExpressionInfo> expressionFilter() {
+    public List<ExpressionInfo> expressionFilter() throws CloneNotSupportedException {
         /**
          * 返回所有语句SeedStatement中的过滤掉后的内容
          */
         List<ExpressionInfo> listFinal = new ArrayList<>();
-        for (ExpressionInfo e : list) {
-            if (!listFinal.contains(e)) {
-                listFinal.add(e);
+        boolean flagTest = false;
+        ExpressionInfo expressionInfo = null;
+        listFinal.add((ExpressionInfo) list.get(0).clone());
+        for (ExpressionInfo eOut:list){
+            flagTest = false;
+            expressionInfo = null;
+            for (ExpressionInfo eIn:listFinal){
+                if (eOut.getExpression().toString().equals(eIn.getExpression().toString())&&
+                        eOut.getMethClaPacOfExpName().expressionClassName.equals(eIn.getMethClaPacOfExpName().expressionClassName)){
+                    flagTest = true;
+                    expressionInfo = (ExpressionInfo) eIn.clone();
+                    break;
+                }
             }
+            if (flagTest){
+                if (eOut.getLineAndNodeType().lineOfStaOrExp < expressionInfo.getLineAndNodeType().lineOfStaOrExp){
+                    expressionInfo.getLineAndNodeType().setLineOfStaOrExp(eOut.getLineAndNodeType().lineOfStaOrExp);
+                    listFinal.add((ExpressionInfo) expressionInfo.clone());
+                }
+            }else
+                listFinal.add((ExpressionInfo) eOut.clone());
         }
         return listFinal;
     }
 
-    public void allocatonExpressionForModificationPoints() {
+    public void allocatonExpressionForModificationPoints() throws CloneNotSupportedException {
         screenIngredientExpression();
-//        List<ExpressionInfo> expressionInfoList = expressionFilter();
-        List<ExpressionInfo> expressionInfoList = list;//在这里我先不去过滤，以后去过滤
+        List<ExpressionInfo> expressionInfoList = expressionFilter();
         List<ExpressionInfo> expressionInfoFinalList = null;
         for (ModificationPoint mp : modificationPoints) {
             List<ExpressionInfo> listIn = new ArrayList<>();
@@ -97,11 +115,6 @@ public class DirectIngredientExpressionScreener {
                 }
             }
             //过滤掉相同的ExpressionInfo
-            for (ExpressionInfo e : listIn) {
-                if (!expressionInfoFinalList.contains(e)) {
-                    expressionInfoFinalList.add(e);
-                }
-            }
             //过滤掉相同的Type
             List<Type> finalTypeName = new ArrayList<>();
             for (Type type : mp.getTypeName()) {

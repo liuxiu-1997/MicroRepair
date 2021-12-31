@@ -29,6 +29,7 @@ public class LineAndNodeType implements Cloneable{
         NodeType = nodeType;
     }
 
+
     @Override
     public Object clone() throws CloneNotSupportedException {
         LineAndNodeType lineAndNodeType = null;

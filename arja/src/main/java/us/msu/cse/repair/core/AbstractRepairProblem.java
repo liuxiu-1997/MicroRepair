@@ -371,7 +371,7 @@ public abstract class AbstractRepairProblem extends Problem {
         System.out.println("AST parsing is finished!");
     }
 
-    void invokeIngredientScreener() throws JMException {
+    void invokeIngredientScreener() throws JMException, CloneNotSupportedException {
         System.out.println("Ingredient screener starts...");
         DirectIngredientExpressionScreener dir = new DirectIngredientExpressionScreener(modificationPoints, seedStatements);
         dir.allocatonExpressionForModificationPoints();
