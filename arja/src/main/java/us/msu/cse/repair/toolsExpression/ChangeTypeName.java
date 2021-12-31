@@ -15,33 +15,39 @@ public class ChangeTypeName {
         String[] strings = new String[50];
         int i = 0;
         for (Type type : list) {
-            if (!TemplateBoolean.templateBooleanCheck(mp, type.toString() + "type")) {
-                String s = statementString.replaceAll(typeName, type.toString());
+            if (!TemplateBoolean.templateBooleanCheck(mp, type.toString() + "type")&&(!type.toString().equals(typeName))) {
                 if ((type instanceof SimpleType)&&(node.getType() instanceof SimpleType)) {
+                    String s = statementString.replaceAll(typeName, type.toString());
                     if (i < 49)
                         strings[i++] = s;
                     mp.getTemplateBoolean().put(type.toString() + "type", true);
                 }else if ((type instanceof NameQualifiedType)&&((node.getType() instanceof NameQualifiedType))) {
+                    String s = statementString.replaceAll(typeName, type.toString());
                     if (i < 49)
                         strings[i++] = s;
                     mp.getTemplateBoolean().put(type.toString() + "type", true);
                 } else if ((type instanceof QualifiedType)&&((node.getType() instanceof QualifiedType))) {
+                    String s = statementString.replaceAll(typeName, type.toString());
                     if (i < 49)
                         strings[i++] = s;
                     mp.getTemplateBoolean().put(type.toString() + "type", true);
                 }else if ((type instanceof WildcardType)&&((node.getType() instanceof WildcardType))) {
+                    String s = statementString.replaceAll(typeName, type.toString());
                     if (i < 49)
                         strings[i++] = s;
                     mp.getTemplateBoolean().put(type.toString() + "type", true);
                 }else if ((type instanceof ParameterizedType)&&((node.getType() instanceof ParameterizedType))) {
+                    String s = statementString.replaceAll(typeName, type.toString());
                     if (i < 49)
                         strings[i++] = s;
                     mp.getTemplateBoolean().put(type.toString() + "type", true);
                 }else if ((type instanceof PrimitiveType) && (node.getType() instanceof PrimitiveType)) {
+                    String s = statementString.replaceAll(typeName, type.toString());
                     if (i < 49)
                         strings[i++] = s;
                     mp.getTemplateBoolean().put(type.toString() + "type", true);
                 } else if ((type instanceof ArrayType) && (node.getType() instanceof ArrayType)) {
+                    String s = statementString.replaceAll(typeName, type.toString());
                     if (i < 49)
                         strings[i++] = s;
                     mp.getTemplateBoolean().put(type.toString() + "type", true);
