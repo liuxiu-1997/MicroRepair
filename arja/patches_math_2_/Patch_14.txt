@@ -1,0 +1,10 @@
+1 Delete /home/bjtucs/workspace/apr/benchmarks/defects4j/math/math_2_buggy/src/main/java/org/apache/commons/math3/distribution/AbstractIntegerDistribution.java 138
+Faulty:
+upper=((int)Math.ceil(tmp)) - 1;
+Seed:
+if (tmp != null) return true;
+**************************************************
+————————————————————————结束————————————————————————————
+修改点位置：17/1操作：0(0-删除;1-替换;2-插入)补丁位置：41
+提取的表达式成分数量：113候选补丁数量：51Evaluations: 57
+EstimatedTime: 18511

@@ -47,7 +47,7 @@ public class ChangeTypeName {
                         strings[i++] = s;
                     mp.getTemplateBoolean().put(type.toString() + "type", true);
                 } else if ((type instanceof ArrayType) && (node.getType() instanceof ArrayType)) {
-                    String s = statementString.replaceAll(typeName, type.toString());
+                    String s = statementString.replaceAll(((ArrayType) node.getType()).getElementType().toString(), ((ArrayType) type).getElementType().toString());
                     if (i < 49)
                         strings[i++] = s;
                     mp.getTemplateBoolean().put(type.toString() + "type", true);

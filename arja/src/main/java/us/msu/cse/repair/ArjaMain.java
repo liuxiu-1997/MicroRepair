@@ -17,7 +17,7 @@ public class ArjaMain {
 
         String[] args1 = new String[9];
 //        for (int jjj=0;jjj<3;jjj++)
-        for (int i = 2; i <= 16; i += 1) {
+        for (int i = 6; i <= 30; i += 1) {
 //			if(i<=26) {
             args1[0] = "Arja";
             args1[1] = "-DsrcJavaDir";

@@ -1,0 +1,10 @@
+1 InsertBefore /home/bjtucs/workspace/apr/benchmarks/defects4j/math/math_6_buggy/src/main/java/org/apache/commons/math3/optim/BaseOptimizer.java 93
+Faulty:
+return iterations.getCount();
+Seed:
+if (iterations != null) return 1;
+**************************************************
+————————————————————————结束————————————————————————————
+修改点位置：24/1操作：2(0-删除;1-替换;2-插入)补丁位置：15
+提取的表达式成分数量：54候选补丁数量：18Evaluations: 4898
+EstimatedTime: 3464589

@@ -1,0 +1,10 @@
+1 Replace /home/bjtucs/workspace/apr/benchmarks/defects4j/math/math_2_buggy/src/main/java/org/apache/commons/math3/distribution/AbstractIntegerDistribution.java 126
+Faulty:
+final double sigma=FastMath.sqrt(getNumericalVariance());
+Seed:
+final double sigma=checkedCumulativeProbability(lower);
+**************************************************
+————————————————————————结束————————————————————————————
+修改点位置：8/1操作：1(0-删除;1-替换;2-插入)补丁位置：25
+提取的表达式成分数量：93候选补丁数量：26Evaluations: 5898
+EstimatedTime: 1888498
