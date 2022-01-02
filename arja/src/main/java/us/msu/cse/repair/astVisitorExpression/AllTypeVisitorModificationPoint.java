@@ -501,6 +501,15 @@ public class AllTypeVisitorModificationPoint extends ASTVisitor {
             String parameterName = parameter.getName().toString();
             list.add(new ExpressionInfo(parameter.getName(), methClaPacOfExpName, lineNode,
                     parameterType, parameterName));
+            mp.getTypeName().add(parameterType);
+            mp.getVariableName().add(parameterName);
+        }
+        if (mp.getMethodName()!=null) {
+            if (!mp.getMethodName().contains(node.getName().toString())) {
+                mp.getMethodName().add(node.getName().toString());
+            }
+        }else {
+            mp.getMethodName().add(node.getName().toString());
         }
         return true;
     }
@@ -510,7 +519,17 @@ public class AllTypeVisitorModificationPoint extends ASTVisitor {
         if (!mp.getMethodAndTypeNameToFilter().contains(node.getName().toString())){
             mp.getMethodAndTypeNameToFilter().add(node.getName().toString());
         }
-
+        if (mp.getMethodName()!=null) {
+            if (!mp.getMethodName().contains(node.getName().toString())) {
+                mp.getMethodName().add(node.getName().toString());
+            }
+        }else {
+            mp.getMethodName().add(node.getName().toString());
+        }
+        if (node.arguments()!=null){
+            for (Object o:node.arguments())
+                mp.getVariableName().add(o.toString());
+        }
         Expression expression = node.getExpression();
         LineAndNodeType lineNode = GetClassInstance.getLineAndNodeType(node,node.getNodeType());
         list.add(new ExpressionInfo(node,methClaPacOfExpName,lineNode,"methodinvocation"));
