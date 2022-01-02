@@ -323,7 +323,8 @@ public class AllTypeVisitorSeedStatement extends ASTVisitor {
         for (Object obj : node.fragments()) {
             VariableDeclarationFragment v = (VariableDeclarationFragment) obj;
             String varName = v.getName().toString();
-            list.add(new ExpressionInfo(v.getName(), methClaPacOfExpName, lineAndNodeType, node.getType(), varName));
+            ExpressionInfo expressionInfo = new ExpressionInfo(v.getName(), methClaPacOfExpName, lineAndNodeType, node.getType(), varName);
+            list.add(expressionInfo);
         }
         return true;
     }

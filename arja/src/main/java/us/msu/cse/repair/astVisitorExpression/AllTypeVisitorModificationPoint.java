@@ -342,7 +342,8 @@ public class AllTypeVisitorModificationPoint extends ASTVisitor {
         for (Object obj : node.fragments()) {
             VariableDeclarationFragment v = (VariableDeclarationFragment) obj;
             String varName = v.getName().toString();
-            list.add(new ExpressionInfo(v.getName(), methClaPacOfExpName, lineNode, node.getType(), varName));
+            ExpressionInfo expressionInfo = new ExpressionInfo(v.getName(), methClaPacOfExpName, lineNode, node.getType(), varName);
+            list.add(expressionInfo);
         }
         return true;
     }
@@ -778,6 +779,7 @@ public class AllTypeVisitorModificationPoint extends ASTVisitor {
 
     @Override
     public boolean visit(VariableDeclarationStatement node) {
+
         if (!mp.getMethodAndTypeNameToFilter().contains(node.getType().toString())){
             mp.getMethodAndTypeNameToFilter().add(node.getType().toString());
         }

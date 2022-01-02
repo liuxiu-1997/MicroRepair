@@ -501,8 +501,6 @@ public abstract class AbstractRepairProblem extends Problem {
 
                 MixRepairVisitor mixRepairVisitor = new MixRepairVisitor(modificationPoint);
                 push(modificationPoint,compilationUnit,mixRepairVisitor);
-                if (modificationPoint.getIngredients()!=null)
-                    System.out.println("4712: "+modificationPoint.getIngredients().size());
             }
             if (modificationPoint.getIngredients() != null)
                 if (modificationPoint.getIngredients().size() > 0)

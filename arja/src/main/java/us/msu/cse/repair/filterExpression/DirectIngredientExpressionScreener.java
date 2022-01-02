@@ -73,23 +73,23 @@ public class DirectIngredientExpressionScreener {
         boolean flagTest = false;
         ExpressionInfo expressionInfo = null;
         listFinal.add((ExpressionInfo) list.get(0).clone());
-        for (ExpressionInfo eOut:list){
+        for (ExpressionInfo eOut : list) {
             flagTest = false;
             expressionInfo = null;
-            for (ExpressionInfo eIn:listFinal){
-                if (eOut.getExpression().toString().equals(eIn.getExpression().toString())&&
-                        eOut.getMethClaPacOfExpName().expressionClassName.equals(eIn.getMethClaPacOfExpName().expressionClassName)){
+            for (ExpressionInfo eIn : listFinal) {
+                if (eOut.getExpression().toString().equals(eIn.getExpression().toString()) &&
+                        eOut.getMethClaPacOfExpName().expressionClassName.equals(eIn.getMethClaPacOfExpName().expressionClassName)) {
                     flagTest = true;
                     expressionInfo = (ExpressionInfo) eIn.clone();
                     break;
                 }
             }
-            if (flagTest){
-                if (eOut.getLineAndNodeType().lineOfStaOrExp < expressionInfo.getLineAndNodeType().lineOfStaOrExp){
+            if (flagTest) {
+                if (eOut.getLineAndNodeType().lineOfStaOrExp < expressionInfo.getLineAndNodeType().lineOfStaOrExp) {
                     expressionInfo.getLineAndNodeType().setLineOfStaOrExp(eOut.getLineAndNodeType().lineOfStaOrExp);
                     listFinal.add((ExpressionInfo) expressionInfo.clone());
                 }
-            }else
+            } else
                 listFinal.add((ExpressionInfo) eOut.clone());
         }
         return listFinal;
@@ -98,9 +98,9 @@ public class DirectIngredientExpressionScreener {
     public void allocatonExpressionForModificationPoints() throws CloneNotSupportedException {
         screenIngredientExpression();
         List<ExpressionInfo> expressionInfoList = list;
+        int abc = 0;
         for (ModificationPoint mp : modificationPoints) {
             List<ExpressionInfo> listIn = new ArrayList<>();
-            List<ExpressionInfo> expressionInfoFinalFilterList = new ArrayList<>();
             for (ExpressionInfo e : expressionInfoList) {
                 boolean boolean1 = TypeFilter(mp, e);
                 boolean boolean2 = LineFilter(mp, e);
@@ -128,30 +128,8 @@ public class DirectIngredientExpressionScreener {
                     finalTypeName.add(type);
             }
             //------------------------------
-            boolean flagTest = false;
-            ExpressionInfo expressionInfo = null;
-            expressionInfoFinalFilterList.add((ExpressionInfo) listIn.get(0).clone());
-            for (ExpressionInfo eOut:listIn){
-                flagTest = false;
-                expressionInfo = null;
-                for (ExpressionInfo eIn:expressionInfoFinalFilterList){
-                    if (eOut.getExpression().toString().equals(eIn.getExpression().toString())&&
-                            eOut.getMethClaPacOfExpName().expressionClassName.equals(eIn.getMethClaPacOfExpName().expressionClassName)){
-                        flagTest = true;
-                        expressionInfo = (ExpressionInfo) eIn.clone();
-                        break;
-                    }
-                }
-                if (flagTest){
-                    if (eOut.getLineAndNodeType().lineOfStaOrExp < expressionInfo.getLineAndNodeType().lineOfStaOrExp){
-                        expressionInfo.getLineAndNodeType().setLineOfStaOrExp(eOut.getLineAndNodeType().lineOfStaOrExp);
-                        expressionInfoFinalFilterList.add((ExpressionInfo) expressionInfo.clone());
-                    }
-                }else
-                    expressionInfoFinalFilterList.add((ExpressionInfo) eOut.clone());
-            }
             mp.setTypeName(finalTypeName);
-            mp.setIngredientsExpressionInfo(expressionInfoFinalFilterList);
+            mp.setIngredientsExpressionInfo(listIn);
         }
     }
 
@@ -161,7 +139,7 @@ public class DirectIngredientExpressionScreener {
     }
 
     public boolean LineFilter(ModificationPoint mp, ExpressionInfo e) {
-        int mpLine = mp.getLineAndNodeType().lineOfStaOrExp;
+        int mpLine = mp.getLCNode().getLineNumber();
         int expLine = e.getLineAndNodeType().lineOfStaOrExp;
         return mpLine >= expLine;
     }

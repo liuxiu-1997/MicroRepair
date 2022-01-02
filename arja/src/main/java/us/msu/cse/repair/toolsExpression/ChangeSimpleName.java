@@ -54,7 +54,8 @@ public class ChangeSimpleName {
         }
         return statementList;
     }
-    public static List<Statement> getChangedConstructor(ModificationPoint mp,String nodeStr, List list) {
+
+    public static List<Statement> getChangedConstructor(ModificationPoint mp, String nodeStr, List list) {
         String modiSta = mp.getStatement().toString();
         List<Statement> statementList = new ArrayList<>();
         int i = 0;
@@ -100,16 +101,17 @@ public class ChangeSimpleName {
     public static List<Statement> getChangedSimpleName(ModificationPoint mp, String simpleName) {
         String modiSta = mp.getStatement().toString();
         List<Statement> statementList = new ArrayList<>();
-        int i = 0;
+        int iArray = 0;
         List<ExpressionInfo> expressionInfoList = mp.getExpressionInfosIngredients();
-        String[] strings = new String[50];
-        //模式一，只替换一个变量
+        String[] strings = new String[100];
+
         for (ExpressionInfo eInfo : expressionInfoList) {
             String midStr = "";
             String expStr = eInfo.getExpression().toString();
+            //模式一，只替换一个变量,相同的變量依次都更換
             if (mp.getVariableName().contains(expStr) || mp.getMethodName().contains(expStr)) {
-                if ( (!TemplateBoolean.templateBooleanCheck(mp, eInfo.getExpressionStr() + modiSta + simpleName + "s1"))) {
-                    if (i < 49) {
+                if ((!TemplateBoolean.templateBooleanCheck(mp, expStr + simpleName + "all"))) {
+                    if (iArray < 98) {
                         int num = 0;
                         if (modiSta.split(simpleName).length >= 3)
                             num = 3;
@@ -118,22 +120,46 @@ public class ChangeSimpleName {
 
                         if (num == 2) {
                             String[] array = modiSta.split(simpleName, num);
-                            midStr += array[0] + eInfo.getExpression().toString();
+                            midStr += array[0] + expStr;
                             midStr += array[1];
                         } else if (num == 3) {
                             String[] array = modiSta.split(simpleName, num);
-                            midStr += array[0] + eInfo.getExpression().toString();
-                            midStr += array[1] + eInfo.getExpression().toString();
+                            midStr += array[0] + expStr;
+                            midStr += array[1] + expStr;
                             midStr += array[2];
                         }
-                        strings[i++] = midStr;
+                        strings[iArray++] = midStr;
                     }
-                    mp.getTemplateBoolean().put(eInfo.getExpressionStr() + modiSta + simpleName + "s1", true);
+                    mp.getTemplateBoolean().put(expStr + simpleName + "all", true);
                 }
+                //模式二，若有多个变量每次仅仅更新一个
+                if ((!TemplateBoolean.templateBooleanCheck(mp, expStr + simpleName + "onlyone"))) {
+
+                    String[] sMid = modiSta.split(simpleName);
+                    StringBuilder finalOne = new StringBuilder();
+                    StringBuilder finalTwo = new StringBuilder();
+                    for (int i = 0; i < sMid.length; i++) {
+                        finalOne.append(sMid[i]);
+                        if (i != sMid.length - 1)
+                            finalTwo = new StringBuilder(finalOne + expStr);
+                        for (int j = i + 1; j < sMid.length; j++) {
+                            finalTwo.append(sMid[j]);
+                            if (j != sMid.length - 1)
+                                finalTwo.append(simpleName);
+                        }
+                        if (iArray < 98)
+                            strings[iArray++] = finalTwo.toString();
+                        else
+                            break;
+                        finalTwo = new StringBuilder();
+                        finalOne.append(simpleName);
+                    }
+                }
+                mp.getTemplateBoolean().put(expStr + simpleName + "onlyone", true);
             }
         }
-        for (int k = 0; k < 50; k++) {
-            if (strings[k] != null) {
+        for (int k = 0; k < 100; k++) {
+            if ((strings[k] != null) && (strings[k].length() > 0)) {
                 String staClass = "public class Test{\n{\n";
                 staClass += strings[k];
                 staClass += "}\n}";
