@@ -38,6 +38,7 @@ public class ArrayCreationRepairVisitor extends ASTVisitorPlus {
                             ArrayInitializer expression = (ArrayInitializer) ASTNode.copySubtree(node.getAST(), access.getInitializer());
                             node.setInitializer(expression);
                             isRepaired = true;
+                            mp.getTemplateBoolean().put(e.getExpressionStr() + "ac",true);
                             return true;
                         }
 

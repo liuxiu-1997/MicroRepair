@@ -512,7 +512,6 @@ public abstract class AbstractRepairProblem extends Problem {
                 //用于Ingredients的去重
                 for (Statement sOut : mp.getIngredients()) {
                     boolean containFlag = false;
-                    boolean ruleFlag ;
                     if (l.size() > 0) {
                         for (Statement sIn : l) {
                             if (sIn != null && sOut != null) {
@@ -523,8 +522,8 @@ public abstract class AbstractRepairProblem extends Problem {
                             }
                         }
                     }
-                    ruleFlag = IngredientFilterRule.getIsMatchRule(sOut,mp);
-                    if ((!containFlag)&&(!ruleFlag) && (sOut != null)&&(!sOut.toString().equals(mp.getStatement().toString()))) {
+//                    ruleFlag = IngredientFilterRule.getIsMatchRule(sOut,mp);
+                    if ((!containFlag)&& (sOut != null)&&(!sOut.toString().equals(mp.getStatement().toString()))) {
                         l.add(sOut);
                     }
                 }

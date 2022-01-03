@@ -62,7 +62,7 @@ public class SimpleNameRepairVisitor extends ASTVisitorPlus {
                     isRepaired = true;
             }
         }
-        return false;
+        return true;
     }
 
     @Override

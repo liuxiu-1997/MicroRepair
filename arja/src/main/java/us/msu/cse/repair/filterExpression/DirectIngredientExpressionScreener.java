@@ -106,11 +106,7 @@ public class DirectIngredientExpressionScreener {
                 boolean boolean2 = LineFilter(mp, e);
                 boolean boolean3 = LocalFilter(mp, e);
                 if (boolean1 && boolean2 && boolean3) {
-                    try {
-                        listIn.add((ExpressionInfo) e.clone());
-                    } catch (CloneNotSupportedException ex) {
-                        ex.printStackTrace();
-                    }
+                    listIn.add(e);
                 }
             }
             //过滤掉相同的ExpressionInfo
@@ -127,9 +123,22 @@ public class DirectIngredientExpressionScreener {
                 if (!flag)
                     finalTypeName.add(type);
             }
+            List<ExpressionInfo> finalListOfMp = new ArrayList<>();
+            //______________________________
+            for (ExpressionInfo expressionInfo:listIn){
+                if (finalListOfMp.contains(expressionInfo)){
+                    int i = finalListOfMp.indexOf(expressionInfo);
+                    ExpressionInfo eIn1 = finalListOfMp.get(i);
+                    if (eIn1.getLineAndNodeType().lineOfStaOrExp >= expressionInfo.getLineAndNodeType().lineOfStaOrExp ){
+                        finalListOfMp.remove(i);
+                        finalListOfMp.add((ExpressionInfo) expressionInfo.clone());
+                    }
+                }else
+                    finalListOfMp.add((ExpressionInfo) expressionInfo.clone());
+            }
             //------------------------------
             mp.setTypeName(finalTypeName);
-            mp.setIngredientsExpressionInfo(listIn);
+            mp.setIngredientsExpressionInfo(finalListOfMp);
         }
     }
 
@@ -153,7 +162,7 @@ public class DirectIngredientExpressionScreener {
         String mpCN = mpName.expressionClassName;
         String expCN = expName.expressionClassName;
 
-        if ((Objects.equals(mpMN, expMN)) || (Objects.equals(mpCN, expCN))) {
+        if (mpMN.equals(expMN) || mpCN.equals(expCN)) {
             return true;
         }
         return false;
