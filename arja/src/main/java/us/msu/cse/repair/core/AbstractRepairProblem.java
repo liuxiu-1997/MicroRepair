@@ -2,6 +2,7 @@ package us.msu.cse.repair.core;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -26,7 +27,6 @@ import jmetal.core.Problem;
 import jmetal.util.Configuration;
 import jmetal.util.JMException;
 import us.msu.cse.repair.AbstractClass.ASTVisitorPlus;
-import us.msu.cse.repair.IngredientFilterRule;
 import us.msu.cse.repair.astVisitorExpression.*;
 import us.msu.cse.repair.core.compiler.JavaJDKCompiler;
 import us.msu.cse.repair.core.coverage.SeedLineGeneratorProcess;
@@ -49,6 +49,7 @@ import us.msu.cse.repair.core.util.Helper;
 import us.msu.cse.repair.core.util.IO;
 import us.msu.cse.repair.core.util.Patch;
 import us.msu.cse.repair.filterExpression.DirectIngredientExpressionScreener;
+import us.msu.cse.repair.informationExpression.ExpressionInfo;
 import us.msu.cse.repair.repairExpression.RepairExpression;
 import us.msu.cse.repair.toolsExpression.*;
 
@@ -133,6 +134,7 @@ public abstract class AbstractRepairProblem extends Problem {
     protected static int evaluations;
 
     int testMid = 0;
+
     @SuppressWarnings("unchecked")
     public AbstractRepairProblem(Map<String, Object> parameters) throws Exception {
         binJavaDir = (String) parameters.get("binJavaDir");
@@ -152,7 +154,7 @@ public abstract class AbstractRepairProblem extends Problem {
         gzoltarDataDir = (String) parameters.get("gzoltarDataDir");
 
 //        String id = Helper.getRandomID();
-        String id = GetPatchId.getId(srcJavaDir);
+        String id = GetNumId.getId(srcJavaDir);
 
         thr = (Double) parameters.get("thr");
         if (thr == null)
@@ -467,40 +469,40 @@ public abstract class AbstractRepairProblem extends Problem {
                 CompilationUnit compilationUnit = GetCompilationUnit.getCompilationUnitOfString(staClass);
 
                 StringLiteralRepairVisitor stringLiteralRepairVisitor = new StringLiteralRepairVisitor(modificationPoint);
-                push(modificationPoint,compilationUnit,stringLiteralRepairVisitor);
+                push(modificationPoint, compilationUnit, stringLiteralRepairVisitor);
 
                 SimpleNameRepairVisitor simpleNameRepairVisitor = new SimpleNameRepairVisitor(modificationPoint);
-                push(modificationPoint,compilationUnit,simpleNameRepairVisitor);
+                push(modificationPoint, compilationUnit, simpleNameRepairVisitor);
 
                 MethodInvocationRepairVisitor methodInvocationRepairVisitor = new MethodInvocationRepairVisitor(modificationPoint);
-                push(modificationPoint,compilationUnit,methodInvocationRepairVisitor);
+                push(modificationPoint, compilationUnit, methodInvocationRepairVisitor);
 
                 FieldAccessRepairVisitor fieldAccessRepairVisitor = new FieldAccessRepairVisitor(modificationPoint);
-                push(modificationPoint,compilationUnit,fieldAccessRepairVisitor);
+                push(modificationPoint, compilationUnit, fieldAccessRepairVisitor);
 
                 ConstructorInvocationRepairVisitor constructorInvocationRepairVisitor = new ConstructorInvocationRepairVisitor(modificationPoint);
-                push(modificationPoint,compilationUnit,constructorInvocationRepairVisitor);
+                push(modificationPoint, compilationUnit, constructorInvocationRepairVisitor);
 
                 CharacterLiteralRepairVisitor characterLiteralRepairVisitor = new CharacterLiteralRepairVisitor(modificationPoint);
-                push(modificationPoint,compilationUnit,characterLiteralRepairVisitor);
+                push(modificationPoint, compilationUnit, characterLiteralRepairVisitor);
 
                 AssignmentRepairVisitor assignmentRepairVisitor = new AssignmentRepairVisitor(modificationPoint);
-                push(modificationPoint,compilationUnit,assignmentRepairVisitor);
+                push(modificationPoint, compilationUnit, assignmentRepairVisitor);
 
                 ArrayCreationRepairVisitor arrayCreationRepairVisitor = new ArrayCreationRepairVisitor(modificationPoint);
-                push(modificationPoint,compilationUnit,arrayCreationRepairVisitor);
+                push(modificationPoint, compilationUnit, arrayCreationRepairVisitor);
 
                 ArrayAccessRepairVisitor arrayAccessRepairVisitor = new ArrayAccessRepairVisitor(modificationPoint);
-                push(modificationPoint,compilationUnit,arrayAccessRepairVisitor);
+                push(modificationPoint, compilationUnit, arrayAccessRepairVisitor);
 
                 BooleanAndTypeRepairVisitor booleanOperatorRepairVisitor = new BooleanAndTypeRepairVisitor(modificationPoint);
-                push(modificationPoint,compilationUnit,booleanOperatorRepairVisitor);
+                push(modificationPoint, compilationUnit, booleanOperatorRepairVisitor);
 
                 QualifiedNameRepairVisitor qualifiedNameRepairVisitor = new QualifiedNameRepairVisitor(modificationPoint);
-                push(modificationPoint,compilationUnit,qualifiedNameRepairVisitor);
+                push(modificationPoint, compilationUnit, qualifiedNameRepairVisitor);
 
                 MixRepairVisitor mixRepairVisitor = new MixRepairVisitor(modificationPoint);
-                push(modificationPoint,compilationUnit,mixRepairVisitor);
+                push(modificationPoint, compilationUnit, mixRepairVisitor);
             }
             if (modificationPoint.getIngredients() != null)
                 if (modificationPoint.getIngredients().size() > 0)
@@ -523,7 +525,7 @@ public abstract class AbstractRepairProblem extends Problem {
                         }
                     }
 //                    ruleFlag = IngredientFilterRule.getIsMatchRule(sOut,mp);
-                    if ((!containFlag)&& (sOut != null)&&(!sOut.toString().equals(mp.getStatement().toString()))) {
+                    if ((!containFlag) && (sOut != null) && (!sOut.toString().equals(mp.getStatement().toString()))) {
                         l.add(sOut);
                     }
                 }

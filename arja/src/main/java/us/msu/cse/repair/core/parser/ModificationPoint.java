@@ -44,6 +44,7 @@ public class ModificationPoint {
 	List<String> variableName = new ArrayList<>();
 	List<String> methodName = new ArrayList<>();
 	List<Type>  typeName = new ArrayList<>();
+	List<String> importAndOther = new ArrayList<>();
 
 	Map<String, Boolean> templateBoolean = new HashMap<>();//对应的木板仅仅作为成分的补充，使用一次后（已有补丁成分）则舍弃
 
@@ -219,4 +220,11 @@ public class ModificationPoint {
 		this.expressionInfosIngredients = expressionInfosIngredients;
 	}
 
+	public List<String> getImportAndOther() {
+		return importAndOther;
+	}
+
+	public void setImportAndOther(List<String> importAndOther) {
+		this.importAndOther = importAndOther;
+	}
 }

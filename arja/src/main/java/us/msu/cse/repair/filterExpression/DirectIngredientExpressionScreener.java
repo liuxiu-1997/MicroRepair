@@ -1,5 +1,6 @@
 package us.msu.cse.repair.filterExpression;
 
+import com.sun.xml.internal.ws.wsdl.writer.document.Import;
 import org.eclipse.jdt.core.dom.CompilationUnit;
 import org.eclipse.jdt.core.dom.Statement;
 import org.eclipse.jdt.core.dom.Type;
@@ -98,14 +99,15 @@ public class DirectIngredientExpressionScreener {
     public void allocatonExpressionForModificationPoints() throws CloneNotSupportedException {
         screenIngredientExpression();
         List<ExpressionInfo> expressionInfoList = list;
-        int abc = 0;
         for (ModificationPoint mp : modificationPoints) {
             List<ExpressionInfo> listIn = new ArrayList<>();
             for (ExpressionInfo e : expressionInfoList) {
                 boolean boolean1 = TypeFilter(mp, e);
                 boolean boolean2 = LineFilter(mp, e);
                 boolean boolean3 = LocalFilter(mp, e);
-                if (boolean1 && boolean2 && boolean3) {
+                boolean boolean4 = ImportFilter(mp,e);
+
+                if (boolean1 && boolean2 && boolean3 && boolean4) {
                     listIn.add(e);
                 }
             }
@@ -131,15 +133,21 @@ public class DirectIngredientExpressionScreener {
                     ExpressionInfo eIn1 = finalListOfMp.get(i);
                     if (eIn1.getLineAndNodeType().lineOfStaOrExp >= expressionInfo.getLineAndNodeType().lineOfStaOrExp ){
                         finalListOfMp.remove(i);
-                        finalListOfMp.add((ExpressionInfo) expressionInfo.clone());
+                        finalListOfMp.add(expressionInfo);
                     }
                 }else
-                    finalListOfMp.add((ExpressionInfo) expressionInfo.clone());
+                    finalListOfMp.add(expressionInfo);
             }
             //------------------------------
             mp.setTypeName(finalTypeName);
             mp.setIngredientsExpressionInfo(finalListOfMp);
         }
+    }
+
+    private boolean ImportFilter(ModificationPoint mp, ExpressionInfo e) {
+        if (mp.getImportAndOther().contains(e.getExpression().toString()))
+            return false;
+        return true;
     }
 
     public boolean TypeFilter(ModificationPoint mp, ExpressionInfo e) {

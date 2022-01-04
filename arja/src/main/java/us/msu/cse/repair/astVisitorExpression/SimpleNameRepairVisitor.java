@@ -48,7 +48,7 @@ public class SimpleNameRepairVisitor extends ASTVisitorPlus {
                 }
                 mp.getTemplateBoolean().put(node.toString()  + "simpleRepair", true);
             }
-            if ((!TemplateBoolean.templateBooleanCheck(mp, node.toString()  + "formwork"))) {
+            if ((!TemplateBoolean.templateBooleanCheck(mp, node.toString()  + "formwork"))&&mp.getVariableName().contains(node.toString())) {
                 List<Statement> statementList = makeFormWorkStatement.getStatement(mp, node);
                 if (mp.getIngredients() == null) {
                     mp.setIngredients(statementList);

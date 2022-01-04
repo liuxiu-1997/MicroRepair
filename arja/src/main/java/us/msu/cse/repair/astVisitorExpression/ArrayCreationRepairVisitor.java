@@ -38,14 +38,21 @@ public class ArrayCreationRepairVisitor extends ASTVisitorPlus {
                             ArrayInitializer expression = (ArrayInitializer) ASTNode.copySubtree(node.getAST(), access.getInitializer());
                             node.setInitializer(expression);
                             isRepaired = true;
-                            mp.getTemplateBoolean().put(e.getExpressionStr() + "ac",true);
+                            mp.getTemplateBoolean().put(e.getExpressionStr() + "ac", true);
                             return true;
                         }
-
                     }
                 }
+                if (!TemplateBoolean.templateBooleanCheck(mp, node.toString() + "simpleRepair")) {
+                    List<Statement> statementList = ChangeSimpleName.getChangedSimpleName(mp, node.toString());
+                    if (mp.getIngredients() == null) {
+                        mp.setIngredients(statementList);
+                    } else {
+                        mp.getIngredients().addAll(statementList);
+                    }
+                    mp.getTemplateBoolean().put(node.toString() + "simpleRepair", true);
+                }
             }
-
         }
         return false;
     }

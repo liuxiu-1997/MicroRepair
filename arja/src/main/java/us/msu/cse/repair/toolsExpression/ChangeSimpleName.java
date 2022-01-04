@@ -103,18 +103,19 @@ public class ChangeSimpleName {
         List<Statement> statementList = new ArrayList<>();
         int iArray = 0;
         List<ExpressionInfo> expressionInfoList = mp.getExpressionInfosIngredients();
-        String[] strings = new String[500];
+        String[] strings = new String[700];
 
         //我替换的是整体，而不是替换里面的一个字符。只要是防止一个字母的情况出现
         boolean checkFlag = false;
         String[] check = modiSta.split(simpleName);
-        for (int kk=1;kk < check.length;kk++){
-            if (((check[kk].charAt(0)>'a')&&(check[kk].charAt(0)<'z'))||
-                    ((check[kk].charAt(0)>'A')&&(check[kk].charAt(0)<'Z'))){
+        for (int kk = 1; (kk < check.length) && (check[kk].length() > 0); kk++) {
+            if (((check[kk].charAt(0) > 'a') && (check[kk].charAt(0) < 'z')) ||
+                    ((check[kk].charAt(0) > 'A') && (check[kk].charAt(0) < 'Z'))) {
                 checkFlag = true;
                 break;
             }
         }
+
         if (!checkFlag) {
             for (ExpressionInfo eInfo : expressionInfoList) {
                 String midStr = "";
@@ -122,7 +123,7 @@ public class ChangeSimpleName {
                 //模式一，只替换一个变量,相同的變量依次都更換
                 if (mp.getVariableName().contains(expStr) || mp.getMethodName().contains(expStr)) {
                     if ((!TemplateBoolean.templateBooleanCheck(mp, expStr + simpleName + "all"))) {
-                        if (iArray < 498) {
+                        if (iArray < 698) {
                             int num = 0;
                             if (modiSta.split(simpleName).length >= 3)
                                 num = 3;
@@ -158,9 +159,7 @@ public class ChangeSimpleName {
                                 if (j != sMid.length - 1)
                                     finalTwo.append(simpleName);
                             }
-//                            if ((mp.getLCNode().getLineNumber()==3482)&&(simpleName.equals("b")))
-//                                System.out.println("___________________________"+finalTwo.toString());
-                            if (iArray < 498)
+                            if (iArray < 698)
                                 strings[iArray++] = finalTwo.toString();
                             else
                                 break;
@@ -171,7 +170,7 @@ public class ChangeSimpleName {
                     mp.getTemplateBoolean().put(expStr + simpleName + "onlyone", true);
                 }
             }
-            for (int k = 0; k < 500; k++) {
+            for (int k = 0; k < 700; k++) {
                 if ((strings[k] != null) && (strings[k].length() > 2)) {
                     String staClass = "public class Test{\n{\n";
                     staClass += strings[k];

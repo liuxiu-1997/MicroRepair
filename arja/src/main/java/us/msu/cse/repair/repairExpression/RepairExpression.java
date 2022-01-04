@@ -153,6 +153,7 @@ public class RepairExpression {
                         (expression instanceof MethodInvocation) ||
                         (expression instanceof StringLiteral) ||
                         (expression instanceof NumberLiteral) ||
+                        (expression instanceof ArrayAccess)||
                         (expression instanceof NullLiteral))) {
 
                     modificationPoint.getTemplateBoolean().put(e.toString() + "returnRepair", true);
