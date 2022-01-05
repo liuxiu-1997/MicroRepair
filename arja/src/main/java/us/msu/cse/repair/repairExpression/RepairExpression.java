@@ -146,20 +146,24 @@ public class RepairExpression {
             ReturnStatement returnStatement = null;
             for (ExpressionInfo e : modificationPoint.getExpressionInfosIngredients()) {
                 Expression expression = e.getExpression();
-                if ((!TemplateBoolean.templateBooleanCheck(modificationPoint, e.toString() + "returnRepair"))
-                        && ((returnOfExpression.getNodeType() == e.getExpression().getNodeType()) ||
-                        (expression instanceof Name) ||
-                        (expression instanceof FieldAccess) ||
-                        (expression instanceof MethodInvocation) ||
-                        (expression instanceof StringLiteral) ||
-                        (expression instanceof NumberLiteral) ||
-                        (expression instanceof ArrayAccess)||
-                        (expression instanceof NullLiteral))) {
-
-                    modificationPoint.getTemplateBoolean().put(e.toString() + "returnRepair", true);
-                    returnStatement = ast.newReturnStatement();
-                    Expression expressionCopy = (Expression) ASTNode.copySubtree(returnStatement.getAST(), expression);
-                    returnStatement.setExpression(expressionCopy);
+                if (!TemplateBoolean.templateBooleanCheck(modificationPoint, expression.toString() + "returnRepair")) {
+                    if ((returnOfExpression.getNodeType() == e.getExpression().getNodeType()) ||
+                            (expression instanceof FieldAccess) ||
+                            (expression instanceof MethodInvocation) ||
+//                        (expression instanceof StringLiteral) ||
+//                        (expression instanceof NumberLiteral) ||
+                            (expression instanceof ArrayAccess) ||
+                            (expression instanceof NullLiteral)){
+                        returnStatement = ast.newReturnStatement();
+                        Expression expressionCopy = (Expression) ASTNode.copySubtree(returnStatement.getAST(), expression);
+                        returnStatement.setExpression(expressionCopy);
+                    };
+                    if ( (expression instanceof Name) && (!(modificationPoint.getMethodName().contains(expression.toString())))) {
+                        returnStatement = ast.newReturnStatement();
+                        Expression expressionCopy = (Expression) ASTNode.copySubtree(returnStatement.getAST(), expression);
+                        returnStatement.setExpression(expressionCopy);
+                    }
+                    modificationPoint.getTemplateBoolean().put(expression.toString() + "returnRepair", true);
                 }
             }
             if (returnStatement != null) {
@@ -338,9 +342,9 @@ public class RepairExpression {
             if (!TemplateBoolean.templateBooleanCheck(modificationPoint, expressionInfo.getExpression().toString() + "infixLeftVar")) {
                 if ((expressionInfo.getExpression().getNodeType() == expLeft.getNodeType()) ||
                         (expressionInfo.getExpression() instanceof FieldAccess) ||
-                        (expressionInfo.getExpression() instanceof Name) ||
-                        (expressionInfo.getExpression() instanceof StringLiteral) ||
-                        (expressionInfo.getExpression() instanceof NumberLiteral) ||
+                        ((expressionInfo.getExpression() instanceof Name) && (!modificationPoint.getMethodName().contains(expressionInfo.getExpression().toString()))) ||
+//                        (expressionInfo.getExpression() instanceof StringLiteral) ||
+//                        (expressionInfo.getExpression() instanceof NumberLiteral) ||
                         (expressionInfo.getExpression() instanceof MethodInvocation)) {
                     modificationPoint.getTemplateBoolean().put(expressionInfo.getExpression().toString() + "left", true);
                     Expression expression = expressionInfo.getExpression();
@@ -362,9 +366,9 @@ public class RepairExpression {
             if (!TemplateBoolean.templateBooleanCheck(modificationPoint, expressionInfo.getExpression().toString() + "infixRightVar")) {
                 if ((expressionInfo.getExpression().getNodeType() == expRight.getNodeType()) ||
                         (expressionInfo.getExpression() instanceof FieldAccess) ||
-                        (expressionInfo.getExpression() instanceof Name) ||
-                        (expressionInfo.getExpression() instanceof StringLiteral) ||
-                        (expressionInfo.getExpression() instanceof NumberLiteral) ||
+                        ((expressionInfo.getExpression() instanceof Name) && (!modificationPoint.getMethodName().contains(expressionInfo.getExpression().toString()))) ||
+                        ((expressionInfo.getExpression() instanceof StringLiteral) && (expRight instanceof StringLiteral)) ||
+                        ((expressionInfo.getExpression() instanceof NumberLiteral) && (expRight instanceof NumberLiteral)) ||
                         (expressionInfo.getExpression() instanceof NullLiteral) ||
                         (expressionInfo.getExpression() instanceof MethodInvocation)) {
                     modificationPoint.getTemplateBoolean().put(expressionInfo.getExpression().toString() + "Right", true);

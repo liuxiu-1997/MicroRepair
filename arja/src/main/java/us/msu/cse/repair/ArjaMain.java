@@ -33,13 +33,13 @@ public class ArjaMain {
 //				for (int i = 7; i <= 14; i += 7) {
 					args1[0] = "Arja";
 					args1[1] = "-DsrcJavaDir";
-					args1[2] = "/home/bjtucs/workspace/apr/benchmarks/defects4j/chart/chart_" + i + "_buggy/source";
+					args1[2] = "/home/liuguizhuang/arjaLiu/chart/chart_" + i + "_buggy/source";
 					args1[3] = "-DbinJavaDir";
-					args1[4] = "/home/bjtucs/workspace/apr/benchmarks/defects4j/chart/chart_" + i + "_buggy/build";
+					args1[4] = "/home/liuguizhuang/arjaLiu/chart/chart_" + i + "_buggy/build";
 					args1[5] = "-DbinTestDir";
-					args1[6] = "/home/bjtucs/workspace/apr/benchmarks/defects4j/chart/chart_" + i + "_buggy/build-tests";
+					args1[6] = "/home/liuguizhuang/arjaLiu/chart/chart_" + i + "_buggy/build-tests";
 					args1[7] = "-Ddependences";
-					args1[8] = "/home/bjtucs/program_files/defects4j/framework/projects/lib/junit-4.11.jar";
+					args1[8] = "/home/liuguizhuang/program_files/defects4j/framework/projects/lib/junit-4.11.jar";
 ////			}
 //			if(i>26){
 //				args1[0] = "Arja";

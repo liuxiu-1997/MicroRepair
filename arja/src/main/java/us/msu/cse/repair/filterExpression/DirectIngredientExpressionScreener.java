@@ -2,6 +2,7 @@ package us.msu.cse.repair.filterExpression;
 
 import com.sun.xml.internal.ws.wsdl.writer.document.Import;
 import org.eclipse.jdt.core.dom.CompilationUnit;
+import org.eclipse.jdt.core.dom.NullLiteral;
 import org.eclipse.jdt.core.dom.Statement;
 import org.eclipse.jdt.core.dom.Type;
 import org.eclipse.jdt.core.util.IEnclosingMethodAttribute;
@@ -105,9 +106,9 @@ public class DirectIngredientExpressionScreener {
                 boolean boolean1 = TypeFilter(mp, e);
                 boolean boolean2 = LineFilter(mp, e);
                 boolean boolean3 = LocalFilter(mp, e);
-                boolean boolean4 = ImportFilter(mp,e);
-
-                if (boolean1 && boolean2 && boolean3 && boolean4) {
+                boolean boolean4 = ImportFilter(mp, e);
+                boolean boolean5 = NullFilter(mp, e);
+                if (boolean1 && boolean2 && boolean3 && boolean4 && boolean5) {
                     listIn.add(e);
                 }
             }
@@ -127,21 +128,27 @@ public class DirectIngredientExpressionScreener {
             }
             List<ExpressionInfo> finalListOfMp = new ArrayList<>();
             //______________________________
-            for (ExpressionInfo expressionInfo:listIn){
-                if (finalListOfMp.contains(expressionInfo)){
+            for (ExpressionInfo expressionInfo : listIn) {
+                if (finalListOfMp.contains(expressionInfo)) {
                     int i = finalListOfMp.indexOf(expressionInfo);
                     ExpressionInfo eIn1 = finalListOfMp.get(i);
-                    if (eIn1.getLineAndNodeType().lineOfStaOrExp >= expressionInfo.getLineAndNodeType().lineOfStaOrExp ){
+                    if (eIn1.getLineAndNodeType().lineOfStaOrExp >= expressionInfo.getLineAndNodeType().lineOfStaOrExp) {
                         finalListOfMp.remove(i);
                         finalListOfMp.add(expressionInfo);
                     }
-                }else
+                } else
                     finalListOfMp.add(expressionInfo);
             }
             //------------------------------
             mp.setTypeName(finalTypeName);
             mp.setIngredientsExpressionInfo(finalListOfMp);
         }
+    }
+
+    private boolean NullFilter(ModificationPoint mp, ExpressionInfo e) {
+        if ((e.getExpression() instanceof NullLiteral)||(e.getExpression() == null ))
+            return false;
+        return true;
     }
 
     private boolean ImportFilter(ModificationPoint mp, ExpressionInfo e) {

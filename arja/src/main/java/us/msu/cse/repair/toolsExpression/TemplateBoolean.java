@@ -16,7 +16,5 @@ public class TemplateBoolean {
             }
         }
         return false;
-
-
     }
 }

@@ -44,13 +44,15 @@ public class ArrayCreationRepairVisitor extends ASTVisitorPlus {
                     }
                 }
                 if (!TemplateBoolean.templateBooleanCheck(mp, node.toString() + "simpleRepair")) {
-                    List<Statement> statementList = ChangeSimpleName.getChangedSimpleName(mp, node.toString());
-                    if (mp.getIngredients() == null) {
-                        mp.setIngredients(statementList);
-                    } else {
-                        mp.getIngredients().addAll(statementList);
+                    if (node.dimensions().size()>=1) {
+                        List<Statement> statementList = ChangeSimpleName.getChangedSimpleName(mp, node.dimensions().get(0).toString());
+                        if (mp.getIngredients() == null) {
+                            mp.setIngredients(statementList);
+                        } else {
+                            mp.getIngredients().addAll(statementList);
+                        }
+                        mp.getTemplateBoolean().put(node.toString() + "simpleRepair", true);
                     }
-                    mp.getTemplateBoolean().put(node.toString() + "simpleRepair", true);
                 }
             }
         }
