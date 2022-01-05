@@ -17,7 +17,7 @@ public class ArjaMain {
 
         String[] args1 = new String[9];
 //        for (int jjj=0;jjj<3;jjj++)
-        for (int i = 1; i <= 190; i += 1) {
+        for (int i = 1; i <= 1; i += 1) {
 //			if(i<=26) {
 //            args1[0] = "Arja";
 //            args1[1] = "-DsrcJavaDir";
@@ -39,7 +39,7 @@ public class ArjaMain {
 					args1[5] = "-DbinTestDir";
 					args1[6] = "/home/liuguizhuang/arjaLiu/chart/chart_" + i + "_buggy/build-tests";
 					args1[7] = "-Ddependences";
-					args1[8] = "/home/liuguizhuang/program_files/defects4j/framework/projects/lib/junit-4.11.jar";
+					args1[8] = "/home/wangbo/workspace/defects4j/framework/projects/lib/junit-4.11.jar";
 ////			}
 //			if(i>26){
 //				args1[0] = "Arja";
@@ -63,7 +63,7 @@ public class ArjaMain {
                 parameters.put("ingredientScreenerName", ingredientScreenerNameS);
 
 
-            int populationSize = 300;
+            int populationSize = 40;
             int maxGenerations = 50;
 
             String populationSizeS = parameterStrs.get("populationSize");
