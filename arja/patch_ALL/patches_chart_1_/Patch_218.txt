@@ -1,9 +1,0 @@
-1 Replace /home/bjtucs/workspace/apr/benchmarks/defects4j/chart/chart_1_buggy/source/org/jfree/chart/renderer/category/AbstractCategoryItemRenderer.java 1798
-Faulty:
-return result;
-Seed:
-if (result == null) return null;
-**************************************************
-————————————————————————结束————————————————————————————
-Evaluations: 702
-EstimatedTime: 629962

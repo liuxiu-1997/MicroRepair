@@ -25,7 +25,7 @@ public class AssignmentRepairVisitor extends ASTVisitorPlus {
 
     @Override
     public boolean visit(Assignment node) {
-        if (!isRepaired) {
+        if (!mp.isRepair()) {
             Expression eLeft = node.getLeftHandSide();
             Expression eRight = node.getRightHandSide();
             if (eLeft != null) {
@@ -42,7 +42,7 @@ public class AssignmentRepairVisitor extends ASTVisitorPlus {
                                     SimpleName simpleName = (SimpleName) ASTNode.copySubtree(eLeft.getAST(), e.getExpression());
                                     ((FieldAccess) eLeft).setName(simpleName);
                                     mp.getTemplateBoolean().put(e.getExpressionStr() + "asleftfield", true);
-                                    isRepaired = true;
+                                    mp.setRepair(true);
                                     return true;
                                 }
                             }
@@ -61,7 +61,7 @@ public class AssignmentRepairVisitor extends ASTVisitorPlus {
                                     Expression expression = (Expression) ASTNode.copySubtree(node.getAST(), e.getExpression());
                                     node.setLeftHandSide(expression);
                                     mp.getTemplateBoolean().put(e.getExpressionStr() + "asleftsimple", true);
-                                    isRepaired = true;
+                                    mp.setRepair(true);
                                     return true;
                                 }
                             }
@@ -73,7 +73,7 @@ public class AssignmentRepairVisitor extends ASTVisitorPlus {
                             Expression expression = (Expression) ASTNode.copySubtree(node.getAST(), e.getExpression());
                             node.setLeftHandSide(expression);
                             mp.getTemplateBoolean().put(e.getExpressionStr() + "asleftnumber", true);
-                            isRepaired = true;
+                            mp.setRepair(true);
                             return true;
                         }
                     }
@@ -94,7 +94,7 @@ public class AssignmentRepairVisitor extends ASTVisitorPlus {
                                     SimpleName simpleName = (SimpleName) ASTNode.copySubtree(access.getAST(), e.getExpression());
                                     access.setName(simpleName);
                                     mp.getTemplateBoolean().put(e.getExpressionStr() + "asrightfield", true);
-                                    isRepaired = true;
+                                    mp.setRepair(true);
                                     return true;
                                 }
                             }
@@ -114,7 +114,7 @@ public class AssignmentRepairVisitor extends ASTVisitorPlus {
                                     Expression expression = (Expression) ASTNode.copySubtree(node.getAST(), e.getExpression());
                                     node.setRightHandSide(expression);
                                     mp.getTemplateBoolean().put(e.getExpressionStr() + "asrightsimple", true);
-                                    isRepaired = true;
+                                    mp.setRepair(true);
                                     return true;
                                 }
                             }
@@ -126,7 +126,7 @@ public class AssignmentRepairVisitor extends ASTVisitorPlus {
                             Expression expression = (Expression) ASTNode.copySubtree(node.getAST(), e.getExpression());
                             node.setLeftHandSide(expression);
                             mp.getTemplateBoolean().put(e.getExpressionStr() + "asrightnumber", true);
-                            isRepaired = true;
+                            mp.setRepair(true);
                             return true;
                         }
                     }

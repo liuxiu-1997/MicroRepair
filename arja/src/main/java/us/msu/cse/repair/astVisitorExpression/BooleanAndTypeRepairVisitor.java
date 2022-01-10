@@ -24,10 +24,14 @@ public class BooleanAndTypeRepairVisitor extends ASTVisitorPlus {
 
     @Override
     public boolean visit(BooleanLiteral node) {
-        if (node.booleanValue()) {
-            node.setBooleanValue(false);
-        } else
-            node.setBooleanValue(true);
+        if (!TemplateBoolean.templateBooleanCheck(mp,node+"BooleanAll")) {
+            if (node.booleanValue()) {
+                node.setBooleanValue(false);
+            } else
+                node.setBooleanValue(true);
+            mp.setRepair(true);
+            mp.getTemplateBoolean().put(node+"BooleanAll",true);
+        }
         return super.visit(node);
     }
 

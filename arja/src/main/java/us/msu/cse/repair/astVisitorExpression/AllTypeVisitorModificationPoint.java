@@ -237,6 +237,8 @@ public class AllTypeVisitorModificationPoint extends ASTVisitor {
         for (Object obj : node.fragments()) {
             VariableDeclarationFragment v = (VariableDeclarationFragment) obj;
             String varName = v.getName().toString();
+            mp.getVariableName().add(varName);
+            mp.getGlobalVariableName().add(varName);
             ExpressionInfo expressionInfo = new ExpressionInfo(v.getName(), methClaPacOfExpName, lineNode, node.getType(), varName);
             list.add(expressionInfo);
         }
@@ -297,11 +299,7 @@ public class AllTypeVisitorModificationPoint extends ASTVisitor {
 
     @Override
     public boolean visit(ImportDeclaration node) {
-        String[] strings = node.getName().toString().replace('.','9').split("9");
-        for (String string : strings) {
-            if (!mp.getImportAndOther().contains(string))
-                mp.getImportAndOther().add(string);
-        }
+        mp.getImportAndOther().add(node.toString());
         return true;
     }
 
@@ -403,7 +401,7 @@ public class AllTypeVisitorModificationPoint extends ASTVisitor {
     public boolean visit(ParenthesizedExpression node) {
         LineAndNodeType lineNode = GetClassInstance.getLineAndNodeType(node,node.getNodeType());
 
-        if (node != null && OperatorFilterPreAndIn.ExpressionFilterReturn(node.getExpression()))
+        if (OperatorFilterPreAndIn.ExpressionFilterReturn(node.getExpression()))
             list.add(new ExpressionInfo(node.getExpression(), methClaPacOfExpName, lineNode));
         return true;
     }
@@ -482,6 +480,7 @@ public class AllTypeVisitorModificationPoint extends ASTVisitor {
             VariableDeclarationFragment v = (VariableDeclarationFragment) obj;
             Type varType = node.getType();
             String varName = v.getName().toString();
+            mp.getVariableName().add(varName);
             list.add(new ExpressionInfo(v.getName(), methClaPacOfExpName, lineNode,
                     varType, varName));
         }

@@ -8,6 +8,7 @@ import us.msu.cse.repair.core.parser.ModificationPoint;
 import us.msu.cse.repair.formWorkExpression.makeFormWorkStatement;
 import us.msu.cse.repair.informationExpression.ExpressionInfo;
 import us.msu.cse.repair.toolsExpression.ChangeSimpleName;
+import us.msu.cse.repair.toolsExpression.RuleCheck;
 import us.msu.cse.repair.toolsExpression.TemplateBoolean;
 
 import java.awt.*;
@@ -32,8 +33,10 @@ public class SimpleNameRepairVisitor extends ASTVisitorPlus {
 
     @Override
     public boolean visit(SimpleName node) {
-
-        if ((!TemplateBoolean.templateBooleanCheck(mp,node.toString()+"all"))&&(!isRepaired)&&(!(node.toString().equals("Test1")))) {
+        //只用于替换里面的SimpleName；筛选掉里面SimpleName为Name和类型
+        boolean checkRule1 = RuleCheck.rule1OfSimpleName(mp,node);
+        boolean checkRule2 = RuleCheck.rule2OfClassName(mp,node);
+        if ((!TemplateBoolean.templateBooleanCheck(mp,node.toString()+"all")) && checkRule1 && checkRule2) {
             mp.getTemplateBoolean().put(node.toString() + "all", true);
             int num = 0;
             if (mp.getIngredients() != null) {
@@ -59,7 +62,7 @@ public class SimpleNameRepairVisitor extends ASTVisitorPlus {
             }
             if (mp.getIngredients() != null) {
                 if (num != mp.getIngredients().size())
-                    isRepaired = true;
+                    mp.setRepair(true);
             }
         }
         return true;

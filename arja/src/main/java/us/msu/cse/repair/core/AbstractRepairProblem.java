@@ -179,6 +179,7 @@ public abstract class AbstractRepairProblem extends Problem {
         patchOutputRoot = (String) parameters.get("patchOutputRoot");
         if (patchOutputRoot == null)
             patchOutputRoot = "patches_" + id;
+//        patchOutputRoot = "/home/liuguizhuang/arjaLiu/patch"+id;
 
         orgPosTestsInfoPath = (String) parameters.get("orgPosTestsInfoPath");
         if (orgPosTestsInfoPath == null)
@@ -251,8 +252,9 @@ public abstract class AbstractRepairProblem extends Problem {
             throw new Exception("The dependences of the buggy program is not specified!");
         else if (!(new File(jvmPath).exists()))
             throw new Exception("The JVM path does not exist!");
-        else if (!(new File(externalProjRoot).exists()))
+        else if (!(new File(externalProjRoot).exists())) {
             throw new Exception("The directory of external project does not exist!");
+        }
     }
 
     void invokeModules() throws Exception {
@@ -315,7 +317,7 @@ public abstract class AbstractRepairProblem extends Problem {
 
     @SuppressWarnings({"unchecked", "rawtypes"})
     void invokeASTRequestor() throws IOException {
-        System.out.println("AST parsing starts...");
+        System.out.println("\nAST 分析开始...");
 
         modificationPoints = new ArrayList<ModificationPoint>();
         seedStatements = new HashMap<SeedStatement, SeedStatementInfo>();
@@ -370,18 +372,18 @@ public abstract class AbstractRepairProblem extends Problem {
             }
             modificationPoints = temp;
         }
-        System.out.println("AST parsing is finished!");
+        System.out.println("AST 分析结束!");
     }
 
     void invokeIngredientScreener() throws JMException, CloneNotSupportedException {
-        System.out.println("Ingredient screener starts...");
+        System.out.println("\n表达式分配开始...");
         DirectIngredientExpressionScreener dir = new DirectIngredientExpressionScreener(modificationPoints, seedStatements);
         dir.allocatonExpressionForModificationPoints();
-        System.out.println("Ingredient screener is finished!");
+        System.out.println("表达式分配结束!");
     }
 
     void invokeManipulationInitializer() {
-        System.out.println("Initialization of manipulations starts...");
+        System.out.println("\n操作初始化开始...");
         availableManipulations = new ArrayList<List<String>>(modificationPoints.size());
 
         for (int i = 0; i < modificationPoints.size(); i++) {      //操作的初始化就是对于每一个修改点初始化：‘删除’/‘替换’/‘增加’操作,同时,
@@ -390,13 +392,13 @@ public abstract class AbstractRepairProblem extends Problem {
             list.addAll(Arrays.asList(manipulationNames));
             availableManipulations.add(list);
         }
-        System.out.println("Initialization of manipulations is finished!");
+        System.out.println("操作初始化完成 !");
     }
 
     void invokeExpressionProduct() throws IOException, InterruptedException {
         // TODO Auto-generated method stub
         //这里主要是产生初始化补丁成分，产生我的补丁，是我自己的补丁
-        System.out.println("modification-initial of expressionIngredient starts...");
+        System.out.println("\n候选补丁生成开始...");
 
 
         int size = modificationPoints.size();
@@ -432,34 +434,6 @@ public abstract class AbstractRepairProblem extends Problem {
                     mid = repairExpression.doWhileRepair();
                 }
             }
-            //——————————————————————————————————————————— 修复二 ——————————————————————————————————————————————————————————
-            //———————————————————————————————————强制类型转换、数组调用、变量调用检查——————————————————————————————————————————————-
-//            for (ExpressionInfo expression : modificationPoint.getModificationPointExpressionInfosList()) {
-//                /**
-//                 * 当修改点部位ifStatement、whileStatement、doWhile时，看是否满足：
-//                 * 1.强制类型转换;
-//                 * 2.数组调用;
-//                 * 3.变量调用;
-//                 * 如果满足以上条件，则进行补丁的生成。并且此条补丁生成之后，不再进行使用。
-//                 *///这里还要进行进一步过滤，因为有时候人家已经写了这个函数了
-//                Expression etem = expression.getExpression();
-//                if ((etem instanceof CastExpression) &&
-//                        (!TemplateBoolean.templateBooleanCheck(modificationPoints.get(i), expression.getExpressionStr())) &&
-//                        (!SimilarTarTemplateCheck.templateCheck(etem, "CastExpression"))) {
-//                    repairExpression.castTypeRepair((CastExpression) etem);
-//                    modificationPoint.getTemplateBoolean().put(expression.getExpressionStr(), true);
-//                } else if ((etem instanceof ArrayAccess) &&
-//                        (!TemplateBoolean.templateBooleanCheck(modificationPoint, expression.getExpressionStr())) &&
-//                        (!SimilarTarTemplateCheck.templateCheck(etem, "ArrayAccess"))) {
-//                    repairExpression.arrayRepair((ArrayAccess) etem);
-//                    modificationPoint.getTemplateBoolean().put(expression.getExpressionStr(), true);
-//                } else if ((etem instanceof FieldAccess) &&
-//                        (!TemplateBoolean.templateBooleanCheck(modificationPoint, expression.getExpressionStr())) &&
-//                        (!SimilarTarTemplateCheck.templateCheck(etem, "FieldAccess"))) {
-//                    repairExpression.fieldRepair((FieldAccess) etem);
-//                    modificationPoint.getTemplateBoolean().put(expression.getExpressionStr(), true);
-//                }
-//            }
             //——————————————————————————————————————————— 修复三——————————————————————————————————————————————————————————
             //—————————————————————————————————————对修改点在ASTVisitor上进行修复————————————————————————————————————————————-
             {
@@ -501,8 +475,8 @@ public abstract class AbstractRepairProblem extends Problem {
                 QualifiedNameRepairVisitor qualifiedNameRepairVisitor = new QualifiedNameRepairVisitor(modificationPoint);
                 push(modificationPoint, compilationUnit, qualifiedNameRepairVisitor);
 
-                MixRepairVisitor mixRepairVisitor = new MixRepairVisitor(modificationPoint);
-                push(modificationPoint, compilationUnit, mixRepairVisitor);
+//                MixRepairVisitor mixRepairVisitor = new MixRepairVisitor(modificationPoint);
+//                push(modificationPoint, compilationUnit, mixRepairVisitor);
             }
             if (modificationPoint.getIngredients() != null)
                 if (modificationPoint.getIngredients().size() > 0)
@@ -530,33 +504,29 @@ public abstract class AbstractRepairProblem extends Problem {
                     }
                 }
             }
-            mp.setIngredients(l);
+            mp.setIngredients(l); //mp.setIngredients();
         }
         modificationPoints = tmp;
-        System.out.println("modification-initial of expressionIngredient finish...");
+        System.out.println("候选补丁生成结束...");
     }
 
     void push(ModificationPoint modificationPoint, CompilationUnit compilationUnit, ASTVisitorPlus mpVisitor) {
-        boolean visitorRepairFlag = true;
         AST ast = AST.newAST(AST.JLS8);
         List<Statement> ingredientList = new ArrayList<>();
-        while (visitorRepairFlag) {
+        modificationPoint.setRepair(true);
+        while (modificationPoint.isRepair()) {   //
             int number = 0;
             if (modificationPoint.getIngredients() != null) {
                 number = modificationPoint.getIngredients().size();
             }
-            mpVisitor.setRepaired(false);
+            modificationPoint.setRepair(false);
             CompilationUnit compilationUnitIn = (CompilationUnit) ASTNode.copySubtree(ast, compilationUnit);
             compilationUnitIn.accept(mpVisitor);
-            visitorRepairFlag = mpVisitor.isRepaired();
             Statement sta = mpVisitor.getStatement();
 
-            if ((modificationPoint.getIngredients() != null) && (sta != null)) {
-                if (number == modificationPoint.getIngredients().size()) {
-                    ingredientList.add(sta);
-                }
-            } else if (visitorRepairFlag && (sta != null)) {
-                ingredientList.add(sta);
+            if ((number == modificationPoint.getIngredients().size()) && modificationPoint.isRepair() && (sta!=null)) {
+                Statement statementMid = (Statement)ASTNode.copySubtree(compilationUnit.getAST(),sta);
+                ingredientList.add(statementMid);
             }
         }
         if (modificationPoint.getIngredients() == null) {

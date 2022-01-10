@@ -24,12 +24,12 @@ public class StringLiteralRepairVisitor extends ASTVisitorPlus {
 
     @Override
     public boolean visit(StringLiteral node) {
-        if (!isRepaired) {
+        if (!mp.isRepair()) {
             for (ExpressionInfo e : expressionInfoList) {
                 if ((e.getExpression() instanceof StringLiteral) && (!(TemplateBoolean.templateBooleanCheck(mp, e.getExpressionStr() + "string")))) {
                     node.setLiteralValue(node.toString());
                     mp.getTemplateBoolean().put(e.getExpressionStr() + "string", true);
-                    isRepaired = true;
+                    mp.setRepair(true);
                     return true;
                 }
             }

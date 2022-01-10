@@ -25,7 +25,7 @@ public class ArrayCreationRepairVisitor extends ASTVisitorPlus {
 
     @Override
     public boolean visit(ArrayCreation node) {
-        if ((!isRepaired)) {
+        if (!mp.isRepair()) {
             for (ExpressionInfo e : expressionInfoList) {
                 if ((e.getVarType() instanceof ArrayType) && (e.getExpression() instanceof ArrayCreation)) {
                     ArrayType t1 = (ArrayType) e.getVarType();
@@ -37,7 +37,7 @@ public class ArrayCreationRepairVisitor extends ASTVisitorPlus {
                         if ((access.getInitializer() != null) && (access.dimensions().toString().equals(node.dimensions().toString()))) {
                             ArrayInitializer expression = (ArrayInitializer) ASTNode.copySubtree(node.getAST(), access.getInitializer());
                             node.setInitializer(expression);
-                            isRepaired = true;
+                            mp.setRepair(true);;
                             mp.getTemplateBoolean().put(e.getExpressionStr() + "ac", true);
                             return true;
                         }

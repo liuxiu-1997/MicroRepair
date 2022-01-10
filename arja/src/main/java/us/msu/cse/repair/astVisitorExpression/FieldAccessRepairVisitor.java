@@ -25,7 +25,7 @@ public class FieldAccessRepairVisitor extends ASTVisitorPlus {
 
     @Override
     public boolean visit(FieldAccess node) {
-        if (!isRepaired) {
+        if (!mp.isRepair()) {
             ExpressionInfo expressionInfo = TypeInformation.getTypeInformation(node.getName(), mp);
             if (expressionInfo == null)
                 expressionInfo = TypeInformation.getSourceVariable(mp.getSourceFilePath(), node.getName().toString());
@@ -38,7 +38,7 @@ public class FieldAccessRepairVisitor extends ASTVisitorPlus {
                             SimpleName s = (SimpleName) ASTNode.copySubtree(node.getAST(), e.getExpression());
                             node.setName(s);
                             mp.getTemplateBoolean().put(e.getExpressionStr() + "field", true);
-                            isRepaired = true;
+                            mp.setRepair(true);
                             return true;
                         }
                     }

@@ -1,9 +1,0 @@
-1 Replace /home/bjtucs/workspace/apr/benchmarks/defects4j/chart/chart_7_buggy/source/org/jfree/data/time/TimePeriodValues.java 306
-Faulty:
-this.maxMiddleIndex=index;
-Seed:
-this.maxMiddleIndex=maxStartIndex;
-**************************************************
-————————————————————————结束————————————————————————————
-Evaluations: 10851
-EstimatedTime: 976259

@@ -1,9 +1,0 @@
-1 Delete /home/bjtucs/workspace/apr/benchmarks/defects4j/chart/chart_1_buggy/source/org/jfree/chart/renderer/category/AbstractCategoryItemRenderer.java 1798
-Faulty:
-return result;
-Seed:
-return range;
-**************************************************
-————————————————————————结束————————————————————————————
-Evaluations: 176
-EstimatedTime: 139199

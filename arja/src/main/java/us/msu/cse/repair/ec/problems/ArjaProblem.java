@@ -162,7 +162,7 @@ public class ArjaProblem extends AbstractRepairProblem {
         boolean status = false;
         if (compiledClasses != null) {
             if (numberOfObjectives == 2 || numberOfObjectives == 3)
-                solution.setObjective(0, numberOfEdits);//恍然大悟：两个目标值，第一个目标值是修改点的大小;第二个目标值是适应读函数
+                solution.setObjective(0, numberOfEdits);//：两个目标值，第一个目标值是修改点的大小;第二个目标值是适应读函数
             try {
                 status = invokeTestExecutor(compiledClasses, solution);
             } catch (Exception e) {
@@ -243,7 +243,7 @@ public class ArjaProblem extends AbstractRepairProblem {
             testExecutor = getTestExecutor(compiledClasses, positiveTests);
             status = testExecutor.runTests();
         }
-        //实锤啦，这是适应度函数！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！
+        //，这是适应度函数！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！
         if (!testExecutor.isExceptional()) {
             double ratioOfFailuresInPositive = testExecutor.getRatioOfFailuresInPositive();
             double ratioOfFailuresInNegative = testExecutor.getRatioOfFailuresInNegative();

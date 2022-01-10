@@ -1,11 +1,14 @@
 package us.msu.cse.repair.toolsExpression;
 
+import jmetal.util.Permutation;
+import jmetal.util.PseudoRandom;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.dom.*;
 import us.msu.cse.repair.astVisitorExpression.GetStatementFromText;
 import us.msu.cse.repair.core.parser.ModificationPoint;
 import us.msu.cse.repair.informationExpression.ExpressionInfo;
 
+import java.security.Permission;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -102,6 +105,7 @@ public class ChangeSimpleName {
         String modiSta = mp.getStatement().toString();
         List<Statement> statementList = new ArrayList<>();
         int iArray = 0;
+        long recordNum = System.currentTimeMillis();
         List<ExpressionInfo> expressionInfoList = mp.getExpressionInfosIngredients();
         String[] strings = new String[700];
 
@@ -109,8 +113,8 @@ public class ChangeSimpleName {
         boolean checkFlag = false;
         String[] check = modiSta.split(simpleName);
         for (int kk = 1; (kk < check.length) && (check[kk].length() > 0); kk++) {
-            if (((check[kk].charAt(0) > 'a') && (check[kk].charAt(0) < 'z')) ||
-                    ((check[kk].charAt(0) > 'A') && (check[kk].charAt(0) < 'Z'))) {
+            if (((check[kk].charAt(0) >= 'a') && (check[kk].charAt(0) <= 'z')) ||
+                    ((check[kk].charAt(0) >= 'A') && (check[kk].charAt(0) <= 'Z'))) {
                 checkFlag = true;
                 break;
             }
@@ -121,8 +125,9 @@ public class ChangeSimpleName {
                 String midStr = "";
                 String expStr = eInfo.getExpression().toString();
                 //模式一，只替换一个变量,相同的變量依次都更換
-                if (mp.getVariableName().contains(expStr) || mp.getMethodName().contains(expStr)) {
-                    if ((!TemplateBoolean.templateBooleanCheck(mp, expStr + simpleName + "all"))) {
+                if ((mp.getMethodName().contains(simpleName) && mp.getMethodName().contains(expStr))
+                        || (mp.getVariableName().contains(simpleName) && mp.getVariableName().contains(expStr))) {
+                    if ((!TemplateBoolean.templateBooleanCheck(mp, recordNum +expStr + "all"))) {
                         if (iArray < 698) {
                             int num = 0;
                             if (modiSta.split(simpleName).length >= 3)
@@ -142,10 +147,10 @@ public class ChangeSimpleName {
                             }
                             strings[iArray++] = midStr;
                         }
-                        mp.getTemplateBoolean().put(expStr + simpleName + "all", true);
+                        mp.getTemplateBoolean().put(recordNum +expStr+ "all", true);
                     }
                     //模式二，若有多个变量每次仅仅更新一个
-                    if ((!TemplateBoolean.templateBooleanCheck(mp, expStr + simpleName + "onlyone"))) {
+                    if ((!TemplateBoolean.templateBooleanCheck(mp, recordNum + expStr+ "onlyone"))) {
 
                         String[] sMid = modiSta.split(simpleName);
                         StringBuilder finalOne = new StringBuilder();
@@ -167,21 +172,66 @@ public class ChangeSimpleName {
                             finalOne.append(simpleName);
                         }
                     }
-                    mp.getTemplateBoolean().put(expStr + simpleName + "onlyone", true);
+                    mp.getTemplateBoolean().put(recordNum +expStr+ "onlyone", true);
                 }
             }
-            for (int k = 0; k < 700; k++) {
-                if ((strings[k] != null) && (strings[k].length() > 2)) {
-                    String staClass = "public class Test{\n{\n";
-                    staClass += strings[k];
-                    staClass += "}\n}";
-                    Statement statement = ChangeSimpleName.getStatement(staClass);
-                    if (statement != null) {
-                        statementList.add(statement);
+        } else {
+            //其实这个已经可以代替上面的if了，还没有大规模验证，等待等待再替换
+            char[] modiStaChar = modiSta.toCharArray();
+            char[] simpleNameChar = simpleName.toCharArray();
+            String sfinalStr = "";
+            for (ExpressionInfo expressionInfo : expressionInfoList) {
+                sfinalStr = "";
+                String expressionStr = expressionInfo.getExpression().toString();
+                if ((mp.getMethodName().contains(simpleName) && mp.getMethodName().contains(expressionStr))
+                        || (mp.getVariableName().contains(simpleName) && mp.getVariableName().contains(expressionStr))) {
+                    if (!TemplateBoolean.templateBooleanCheck(mp, recordNum +expressionStr+ "OnlyOneElseC")) {
+                        mp.getTemplateBoolean().put(recordNum+expressionStr+ "OnlyOneElseC", true);
+                        for (int i = 0; i < modiStaChar.length; i++) {
+                            boolean flag = false;
+                            if (modiStaChar[i] == simpleNameChar[0]) {
+                                for (int j = 0, k = i; (j < simpleNameChar.length) && (k < modiStaChar.length); j++, k++) {
+                                    if (modiStaChar[k] != simpleNameChar[j]) {
+                                        flag = true;
+                                        break;
+                                    }
+                                }
+                                if (!flag) {
+                                    if ((i > 0) && (((modiStaChar[i - 1] >= 'a') && (modiStaChar[i - 1] <= 'z')) || ((modiStaChar[i - 1] >= 'A') && (modiStaChar[i - 1] <= 'Z')))) {
+                                        flag = true;
+                                    } else if ((i + simpleNameChar.length < modiStaChar.length)
+                                            && (((modiStaChar[i + simpleNameChar.length] >= 'a') && (modiStaChar[i + simpleNameChar.length] <= 'z'))
+                                            || ((modiStaChar[i + simpleNameChar.length] >= 'A') && (modiStaChar[i + simpleNameChar.length] <= 'Z')))) {
+                                        flag = true;
+                                    }
+                                }
+                                if (!flag) {
+                                    String sMid = sfinalStr;
+                                    sMid += expressionStr;
+                                    for (int k = i + simpleNameChar.length; k < modiStaChar.length; k++) {
+                                        sMid += modiStaChar[k];
+                                    }
+                                }
+                            }
+                            sfinalStr += modiStaChar[i];
+                        }
                     }
                 }
             }
+
         }
+        for (int k = 0; k < 700; k++) {
+            if ((strings[k] != null) && (strings[k].length() > 2)) {
+                String staClass = "public class Test{\n{\n";
+                staClass += strings[k];
+                staClass += "}\n}";
+                Statement statement = ChangeSimpleName.getStatement(staClass);
+                if (statement != null) {
+                    statementList.add(statement);
+                }
+            }
+        }
+
         return statementList;
     }
 

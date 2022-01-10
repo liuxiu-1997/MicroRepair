@@ -5,6 +5,7 @@ import us.msu.cse.repair.algorithmsExpression.ExpressionPriorityMaxSelect;
 import us.msu.cse.repair.core.parser.ModificationPoint;
 import us.msu.cse.repair.informationExpression.ExpressionInfo;
 import us.msu.cse.repair.toolsExpression.GlobalVariableCheck;
+import us.msu.cse.repair.toolsExpression.RuleCheck;
 import us.msu.cse.repair.toolsExpression.TemplateBoolean;
 import us.msu.cse.repair.toolsExpression.TypeInformation;
 
@@ -340,13 +341,9 @@ public class RepairExpression {
         List<ExpressionInfo> modiExpressionList = modificationPoint.getExpressionInfosIngredients();
         for (ExpressionInfo expressionInfo : modiExpressionList) {
             if (!TemplateBoolean.templateBooleanCheck(modificationPoint, expressionInfo.getExpression().toString() + "infixLeftVar")) {
-                if ((expressionInfo.getExpression().getNodeType() == expLeft.getNodeType()) ||
-                        (expressionInfo.getExpression() instanceof FieldAccess) ||
-                        ((expressionInfo.getExpression() instanceof Name) && (!modificationPoint.getMethodName().contains(expressionInfo.getExpression().toString()))) ||
-//                        (expressionInfo.getExpression() instanceof StringLiteral) ||
-//                        (expressionInfo.getExpression() instanceof NumberLiteral) ||
-                        (expressionInfo.getExpression() instanceof MethodInvocation)) {
-                    modificationPoint.getTemplateBoolean().put(expressionInfo.getExpression().toString() + "left", true);
+//               boolean rule1 = RuleCheck.rule1OfIfRepair(expLeft,expressionInfo);
+               boolean rule2 = RuleCheck.rule2OfIfRepair(modificationPoint,expLeft,expressionInfo);
+                if ( rule2) {
                     Expression expression = expressionInfo.getExpression();
                     Expression expressionCopy1 = (Expression) ASTNode.copySubtree(statement.getAST(), expression);
                     e.setLeftOperand(expressionCopy1);
@@ -364,13 +361,9 @@ public class RepairExpression {
         List<ExpressionInfo> modiExpressionList = modificationPoint.getExpressionInfosIngredients();
         for (ExpressionInfo expressionInfo : modiExpressionList) {
             if (!TemplateBoolean.templateBooleanCheck(modificationPoint, expressionInfo.getExpression().toString() + "infixRightVar")) {
-                if ((expressionInfo.getExpression().getNodeType() == expRight.getNodeType()) ||
-                        (expressionInfo.getExpression() instanceof FieldAccess) ||
-                        ((expressionInfo.getExpression() instanceof Name) && (!modificationPoint.getMethodName().contains(expressionInfo.getExpression().toString()))) ||
-                        ((expressionInfo.getExpression() instanceof StringLiteral) && (expRight instanceof StringLiteral)) ||
-                        ((expressionInfo.getExpression() instanceof NumberLiteral) && (expRight instanceof NumberLiteral)) ||
-                        (expressionInfo.getExpression() instanceof NullLiteral) ||
-                        (expressionInfo.getExpression() instanceof MethodInvocation)) {
+//                boolean rule1 = RuleCheck.rule1OfIfRepair(expRight,expressionInfo);
+                boolean rule2 = RuleCheck.rule2OfIfRepair(modificationPoint,expRight,expressionInfo);
+                if ( rule2 ) {
                     modificationPoint.getTemplateBoolean().put(expressionInfo.getExpression().toString() + "Right", true);
                     Expression expression = expressionInfo.getExpression();
                     Expression expressionCopy1 = (Expression) ASTNode.copySubtree(statement.getAST(), expression);

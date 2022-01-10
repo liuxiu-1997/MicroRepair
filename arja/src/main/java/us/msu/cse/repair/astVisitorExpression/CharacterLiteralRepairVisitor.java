@@ -23,13 +23,13 @@ public class CharacterLiteralRepairVisitor extends ASTVisitorPlus {
     @Override
     public boolean visit(CharacterLiteral node) {
 
-        if (!isRepaired) {
+        if (!mp.isRepair()) {
             for (ExpressionInfo e : expressionInfoList) {
                 if ((e.getExpression() instanceof CharacterLiteral) && (!(TemplateBoolean.templateBooleanCheck(mp, e.getExpressionStr() + "char")))) {
                     CharacterLiteral literal = (CharacterLiteral) e.getExpression();
                     node.setCharValue(literal.charValue());
                     mp.getTemplateBoolean().put(e.getExpressionStr() + "char", true);
-                    isRepaired = true;
+                    mp.setRepair(true);
                     return true;
                 }
             }

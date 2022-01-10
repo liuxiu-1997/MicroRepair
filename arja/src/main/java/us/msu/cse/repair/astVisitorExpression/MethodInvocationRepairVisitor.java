@@ -24,14 +24,14 @@ public class MethodInvocationRepairVisitor extends ASTVisitorPlus {
 
     @Override
     public boolean visit(MethodInvocation node) {
-        if (!isRepaired) {
+        if (!mp.isRepair()) {
 
             for (ExpressionInfo e : expressionInfoList) {
                 if (!TemplateBoolean.templateBooleanCheck(mp, mp.getStatement().toString() + e + "MethodInvocation") && (e.getExpression() instanceof Name)) {
                     Expression eMid = (Expression) ASTNode.copySubtree(node.getAST(), e.getExpression());
                     node.setExpression(eMid);
                     mp.getTemplateBoolean().put(mp.getStatement().toString() + e + "MethodInvocation", true);
-                    isRepaired = true;
+                    mp.setRepair(true);
                     return true;
                 }
             }

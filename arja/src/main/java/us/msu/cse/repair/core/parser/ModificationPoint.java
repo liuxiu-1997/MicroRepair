@@ -25,7 +25,7 @@ public class ModificationPoint {
 	LCNode lcNode;
 
 	//对应于每个修改点，其成分为普通语句还有表达式成分
-	List<Statement> ingredients;
+	List<Statement> ingredients = new ArrayList<>() ;
 	List<ExpressionInfo> expressionInfosIngredients;
 
 	Map<String, VarInfo> declaredFields;
@@ -39,12 +39,13 @@ public class ModificationPoint {
 	Map<String, MethodInfo> outerMethods;
 
 	boolean isInStaticMethod;
-
+	boolean isRepair;
 	List<String> methodAndTypeNameToFilter = new ArrayList<>();
 	List<String> variableName = new ArrayList<>();
 	List<String> methodName = new ArrayList<>();
 	List<Type>  typeName = new ArrayList<>();
 	List<String> importAndOther = new ArrayList<>();
+	List<String> globalVariableName = new ArrayList<>();
 
 	Map<String, Boolean> templateBoolean = new HashMap<>();//对应的木板仅仅作为成分的补充，使用一次后（已有补丁成分）则舍弃
 
@@ -226,5 +227,21 @@ public class ModificationPoint {
 
 	public void setImportAndOther(List<String> importAndOther) {
 		this.importAndOther = importAndOther;
+	}
+
+	public boolean isRepair() {
+		return isRepair;
+	}
+
+	public void setRepair(boolean repair) {
+		isRepair = repair;
+	}
+
+	public List<String> getGlobalVariableName() {
+		return globalVariableName;
+	}
+
+	public void setGlobalVariableName(List<String> globalVariableName) {
+		this.globalVariableName = globalVariableName;
 	}
 }

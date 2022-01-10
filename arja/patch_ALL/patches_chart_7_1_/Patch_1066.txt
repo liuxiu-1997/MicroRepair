@@ -1,9 +1,0 @@
-1 InsertBefore /home/bjtucs/workspace/apr/benchmarks/defects4j/chart/chart_7_buggy/source/org/jfree/data/time/TimePeriodValue.java 97
-Faulty:
-return this.period;
-Seed:
-if (period == null) return null;
-**************************************************
-————————————————————————结束————————————————————————————
-Evaluations: 4917
-EstimatedTime: 492491

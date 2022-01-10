@@ -25,7 +25,7 @@ public class ArrayAccessRepairVisitor extends ASTVisitorPlus {
 
     @Override
     public boolean visit(ArrayAccess node) {
-        if ((!isRepaired)) {
+        if (!mp.isRepair()) {
             ExpressionInfo expressionInfo = TypeInformation.getArrayAccessTypeInfo(node);
             if (expressionInfo == null)
                 expressionInfo = TypeInformation.getSourceVariable(mp.getSourceFilePath(), node.getArray().toString());
@@ -40,7 +40,7 @@ public class ArrayAccessRepairVisitor extends ASTVisitorPlus {
                             Expression expression = (Expression) ASTNode.copySubtree(node.getAST(), e.getExpression());
                             node.setArray(expression);
                             mp.getTemplateBoolean().put(e.getExpression().toString() + "aa", true);
-                            isRepaired = true;
+                            mp.setRepair(true);
                             return true;
                         }
                     }

@@ -1,9 +1,0 @@
-1 Replace /home/bjtucs/workspace/apr/benchmarks/defects4j/math/math_8_buggy/src/main/java/org/apache/commons/math3/distribution/DiscreteDistribution.java 190
-Faulty:
-out[i]=sample();
-Seed:
-if (out == null) out[i]=sample();
-**************************************************
-————————————————————————结束————————————————————————————
-Evaluations: 2031
-EstimatedTime: 262175

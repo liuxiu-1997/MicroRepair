@@ -1,9 +1,0 @@
-1 InsertBefore /home/bjtucs/workspace/apr/benchmarks/defects4j/math/math_4_buggy/src/main/java/org/apache/commons/math3/geometry/euclidean/threed/Line.java 114
-Faulty:
-return point.subtract(zero).dotProduct(direction);
-Seed:
-if (direction != null) return 1;
-**************************************************
-————————————————————————结束————————————————————————————
-Evaluations: 1273
-EstimatedTime: 1163273
