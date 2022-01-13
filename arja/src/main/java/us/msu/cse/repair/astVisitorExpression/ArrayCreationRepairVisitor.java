@@ -35,10 +35,10 @@ public class ArrayCreationRepairVisitor extends ASTVisitorPlus {
                     if ((t1.toString().equals(t2.toString())) && (t1S.equals(t2S)) && (!TemplateBoolean.templateBooleanCheck(mp, e.getExpressionStr() + "ac"))) {
                         ArrayCreation access = (ArrayCreation) e.getExpression();
                         if ((access.getInitializer() != null) && (access.dimensions().toString().equals(node.dimensions().toString()))) {
+                            mp.getTemplateBoolean().put(e.getExpressionStr() + "ac", true);
                             ArrayInitializer expression = (ArrayInitializer) ASTNode.copySubtree(node.getAST(), access.getInitializer());
                             node.setInitializer(expression);
                             mp.setRepair(true);;
-                            mp.getTemplateBoolean().put(e.getExpressionStr() + "ac", true);
                             return true;
                         }
                     }

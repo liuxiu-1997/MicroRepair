@@ -27,8 +27,8 @@ public class StringLiteralRepairVisitor extends ASTVisitorPlus {
         if (!mp.isRepair()) {
             for (ExpressionInfo e : expressionInfoList) {
                 if ((e.getExpression() instanceof StringLiteral) && (!(TemplateBoolean.templateBooleanCheck(mp, e.getExpressionStr() + "string")))) {
-                    node.setLiteralValue(node.toString());
                     mp.getTemplateBoolean().put(e.getExpressionStr() + "string", true);
+                    node.setLiteralValue(node.toString());
                     mp.setRepair(true);
                     return true;
                 }
@@ -46,8 +46,10 @@ public class StringLiteralRepairVisitor extends ASTVisitorPlus {
                 cur = cur.getParent();
             }
             Initializer initializer = (Initializer) cur;
-            s = (Statement) initializer.getBody().statements().get(0);
-            statementFlag = true;
+            if (initializer.getBody().statements().size()>0) {
+                s = (Statement) initializer.getBody().statements().get(0);
+                statementFlag = true;
+            }
         }
     }
 

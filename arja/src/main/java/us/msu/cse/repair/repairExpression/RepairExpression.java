@@ -148,28 +148,18 @@ public class RepairExpression {
             for (ExpressionInfo e : modificationPoint.getExpressionInfosIngredients()) {
                 Expression expression = e.getExpression();
                 if (!TemplateBoolean.templateBooleanCheck(modificationPoint, expression.toString() + "returnRepair")) {
-                    if ((returnOfExpression.getNodeType() == e.getExpression().getNodeType()) ||
-                            (expression instanceof FieldAccess) ||
-                            (expression instanceof MethodInvocation) ||
-//                        (expression instanceof StringLiteral) ||
-//                        (expression instanceof NumberLiteral) ||
-                            (expression instanceof ArrayAccess) ||
-                            (expression instanceof NullLiteral)){
+                    boolean flagCheck = RuleCheck.rule1OfReturnStatement(modificationPoint,returnOfExpression,expression);
+                    if (flagCheck){
                         returnStatement = ast.newReturnStatement();
                         Expression expressionCopy = (Expression) ASTNode.copySubtree(returnStatement.getAST(), expression);
                         returnStatement.setExpression(expressionCopy);
                     };
-                    if ( (expression instanceof Name) && (!(modificationPoint.getMethodName().contains(expression.toString())))) {
-                        returnStatement = ast.newReturnStatement();
-                        Expression expressionCopy = (Expression) ASTNode.copySubtree(returnStatement.getAST(), expression);
-                        returnStatement.setExpression(expressionCopy);
-                    }
                     modificationPoint.getTemplateBoolean().put(expression.toString() + "returnRepair", true);
                 }
-            }
-            if (returnStatement != null) {
-                clearAndSetIngredient(returnStatement);
-                return true;
+                if (returnStatement != null) {
+                    clearAndSetIngredient(returnStatement);
+                    return true;
+                }
             }
         }
         return false;

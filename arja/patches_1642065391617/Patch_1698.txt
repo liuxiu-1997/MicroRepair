@@ -1,0 +1,56 @@
+1 Delete /home/bjtucs/workspace/apr/benchmarks/defects4j/lang/lang_39_buggy/src/java/org/apache/commons/lang3/StringUtils.java 3675
+Faulty:
+for (int i=0; i < searchList.length; i++) {
+  int greater=replacementList[i].length() - searchList[i].length();
+  if (greater > 0) {
+    increase+=3 * greater;
+  }
+}
+Seed:
+for (int i=0; i < isEmpty(text).length; i++) {
+  int greater=replacementList[i].length() - searchList[i].length();
+  if (greater > 0) {
+    increase+=3 * greater;
+  }
+}
+**************************************************
+————————————————————————结束————————————————————————————
+修改点位置：0/2操作：0(0-删除;1-替换;2-插入)补丁位置：240
+提取的表达式成分数量：579候选补丁数量：11052 InsertBefore /home/bjtucs/workspace/apr/benchmarks/defects4j/lang/lang_39_buggy/src/java/org/apache/commons/lang3/StringUtils.java 3700
+Faulty:
+for (int i=0; i < searchLength; i++) {
+  if (noMoreMatchesForReplIndex[i] || searchList[i] == null || searchList[i].length() == 0 || replacementList[i] == null) {
+    continue;
+  }
+  tempIndex=text.indexOf(searchList[i],start);
+  if (tempIndex == -1) {
+    noMoreMatchesForReplIndex[i]=true;
+  }
+ else {
+    if (textIndex == -1 || tempIndex < textIndex) {
+      textIndex=tempIndex;
+      replaceIndex=i;
+    }
+  }
+}
+Seed:
+for (int i=0; i < textIndex; i++) {
+  if (noMoreMatchesForReplIndex[i] || searchList[i] == null || searchList[i].length() == 0 || replacementList[i] == null) {
+    continue;
+  }
+  tempIndex=text.indexOf(searchList[i],start);
+  if (tempIndex == -1) {
+    noMoreMatchesForReplIndex[i]=true;
+  }
+ else {
+    if (textIndex == -1 || tempIndex < textIndex) {
+      textIndex=tempIndex;
+      replaceIndex=i;
+    }
+  }
+}
+**************************************************
+————————————————————————结束————————————————————————————
+修改点位置：33/2操作：2(0-删除;1-替换;2-插入)补丁位置：41
+提取的表达式成分数量：579候选补丁数量：2431Evaluations: 5761
+EstimatedTime: 477060

@@ -26,9 +26,9 @@ public class CharacterLiteralRepairVisitor extends ASTVisitorPlus {
         if (!mp.isRepair()) {
             for (ExpressionInfo e : expressionInfoList) {
                 if ((e.getExpression() instanceof CharacterLiteral) && (!(TemplateBoolean.templateBooleanCheck(mp, e.getExpressionStr() + "char")))) {
+                    mp.getTemplateBoolean().put(e.getExpressionStr() + "char", true);
                     CharacterLiteral literal = (CharacterLiteral) e.getExpression();
                     node.setCharValue(literal.charValue());
-                    mp.getTemplateBoolean().put(e.getExpressionStr() + "char", true);
                     mp.setRepair(true);
                     return true;
                 }

@@ -1,0 +1,28 @@
+1 Delete /home/bjtucs/workspace/apr/benchmarks/defects4j/lang/lang_39_buggy/src/java/org/apache/commons/lang3/StringUtils.java 3675
+Faulty:
+for (int i=0; i < searchList.length; i++) {
+  int greater=replacementList[i].length() - searchList[i].length();
+  if (greater > 0) {
+    increase+=3 * greater;
+  }
+}
+Seed:
+for (int i=0; i < searchList.length; i++) {
+  int greater=replacementList[i].length() - searchList[i].length();
+  if (greater > 0) {
+    searchString.length()+=3 * greater;
+  }
+}
+**************************************************
+————————————————————————结束————————————————————————————
+修改点位置：0/2操作：0(0-删除;1-替换;2-插入)补丁位置：978
+提取的表达式成分数量：579候选补丁数量：11052 Delete /home/bjtucs/workspace/apr/benchmarks/defects4j/lang/lang_39_buggy/src/java/org/apache/commons/lang3/StringUtils.java 3696
+Faulty:
+replaceIndex=-1;
+Seed:
+new String(c,tokenStart,newTokenStart - tokenStart)=-1;
+**************************************************
+————————————————————————结束————————————————————————————
+修改点位置：38/2操作：0(0-删除;1-替换;2-插入)补丁位置：13
+提取的表达式成分数量：574候选补丁数量：119Evaluations: 5150
+EstimatedTime: 425912

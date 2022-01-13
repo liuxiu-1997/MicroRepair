@@ -28,9 +28,9 @@ public class MethodInvocationRepairVisitor extends ASTVisitorPlus {
 
             for (ExpressionInfo e : expressionInfoList) {
                 if (!TemplateBoolean.templateBooleanCheck(mp, mp.getStatement().toString() + e + "MethodInvocation") && (e.getExpression() instanceof Name)) {
+                    mp.getTemplateBoolean().put(mp.getStatement().toString() + e + "MethodInvocation", true);
                     Expression eMid = (Expression) ASTNode.copySubtree(node.getAST(), e.getExpression());
                     node.setExpression(eMid);
-                    mp.getTemplateBoolean().put(mp.getStatement().toString() + e + "MethodInvocation", true);
                     mp.setRepair(true);
                     return true;
                 }

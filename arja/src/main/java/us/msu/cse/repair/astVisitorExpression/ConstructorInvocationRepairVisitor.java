@@ -26,13 +26,14 @@ public class ConstructorInvocationRepairVisitor extends ASTVisitorPlus {
     public boolean visit(ConstructorInvocation node) {
         if (node.arguments() != null) {
             if ((!TemplateBoolean.templateBooleanCheck(mp, node.toString() + mp.getStatement().toString() + "cons"))) {
+                mp.getTemplateBoolean().put(node.toString() + mp.getStatement().toString() + "cons", true);
                 List<Statement> statementList = ChangeSimpleName.getChangedConstructor(mp, node.toString(), node.arguments());
                 if (mp.getIngredients() == null) {
                     mp.setIngredients(statementList);
                 } else {
                     mp.getIngredients().addAll(statementList);
                 }
-                mp.getTemplateBoolean().put(node.toString() + mp.getStatement().toString() + "cons", true);
+
             }
         }
         return super.visit(node);

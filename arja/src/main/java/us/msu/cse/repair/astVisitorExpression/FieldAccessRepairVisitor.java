@@ -35,9 +35,9 @@ public class FieldAccessRepairVisitor extends ASTVisitorPlus {
                     for (ExpressionInfo e : expressionInfoList) {
                         if ((e.getVarType() != null) && (e.getExpression() instanceof Name) && (typeAssign.toString().equals(e.getVarType().toString()))
                                 && (!(TemplateBoolean.templateBooleanCheck(mp, e.getExpressionStr() + "field")))) {
+                            mp.getTemplateBoolean().put(e.getExpressionStr() + "field", true);
                             SimpleName s = (SimpleName) ASTNode.copySubtree(node.getAST(), e.getExpression());
                             node.setName(s);
-                            mp.getTemplateBoolean().put(e.getExpressionStr() + "field", true);
                             mp.setRepair(true);
                             return true;
                         }

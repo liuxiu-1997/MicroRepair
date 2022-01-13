@@ -79,6 +79,7 @@ public class DirectIngredientExpressionScreener {
                 boolean boolean4 = ImportFilter(mp, e);
                 boolean boolean5 = NullFilter(mp, e);
                 boolean boolean6 = simpleNameFilter(mp, e);
+
                 if (boolean1 && boolean2 && boolean3 && boolean4 && boolean5 && boolean6) {
                     listIn.add(e);
                 }
@@ -120,6 +121,18 @@ public class DirectIngredientExpressionScreener {
     private boolean simpleNameFilter(ModificationPoint mp, ExpressionInfo e) {
         if (e.getExpression() instanceof SimpleName) {
             return RuleCheck.rule2OfSimpleName(mp, (SimpleName) e.getExpression());
+        } else if (e.getExpression() instanceof ArrayAccess) {
+            return RuleCheck.rule1OfArrayAccess(mp, (ArrayAccess) e.getExpression());
+        } else if (e.getExpression() instanceof NumberLiteral) {
+            return RuleCheck.rule1OfNumberliteral(mp, (NumberLiteral) e.getExpression());
+        } else if (e.getExpression() instanceof StringLiteral) {
+            return RuleCheck.rule1OfStringliteral(mp, (StringLiteral) e.getExpression());
+        } else if (e.getExpression() instanceof MethodInvocation) {
+            return RuleCheck.rule1OfMethodInvocation(mp, (MethodInvocation) e.getExpression());
+        } else if (e.getExpression() instanceof FieldAccess) {
+            return RuleCheck.rule2OfFieldAccess(mp, (FieldAccess) e.getExpression());
+        } else if(e.getExpression() instanceof QualifiedName){
+            return RuleCheck.rule1OfQualifiedName(mp, (QualifiedName) e.getExpression());
         } else
             return true;
     }
@@ -135,7 +148,7 @@ public class DirectIngredientExpressionScreener {
         Expression expression = e.getExpression();
         if (((expression instanceof SimpleName) || (expression instanceof QualifiedName)) && (expression.toString().length() >= 2)) {
             for (String s : importAndOther) {
-                if (s.indexOf(e.getExpression().toString()) > 1)
+                if ((s.indexOf(e.getExpression().toString()) >= 1) || (s.matches(expression.toString())))
                     return false;
             }
         }
@@ -150,7 +163,11 @@ public class DirectIngredientExpressionScreener {
     public boolean LineFilter(ModificationPoint mp, ExpressionInfo e) {
         int mpLine = mp.getLCNode().getLineNumber();
         int expLine = e.getLineAndNodeType().lineOfStaOrExp;
-        return mpLine >= expLine;
+        if ((e.getExpression() instanceof SimpleName) || (e.getExpression() instanceof StringLiteral) ||
+                (e.getExpression() instanceof NumberLiteral))
+            return mpLine >= expLine;
+        else
+            return true;
     }
 
     public boolean LocalFilter(ModificationPoint mp, ExpressionInfo e) {

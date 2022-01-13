@@ -331,6 +331,8 @@ public class AllTypeVisitorModificationPoint extends ASTVisitor {
         if(!mp.getMethodName().contains(node.getName().toString())){
             mp.getMethodName().add(node.getName().toString()) ;
         }
+        LineAndNodeType lineAndNodeTypeMethodName = new LineAndNodeType(1,node.getNodeType());
+        list.add(new ExpressionInfo(node.getName(),methClaPacOfExpName,lineAndNodeTypeMethodName));
         return super.visit(node);
     }
 
@@ -363,6 +365,18 @@ public class AllTypeVisitorModificationPoint extends ASTVisitor {
         }else {
             mp.getMethodName().add(node.getName().toString());
         }
+
+        LineAndNodeType lineAndNodeTypeMethodName = new LineAndNodeType(1,node.getNodeType());
+        list.add(new ExpressionInfo(node.getName(),methClaPacOfExpName,lineAndNodeTypeMethodName));
+
+        if (node.parameters().size()==0){
+            AST ast = AST.newAST(AST.JLS8);
+            MethodInvocation methodInvocation = ast.newMethodInvocation();
+            SimpleName simpleName = (SimpleName)ASTNode.copySubtree(ast,node.getName());
+            methodInvocation.setName(simpleName);
+            list.add(new ExpressionInfo(methodInvocation, methClaPacOfExpName, lineNode));
+        }
+
         return true;
     }
 
@@ -459,13 +473,6 @@ public class AllTypeVisitorModificationPoint extends ASTVisitor {
             list.add(new ExpressionInfo(expression, methClaPacOfExpName, lineNode));
         return true;
     }
-
-//    @Override
-//    public boolean visit(StringLiteral node) {
-//        LineAndNodeType lineNode = GetClassInstance.getLineAndNodeType(node,node.getNodeType());
-//        list.add(new ExpressionInfo(node, methClaPacOfExpName, lineNode));
-//        return false;
-//    }
 
 
     @Override

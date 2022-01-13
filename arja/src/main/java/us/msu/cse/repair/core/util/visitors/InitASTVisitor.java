@@ -49,7 +49,11 @@ public class InitASTVisitor extends ASTVisitor {
 
 		LCNode lcNode = new LCNode(className, lineNumber);
 
-		String packageName = cu.getPackage().getName().toString();
+		String packageName ;
+		if (cu.getPackage()!= null){
+			packageName = cu.getPackage().getName().toString();
+		}else
+			packageName =" ";
 		ASTNode astNodeMid = (ASTNode) statement;
 		String methodName = null;
 		LineAndNodeType lineAndNodeType = new LineAndNodeType(lineNumber,statement.getNodeType());

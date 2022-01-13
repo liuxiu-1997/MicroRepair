@@ -154,7 +154,8 @@ public abstract class AbstractRepairProblem extends Problem {
         gzoltarDataDir = (String) parameters.get("gzoltarDataDir");
 
 //        String id = Helper.getRandomID();
-        String id = GetNumId.getId(srcJavaDir);
+//        String id = GetNumId.getId(srcJavaDir);
+        String id = System.currentTimeMillis()+"";
 
         thr = (Double) parameters.get("thr");
         if (thr == null)
