@@ -1,0 +1,18 @@
+1 Delete /home/bjtucs/workspace/apr/benchmarks/defects4j/lang/lang_63_buggy/src/java/org/apache/commons/lang/time/DurationFormatUtils.java 345
+Faulty:
+days=0;
+Seed:
+reduceAndCorrect(start,end,Calendar.DAY_OF_MONTH,days)=0;
+**************************************************
+————————————————————————结束————————————————————————————
+修改点位置：36/2操作：0(0-删除;1-替换;2-插入)补丁位置：60
+提取的表达式成分数量：213候选补丁数量：872 Replace /home/bjtucs/workspace/apr/benchmarks/defects4j/lang/lang_63_buggy/src/java/org/apache/commons/lang/time/DurationFormatUtils.java 437
+Faulty:
+int newdiff=startValue - endValue;
+Seed:
+int newdiff=endValue - endValue;
+**************************************************
+————————————————————————结束————————————————————————————
+修改点位置：24/2操作：1(0-删除;1-替换;2-插入)补丁位置：44
+提取的表达式成分数量：165候选补丁数量：145Evaluations: 74
+EstimatedTime: 9616

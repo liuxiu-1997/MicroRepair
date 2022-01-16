@@ -24,8 +24,8 @@ public class QualifiedNameRepairVisitor extends ASTVisitorPlus {
 
     @Override
     public boolean visit(QualifiedName node) {
-        if ((!TemplateBoolean.templateBooleanCheck(mp, node.toString() + "all")) && (!mp.isRepair())) {
-            mp.getTemplateBoolean().put(node.toString() + "all", true);
+        if ((!TemplateBoolean.templateBooleanCheck(mp, node.toString() + "QualifiedName")) && (!mp.isRepair())) {
+            mp.getTemplateBoolean().put(node.toString() + "QualifiedName", true);
             List<Statement> statementList = ChangeSimpleName.getChangedQualifiedName(mp, node.toString());
             if (mp.getIngredients() == null) {
                 mp.setIngredients(statementList);

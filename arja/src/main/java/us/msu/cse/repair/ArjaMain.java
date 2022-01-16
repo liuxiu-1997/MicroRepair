@@ -18,7 +18,7 @@ public class ArjaMain {
     public static void main(String args[]) throws Exception {
 
         String[] args1 = new String[9];
-//        for (int i = 12; i <= 26; i += 1) {
+//        for (int i = 19; i <= 26; i += 1) {
 //            args1[0] = "Arja";
 //            args1[1] = "-DsrcJavaDir";
 //            args1[2] = "/home/liuguizhuang/arjaLiu/chart/chart_" + i + "_buggy/source";
@@ -28,7 +28,8 @@ public class ArjaMain {
 //            args1[6] = "/home/liuguizhuang/arjaLiu/chart/chart_" + i + "_buggy/build-tests";
 //            args1[7] = "-Ddependences";
 //            args1[8] = "/home/wangbo/workspace/defects4j/framework/projects/lib/junit-4.11.jar";
-
+//            Test(args1, i);
+//        }
 //            args1[0] = "Arja";
 //            args1[1] = "-DsrcJavaDir";
 //            args1[2] = "/home/bjtucs/workspace/apr/benchmarks/defects4j/chart/chart_" + i + "_buggy/source";
@@ -41,6 +42,7 @@ public class ArjaMain {
 //            Test(args1,i);
 //        }
 //        for (int i = 22; i <= 106; i += 1) {
+//        int i=22;
 //            args1[0] = "Arja";
 //            args1[1] = "-DsrcJavaDir";
 //            args1[2] = "/home/liuguizhuang/arjaLiu/math/math_" + i + "_buggy/src/main/java";
@@ -50,7 +52,9 @@ public class ArjaMain {
 //            args1[6] = "/home/liuguizhuang/arjaLiu/math/math_" + i + "_buggy/target/test-classes";
 //            args1[7] = "-Ddependences";
 //            args1[8] = "/home/wangbo/workspace/defects4j/framework/projects/lib/junit-4.11.jar";
-
+//****************************0
+//        for (int i=7;i<=85;i++){
+//        int i=75;
 //            args1[0] = "Arja";
 //            args1[1] = "-DsrcJavaDir";
 //            args1[2] = "/home/bjtucs/workspace/apr/benchmarks/defects4j/math/math_" + i + "_buggy/src/main/java";
@@ -62,19 +66,101 @@ public class ArjaMain {
 //            args1[8] = "/home/bjtucs/program_files/defects4j/framework/projects/lib/junit-4.11.jar";
 //            Test(args1,i);
 //        }
+//        for (int i=86;i<=106;i++){
 
-//        for (int i = 19; i <= 27; i++) {
-////            args1[0] = "Arja";
-////            args1[1] = "-DsrcJavaDir";
-////            args1[2] = "/home/liuguizhuang/arjaLiu/time/time_" + i + "_buggy/src/main";
-////            args1[3] = "-DbinJavaDir";
-////            args1[4] = "/home/liuguizhuang/arjaLiu/time/time_" + i + "_buggy/target/classes";
-////            args1[5] = "-DbinTestDir";
-////            args1[6] = "/home/liuguizhuang/arjaLiu/time/time_" + i + "_buggy/target/test-classes";
-////            args1[7] = "-Ddependences";
-////            args1[8] = "/home/wangbo/workspace/defects4j/framework/projects/lib/junit-4.11.jar";
-////            args1[9] = "-DexternalProjRoot";
-////            args1[10] = "/home/liuguizhuang/arjaLiu";
+//        int i=98;
+//            args1[0] = "Arja";
+//            args1[1] = "-DsrcJavaDir";
+//            args1[2] = "/home/bjtucs/workspace/apr/benchmarks/defects4j/math/math_" + i + "_buggy/src/main/java";
+//            args1[3] = "-DbinJavaDir";
+//            args1[4] = "/home/bjtucs/workspace/apr/benchmarks/defects4j/math/math_" + i + "_buggy/target/classes";
+//            args1[5] = "-DbinTestDir";
+//            args1[6] = "/home/bjtucs/workspace/apr/benchmarks/defects4j/math/math_" + i + "_buggy/target/test-classes";
+//            args1[7] = "-Ddependences";
+//            args1[8] = "/home/bjtucs/program_files/defects4j/framework/projects/lib/junit-4.11.jar";
+//            Test(args1,i);
+//        }
+//******************
+
+//        for (int i=96;i<=106;i++){
+//        int i=98;
+//            args1[0] = "Arja";
+//            args1[1] = "-DsrcJavaDir";
+//            args1[2] = "/home/liuguizhuang/arjaLiu/math/math_" + i + "_buggy/src/java";
+//            args1[3] = "-DbinJavaDir";
+//            args1[4] = "/home/liuguizhuang/arjaLiu/math/math_" + i + "_buggy/target/classes";
+//            args1[5] = "-DbinTestDir";
+//            args1[6] = "/home/liuguizhuang/arjaLiu/math/math_" + i + "_buggy/target/test-classes";
+//            args1[7] = "-Ddependences";
+//            args1[8] = "/home/wangbo/workspace/defects4j/framework/projects/lib/junit-4.11.jar";
+//            Test(args1,i);
+////        }
+//        for (int i=63;i<=85;i++){
+        int i=75;
+            args1[0] = "Arja";
+            args1[1] = "-DsrcJavaDir";
+            args1[2] = "/home/liuguizhuang/arjaLiu/math/math_" + i + "_buggy/src/main/java";
+            args1[3] = "-DbinJavaDir";
+            args1[4] = "/home/liuguizhuang/arjaLiu/math/math_" + i + "_buggy/target/classes";
+            args1[5] = "-DbinTestDir";
+            args1[6] = "/home/liuguizhuang/arjaLiu/math/math_" + i + "_buggy/target/test-classes";
+            args1[7] = "-Ddependences";
+            args1[8] = "/home/wangbo/workspace/defects4j/framework/projects/lib/junit-4.11.jar";
+            Test(args1,i);
+////        }
+//        for (int i=40;i<=59;i++){
+//        int i=22;
+//        args1[0] = "Arja";
+//        args1[1] = "-DsrcJavaDir";
+//        args1[2] = "/home/liuguizhuang/arjaLiu/math/math_" + i + "_buggy/src/main/java";
+//        args1[3] = "-DbinJavaDir";
+//        args1[4] = "/home/liuguizhuang/arjaLiu/math/math_" + i + "_buggy/target/classes";
+//        args1[5] = "-DbinTestDir";
+//        args1[6] = "/home/liuguizhuang/arjaLiu/math/math_" + i + "_buggy/target/test-classes";
+//        args1[7] = "-Ddependences";
+//        args1[8] = "/home/wangbo/workspace/defects4j/framework/projects/lib/junit-4.11.jar";
+//        Test(args1, i);
+//        }
+//
+//        for (int i = 4; i <= 5; i++) {
+//            args1[0] = "Arja";
+//            args1[1] = "-DsrcJavaDir";
+//            args1[2] = "/home/liuguizhuang/arjaLiu/math/math_" + i + "_buggy/src/main/java";
+//            args1[3] = "-DbinJavaDir";
+//            args1[4] = "/home/liuguizhuang/arjaLiu/math/math_" + i + "_buggy/target/classes";
+//            args1[5] = "-DbinTestDir";
+//            args1[6] = "/home/liuguizhuang/arjaLiu/math/math_" + i + "_buggy/target/test-classes";
+//            args1[7] = "-Ddependences";
+//            args1[8] = "/home/wangbo/workspace/defects4j/framework/projects/lib/junit-4.11.jar";
+//            Test(args1, i);
+//        }
+
+
+//        for (int i = 1; i <= 11; i++) {
+//            args1[0] = "Arja";
+//            args1[1] = "-DsrcJavaDir";
+//            args1[2] = "/home/liuguizhuang/arjaLiu/time/time_" + i + "_buggy/src/main";
+//            args1[3] = "-DbinJavaDir";
+//            args1[4] = "/home/liuguizhuang/arjaLiu/time/time_" + i + "_buggy/target/classes";
+//            args1[5] = "-DbinTestDir";
+//            args1[6] = "/home/liuguizhuang/arjaLiu/time/time_" + i + "_buggy/target/test-classes";
+//            args1[7] = "-Ddependences";
+//            args1[8] = "/home/wangbo/workspace/defects4j/framework/projects/lib/junit-4.11.jar";
+//            Test(args1, i);
+//        }
+//        for (int i = 12; i <= 17; i++) {
+//            args1[0] = "Arja";
+//            args1[1] = "-DsrcJavaDir";
+//            args1[2] = "/home/liuguizhuang/arjaLiu/time/time_" + i + "_buggy/src/main";
+//            args1[3] = "-DbinJavaDir";
+//            args1[4] = "/home/liuguizhuang/arjaLiu/time/time_" + i + "_buggy/build/classes";
+//            args1[5] = "-DbinTestDir";
+//            args1[6] = "/home/liuguizhuang/arjaLiu/time/time_" + i + "_buggy/build/tests";
+//            args1[7] = "-Ddependences";
+//            args1[8] = "/home/wangbo/workspace/defects4j/framework/projects/lib/junit-4.11.jar";
+//            Test(args1, i);
+//        }
+//        }
 //            args1[0] = "Arja";
 //            args1[1] = "-DsrcJavaDir";
 //            args1[2] = "/home/bjtucs/workspace/apr/benchmarks/defects4j/time/time_" + i + "_buggy/src/main";
@@ -99,70 +185,69 @@ public class ArjaMain {
 //            args1[8] = "/home/bjtucs/program_files/defects4j/framework/projects/lib/junit-4.11.jar";
 //            Test(args1, i);
 //        }
+//_______________________________________________________________________________________________
+//        for (int i = 24; i <= 35; i += 1) {
+////            args1[0] = "Arja";
+////            args1[1] = "-DsrcJavaDir";
+////            args1[2] = "/home/liuguizhuang/arjaLiu/lang/lang_" + i + "_buggy/src/main/java";
+////            args1[3] = "-DbinJavaDir";
+////            args1[4] = "/home/liuguizhuang/arjaLiu/lang/lang_" + i + "_buggy/target/classes";
+////            args1[5] = "-DbinTestDir";
+////            args1[6] = "/home/liuguizhuang/arjaLiu/lang/lang_" + i + "_buggy/target/tests";
+////            args1[7] = "-Ddependences";
+////            args1[8] = "/home/wangbo/workspace/defects4j/framework/projects/lib/junit-4.11.jar";
 //
-        for (int i = 24; i <= 35; i += 1) {
 //            args1[0] = "Arja";
 //            args1[1] = "-DsrcJavaDir";
-//            args1[2] = "/home/liuguizhuang/arjaLiu/lang/lang_" + i + "_buggy/src/main/java";
+//            args1[2] = "/home/bjtucs/workspace/apr/benchmarks/defects4j/lang/lang_" + i + "_buggy/src/main";
 //            args1[3] = "-DbinJavaDir";
-//            args1[4] = "/home/liuguizhuang/arjaLiu/lang/lang_" + i + "_buggy/target/classes";
+//            args1[4] = "/home/bjtucs/workspace/apr/benchmarks/defects4j/lang/lang_" + i + "_buggy/target/classes";
 //            args1[5] = "-DbinTestDir";
-//            args1[6] = "/home/liuguizhuang/arjaLiu/lang/lang_" + i + "_buggy/target/tests";
+//            args1[6] = "/home/bjtucs/workspace/apr/benchmarks/defects4j/lang/lang_" + i + "_buggy/target/test-classes";
 //            args1[7] = "-Ddependences";
-//            args1[8] = "/home/wangbo/workspace/defects4j/framework/projects/lib/junit-4.11.jar";
-
-            args1[0] = "Arja";
-            args1[1] = "-DsrcJavaDir";
-            args1[2] = "/home/bjtucs/workspace/apr/benchmarks/defects4j/lang/lang_" + i + "_buggy/src/main";
-            args1[3] = "-DbinJavaDir";
-            args1[4] = "/home/bjtucs/workspace/apr/benchmarks/defects4j/lang/lang_" + i + "_buggy/target/classes";
-            args1[5] = "-DbinTestDir";
-            args1[6] = "/home/bjtucs/workspace/apr/benchmarks/defects4j/lang/lang_" + i + "_buggy/target/test-classes";
-            args1[7] = "-Ddependences";
-            args1[8] = "/home/bjtucs/program_files/defects4j/framework/projects/lib/junit-4.11.jar";
-            Test(args1,i);
-        }
-        for(int i=36;i<=41;i++){
-            args1[0] = "Arja";
-            args1[1] = "-DsrcJavaDir";
-            args1[2] = "/home/bjtucs/workspace/apr/benchmarks/defects4j/lang/lang_" + i + "_buggy/src/java";
-            args1[3] = "-DbinJavaDir";
-            args1[4] = "/home/bjtucs/workspace/apr/benchmarks/defects4j/lang/lang_" + i + "_buggy/target/classes";
-            args1[5] = "-DbinTestDir";
-            args1[6] = "/home/bjtucs/workspace/apr/benchmarks/defects4j/lang/lang_" + i + "_buggy/target/test-classes";
-            args1[7] = "-Ddependences";
-            args1[8] = "/home/bjtucs/program_files/defects4j/framework/projects/lib/junit-4.11.jar";
-            Test(args1,i);
-        }
-        for(int i=42;i<=53;i++){
-            args1[0] = "Arja";
-            args1[1] = "-DsrcJavaDir";
-            args1[2] = "/home/bjtucs/workspace/apr/benchmarks/defects4j/lang/lang_" + i + "_buggy/src/java";
-            args1[3] = "-DbinJavaDir";
-            args1[4] = "/home/bjtucs/workspace/apr/benchmarks/defects4j/lang/lang_" + i + "_buggy/target/classes";
-            args1[5] = "-DbinTestDir";
-            args1[6] = "/home/bjtucs/workspace/apr/benchmarks/defects4j/lang/lang_" + i + "_buggy/target/tests-classes";
-            args1[7] = "-Ddependences";
-            args1[8] = "/home/bjtucs/program_files/defects4j/framework/projects/lib/junit-4.11.jar";
-            Test(args1,i);
-        }
-        for (int i=54;i<=65;i++){
-            args1[0] = "Arja";
-            args1[1] = "-DsrcJavaDir";
-            args1[2] = "/home/bjtucs/workspace/apr/benchmarks/defects4j/lang/lang_" + i + "_buggy/src/java";
-            args1[3] = "-DbinJavaDir";
-            args1[4] = "/home/bjtucs/workspace/apr/benchmarks/defects4j/lang/lang_" + i + "_buggy/target/classes";
-            args1[5] = "-DbinTestDir";
-            args1[6] = "/home/bjtucs/workspace/apr/benchmarks/defects4j/lang/lang_" + i + "_buggy/target/tests";
-            args1[7] = "-Ddependences";
-            args1[8] = "/home/bjtucs/program_files/defects4j/framework/projects/lib/junit-4.11.jar";
-            Test(args1,i);
-        }
-
-
+//            args1[8] = "/home/bjtucs/program_files/defects4j/framework/projects/lib/junit-4.11.jar";
+//            Test(args1,i);
+//        }
+//        for(int i=36;i<=41;i++){
+//            args1[0] = "Arja";
+//            args1[1] = "-DsrcJavaDir";
+//            args1[2] = "/home/bjtucs/workspace/apr/benchmarks/defects4j/lang/lang_" + i + "_buggy/src/java";
+//            args1[3] = "-DbinJavaDir";
+//            args1[4] = "/home/bjtucs/workspace/apr/benchmarks/defects4j/lang/lang_" + i + "_buggy/target/classes";
+//            args1[5] = "-DbinTestDir";
+//            args1[6] = "/home/bjtucs/workspace/apr/benchmarks/defects4j/lang/lang_" + i + "_buggy/target/test-classes";
+//            args1[7] = "-Ddependences";
+//            args1[8] = "/home/bjtucs/program_files/defects4j/framework/projects/lib/junit-4.11.jar";
+//            Test(args1,i);
+//        }
+//        for(int i=42;i<=53;i++){
+//            args1[0] = "Arja";
+//            args1[1] = "-DsrcJavaDir";
+//            args1[2] = "/home/bjtucs/workspace/apr/benchmarks/defects4j/lang/lang_" + i + "_buggy/src/java";
+//            args1[3] = "-DbinJavaDir";
+//            args1[4] = "/home/bjtucs/workspace/apr/benchmarks/defects4j/lang/lang_" + i + "_buggy/target/classes";
+//            args1[5] = "-DbinTestDir";
+//            args1[6] = "/home/bjtucs/workspace/apr/benchmarks/defects4j/lang/lang_" + i + "_buggy/target/tests-classes";
+//            args1[7] = "-Ddependences";
+//            args1[8] = "/home/bjtucs/program_files/defects4j/framework/projects/lib/junit-4.11.jar";
+//            Test(args1,i);
+//        }
+//        for (int i=54;i<=65;i++){
+//            args1[0] = "Arja";
+//            args1[1] = "-DsrcJavaDir";
+//            args1[2] = "/home/bjtucs/workspace/apr/benchmarks/defects4j/lang/lang_" + i + "_buggy/src/java";
+//            args1[3] = "-DbinJavaDir";
+//            args1[4] = "/home/bjtucs/workspace/apr/benchmarks/defects4j/lang/lang_" + i + "_buggy/target/classes";
+//            args1[5] = "-DbinTestDir";
+//            args1[6] = "/home/bjtucs/workspace/apr/benchmarks/defects4j/lang/lang_" + i + "_buggy/target/tests";
+//            args1[7] = "-Ddependences";
+//            args1[8] = "/home/bjtucs/program_files/defects4j/framework/projects/lib/junit-4.11.jar";
+//            Test(args1,i);
+//        }
 
 
 //        for (int i = 36; i <= 65; i += 1) {
+//        int i=59;
 //            args1[0] = "Arja";
 //            args1[1] = "-DsrcJavaDir";
 //            args1[2] = "/home/liuguizhuang/arjaLiu/lang/lang_" + i + "_buggy/src/java";
@@ -197,7 +282,7 @@ public class ArjaMain {
 
 
         int populationSize = 100;
-        int maxGenerations = 100;
+        int maxGenerations = 200;
 
         String populationSizeS = parameterStrs.get("populationSize");
         if (populationSizeS != null)

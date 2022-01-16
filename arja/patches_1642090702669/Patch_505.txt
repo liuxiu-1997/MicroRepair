@@ -1,0 +1,14 @@
+1 Replace /home/bjtucs/workspace/apr/benchmarks/defects4j/lang/lang_51_buggy/src/java/org/apache/commons/lang/BooleanUtils.java 672
+Faulty:
+if (ch == 'y') {
+  return (str.charAt(1) == 'e' || str.charAt(1) == 'E') && (str.charAt(2) == 's' || str.charAt(2) == 'S');
+}
+Seed:
+if (ch <= 'y') {
+  return (str.charAt(1) == 'e' || str.charAt(1) == 'E') && (str.charAt(2) == 's' || str.charAt(2) == 'S');
+}
+**************************************************
+————————————————————————结束————————————————————————————
+修改点位置：9/1操作：1(0-删除;1-替换;2-插入)补丁位置：2
+提取的表达式成分数量：124候选补丁数量：72Evaluations: 1300
+EstimatedTime: 94386

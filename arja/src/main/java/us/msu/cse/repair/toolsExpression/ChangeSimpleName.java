@@ -4,6 +4,7 @@ import jmetal.util.Permutation;
 import jmetal.util.PseudoRandom;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.dom.*;
+import org.eclipse.osgi.internal.resolver.SystemState;
 import us.msu.cse.repair.astVisitorExpression.GetStatementFromText;
 import us.msu.cse.repair.core.parser.ModificationPoint;
 import us.msu.cse.repair.informationExpression.ExpressionInfo;
@@ -124,6 +125,7 @@ public class ChangeSimpleName {
             for (ExpressionInfo eInfo : expressionInfoList) {
                 String midStr = "";
                 String expStr = eInfo.getExpression().toString();
+
                 boolean flagAll = RuleCheck.changeNameRuleAll(mp,simpleName,eInfo.getExpression());
 
                 //模式一，只替换一个变量,相同的變量依次都更換
@@ -267,6 +269,8 @@ public class ChangeSimpleName {
                 //模式一，只替换一个变量,相同的變量依次都更換
                 if (flagAll) {
                     if ((!TemplateBoolean.templateBooleanCheck(mp, recordNum +expStr + "all"))) {
+                        mp.getTemplateBoolean().put(recordNum +expStr+ "all", true);
+
                         if (iArray < 698) {
                             int num = 0;
                             if (modiSta.split(simpleName).length >= 3)
@@ -286,11 +290,11 @@ public class ChangeSimpleName {
                             }
                             strings[iArray++] = midStr;
                         }
-                        mp.getTemplateBoolean().put(recordNum +expStr+ "all", true);
+
                     }
                     //模式二，若有多个变量每次仅仅更新一个
                     if ((!TemplateBoolean.templateBooleanCheck(mp, recordNum + expStr+ "onlyone"))) {
-
+                        mp.getTemplateBoolean().put(recordNum +expStr+ "onlyone", true);
                         String[] sMid = modiSta.split(simpleName);
                         StringBuilder finalOne = new StringBuilder();
                         StringBuilder finalTwo = new StringBuilder();
@@ -311,7 +315,7 @@ public class ChangeSimpleName {
                             finalOne.append(simpleName);
                         }
                     }
-                    mp.getTemplateBoolean().put(recordNum +expStr+ "onlyone", true);
+
                 }
             }
         } else {

@@ -1,0 +1,14 @@
+1 InsertBefore /home/bjtucs/workspace/apr/benchmarks/defects4j/math/math_5_buggy/src/main/java/org/apache/commons/math3/complex/Complex.java 340
+Faulty:
+if (this == other) {
+  return true;
+}
+Seed:
+if (this == sinh()) {
+  return true;
+}
+**************************************************
+————————————————————————结束————————————————————————————
+修改点位置：3/1操作：2(0-删除;1-替换;2-插入)补丁位置：80
+提取的表达式成分数量：367候选补丁数量：93Evaluations: 913
+EstimatedTime: 244279

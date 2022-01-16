@@ -1,0 +1,10 @@
+1 InsertBefore /home/bjtucs/workspace/apr/benchmarks/defects4j/lang/lang_59_buggy/src/java/org/apache/commons/lang/text/StrBuilder.java 880
+Faulty:
+ensureCapacity(size + width);
+Seed:
+ensureCapacity(padChar + width);
+**************************************************
+————————————————————————结束————————————————————————————
+修改点位置：1/1操作：2(0-删除;1-替换;2-插入)补丁位置：83
+提取的表达式成分数量：308候选补丁数量：176Evaluations: 790
+EstimatedTime: 69809

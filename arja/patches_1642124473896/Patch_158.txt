@@ -1,0 +1,10 @@
+1 Replace /home/bjtucs/workspace/apr/benchmarks/defects4j/math/math_2_buggy/src/main/java/org/apache/commons/math3/distribution/HypergeometricDistribution.java 268
+Faulty:
+return (double)(getSampleSize() * getNumberOfSuccesses()) / (double)getPopulationSize();
+Seed:
+return (double)(getSampleSize() * getSupportUpperBound()) / (double)getPopulationSize();
+**************************************************
+————————————————————————结束————————————————————————————
+修改点位置：25/1操作：1(0-删除;1-替换;2-插入)补丁位置：56
+提取的表达式成分数量：74候选补丁数量：67Evaluations: 585
+EstimatedTime: 153220

@@ -237,11 +237,11 @@ public class RuleCheck {
          * ---------- 否则，按之前检查SimpleName的方法过滤
          */
 
-        MethodInvocationNum methodInvocationNum = new MethodInvocationNum(methodInvocation.getName().toString());
-        CompilationUnit compilationUnit = (CompilationUnit) mp.getStatement().getRoot();
-        compilationUnit.accept(methodInvocationNum);
-        if (methodInvocationNum.getNum() <= 2)
-            return false;
+//        MethodInvocationNum methodInvocationNum = new MethodInvocationNum(methodInvocation.getName().toString());
+//        CompilationUnit compilationUnit = (CompilationUnit) mp.getStatement().getRoot();
+//        compilationUnit.accept(methodInvocationNum);
+//        if (methodInvocationNum.getNum() <= 1)
+//            return false;
 
         List methodArguments = methodInvocation.arguments();
         boolean flagIn = false;

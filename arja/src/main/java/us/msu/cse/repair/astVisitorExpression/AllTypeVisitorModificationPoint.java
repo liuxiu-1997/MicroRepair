@@ -442,7 +442,8 @@ public class AllTypeVisitorModificationPoint extends ASTVisitor {
     public boolean visit(QualifiedName node) {
         LineAndNodeType lineNode = GetClassInstance.getLineAndNodeType(node,node.getNodeType());
         list.add(new ExpressionInfo(node, methClaPacOfExpName, lineNode));
-//        mp.getVariableName().add(node.toString());
+        if (!mp.getVariableName().contains(node.toString()))
+            mp.getVariableName().add(node.toString());
         return true;
     }
 

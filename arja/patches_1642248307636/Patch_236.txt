@@ -1,0 +1,14 @@
+1 Replace /home/bjtucs/workspace/apr/benchmarks/defects4j/math/math_5_buggy/src/main/java/org/apache/commons/math3/complex/Complex.java 304
+Faulty:
+if (real == 0.0 && imaginary == 0.0) {
+  return NaN;
+}
+Seed:
+if (real == 0.0 && imaginary == 0.0) {
+  return INF;
+}
+**************************************************
+————————————————————————结束————————————————————————————
+修改点位置：1/1操作：1(0-删除;1-替换;2-插入)补丁位置：262
+提取的表达式成分数量：229候选补丁数量：352Evaluations: 543
+EstimatedTime: 189351

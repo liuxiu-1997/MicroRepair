@@ -1,0 +1,14 @@
+1 Replace /home/bjtucs/workspace/apr/benchmarks/defects4j/math/math_33_buggy/src/main/java/org/apache/commons/math3/optimization/linear/SimplexTableau.java 338
+Faulty:
+if (Precision.compareTo(entry,0d,maxUlps) > 0) {
+  columnsToDrop.add(i);
+}
+Seed:
+if (Precision.compareTo(entry,0d,epsilon) > 0) {
+  columnsToDrop.add(i);
+}
+**************************************************
+————————————————————————结束————————————————————————————
+修改点位置：20/1操作：1(0-删除;1-替换;2-插入)补丁位置：168
+提取的表达式成分数量：243候选补丁数量：497Evaluations: 11300
+EstimatedTime: 2712716

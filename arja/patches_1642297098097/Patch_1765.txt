@@ -1,0 +1,18 @@
+1 Replace /home/bjtucs/workspace/apr/benchmarks/defects4j/math/math_22_buggy/src/main/java/org/apache/commons/math3/distribution/UniformRealDistribution.java 184
+Faulty:
+return false;
+Seed:
+return isSupportConnected();
+**************************************************
+————————————————————————结束————————————————————————————
+修改点位置：4/2操作：1(0-删除;1-替换;2-插入)补丁位置：16
+提取的表达式成分数量：45候选补丁数量：192 Replace /home/bjtucs/workspace/apr/benchmarks/defects4j/math/math_22_buggy/src/main/java/org/apache/commons/math3/distribution/FDistribution.java 275
+Faulty:
+return true;
+Seed:
+return numericalVarianceIsCalculated;
+**************************************************
+————————————————————————结束————————————————————————————
+修改点位置：13/2操作：1(0-删除;1-替换;2-插入)补丁位置：6
+提取的表达式成分数量：57候选补丁数量：23Evaluations: 6584
+EstimatedTime: 2734299

@@ -1,0 +1,14 @@
+1 Replace /home/bjtucs/workspace/apr/benchmarks/defects4j/math/math_2_buggy/src/main/java/org/apache/commons/math3/distribution/AbstractIntegerDistribution.java 137
+Faulty:
+if (tmp < upper) {
+  upper=((int)Math.ceil(tmp)) - 1;
+}
+Seed:
+if (tmp < tmp) {
+  tmp=((int)Math.ceil(tmp)) - 1;
+}
+**************************************************
+————————————————————————结束————————————————————————————
+修改点位置：16/1操作：1(0-删除;1-替换;2-插入)补丁位置：68
+提取的表达式成分数量：108候选补丁数量：99Evaluations: 3268
+EstimatedTime: 1007332
